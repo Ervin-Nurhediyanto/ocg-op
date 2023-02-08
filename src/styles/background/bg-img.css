@@ -1,0 +1,19 @@
+.bg-op {
+  background-image: url('../../assets/background/bg-ocg.png');
+}
+.bg-sleeve-001 {
+  background-image: url('../../assets/sleeves/S001.png');
+  background-size: cover;
+}
+.bg-sleeve-002 {
+  background-image: url('../../assets/sleeves/S002.png');
+  background-size: cover;
+}
+.bg-sleeve-003 {
+  background-image: url('../../assets/sleeves/S003.png');
+  background-size: cover;
+}
+.bg-sleeve-004 {
+  background-image: url('../../assets/sleeves/S004.png');
+  background-size: cover;
+}
