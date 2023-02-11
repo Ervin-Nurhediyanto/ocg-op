@@ -2,17 +2,21 @@
   <div class="h-50vh">
     <div class="row m-0 h-50vh">
       <Hand
+        v-on:onDisplay="onDisplay"
+        v-on:HAND="HAND"
+        :effect='effect'
         :info='info'
         :turn='turn'
         :phases="phases"
         :player="player"
         :opponent="opponent"
-        v-on:CFH="CFH"
-        v-on:OD="OD"
         v-on:EFAUTO="EFAUTO"
         v-on:EFCONT="EFCONT"
       />
       <Field
+        v-on:onDisplay="onDisplay"
+        v-on:unit="unit"
+        :effect='effect'
         :info='info'
         :turn='turn'
         :phases="phases"
@@ -21,8 +25,8 @@
         v-on:openDeck="openDeck"
         v-on:openBind="openBind"
         v-on:openDrop="openDrop"
-        v-on:OD="OD"
         v-on:onATK="onATK"
+        v-on:onDEF="onDEF"
         v-on:EFACT="EFACT"
       />
     </div>
@@ -35,7 +39,7 @@ import Field from './C-Arena-Field.vue'
 
 export default {
   name: 'Arena Opponent',
-  props: ['data', 'info', 'turn', 'phases', 'player', 'opponent'],
+  props: ['info', 'turn', 'phases', 'player', 'opponent', 'effect'],
   data () {
     return {}
   },
@@ -44,6 +48,9 @@ export default {
     Field
   },
   methods: {
+    onDisplay (data) {
+      this.$emit('onDisplay', data)
+    },
     openDeck (data) {
       this.$emit('openDeck', data)
     },
@@ -53,14 +60,21 @@ export default {
     openDrop (data) {
       this.$emit('openDrop', data)
     },
-    CFH (data) { // Call From Hand
-      this.$emit('CFH', data)
+    HAND (data) { // Call From Hand
+      this.$emit('HAND', data)
     },
-    OD (data) { // On Display
-      this.$emit('OD', data)
+    unit (data) {
+      this.$emit('unit', data)
     },
-    onATK (data) { // On Display
+    // OLD CODE
+    // CFH (data) { // Call From Hand
+    //   this.$emit('CFH', data)
+    // },
+    onATK (data) {
       this.$emit('onATK', data)
+    },
+    onDEF (data) {
+      this.$emit('onDEF', data)
     },
     EFAUTO (data) { // Effect AUTO
       this.$emit('EFAUTO', data)

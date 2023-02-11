@@ -1,6 +1,6 @@
 <template>
-  <!-- <div class="row h-100vh bg-op"> -->
-  <div class="row h-100vh bg-white">
+  <div class="row h-100vh bg-op">
+  <!-- <div class="row h-100vh bg-white"> -->
     <div class="col-3 p-0 d-flex justify-content-center">
       <Deck
         :deckTitle="data.edit.title"

@@ -19,7 +19,7 @@ export default {
   props: ['info', 'turn', 'phases', 'player', 'opponent'],
   methods: {
     mouseover (data) {
-      this.$emit('OD', data) // On Display
+      this.$emit('onDisplay', data)
     },
     onClick (index) {
       if (this.info.isOpen === true) {
@@ -66,7 +66,8 @@ export default {
       }
       const BF = this.opponent.field
       if (BF.length < 6) {
-        this.$emit('CFH', { who: 'Opponent', index: index }) // Call From Hand
+        this.$emit('HAND', { who: 'Opponent', index: index, todo: 'HAND TO FIELD' }) // Call From Hand
+        // this.$emit('CFH', { who: 'Opponent', index: index }) // Call From Hand
         this.$emit('EFCONT', { who: 'Opponent', event: 'COUNT UNIT ON FIELD' })
       } else {
         Toast('error', 'Field Penuh')
@@ -137,7 +138,8 @@ export default {
           const UT = this.opponent.field[IT].card // Unit Tribute
           DZ.push(UT)
           BF.splice(IT, 1)
-          this.$emit('CFH', { who: 'Opponent', index: index }) // Call From Hand
+          this.$emit('HAND', { who: 'Opponent', index: index, todo: 'HAND TO FIELD' }) // Call From Hand
+          // this.$emit('CFH', { who: 'Opponent', index: index }) // Call From Hand
           this.$emit('EFCONT', { who: 'Opponent', event: 'COUNT UNIT ON FIELD' })
           this.UDE('Opponent')
         }
@@ -195,7 +197,8 @@ export default {
               const UT2 = this.opponent.field[IT2].card // Unit2 Tribut2e
               DZ.push(UT2)
               BF.splice(IT2, 1)
-              this.$emit('CFH', { who: 'Opponent', index: index }) // Call From Hand
+              this.$emit('HAND', { who: 'Opponent', index: index, todo: 'HAND TO FIELD' }) // Call From Hand
+              // this.$emit('CFH', { who: 'Opponent', index: index }) // Call From Hand
               this.$emit('EFCONT', { who: 'Opponent', event: 'COUNT UNIT ON FIELD' })
               this.UDE('Opponent')
             }

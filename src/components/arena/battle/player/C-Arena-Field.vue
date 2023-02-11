@@ -11,7 +11,7 @@
           </div>
           <div v-for="i in player.field.length" :key="i" class="col-2 h-15vh d-flex justify-content-center align-content-center">
             <img
-              :class="`h-15vh w-auto ${player.field[i - 1].position}`"
+              :class="`h-15vh w-auto cursor-pointer ${player.field[i - 1].position}`"
               :src="player.field[i - 1].card.imageM"
               @click.prevent="onClick(i - 1)"
               @mouseover.prevent="mouseover(player.field[i - 1].card)"
@@ -44,13 +44,13 @@ import Deck from './C-Arena-Deck.vue'
 
 export default {
   name: 'Arena Player Field',
-  props: ['info', 'turn', 'phases', 'player', 'opponent'],
+  props: ['info', 'turn', 'phases', 'player', 'opponent', 'effect'],
   components: {
     Deck
   },
   methods: {
     mouseover (data) {
-      this.$emit('OD', data) // On Display
+      this.$emit('onDisplay', data) // On Display
     },
     openDeck (data) {
       this.$emit('openDeck', data)
@@ -69,20 +69,33 @@ export default {
         const code = unit.code
         const phase = this.player.phase
         if (this.turn === 'Player') {
-          if (phase === 'BP') {
+          if (phase === 'BP') { // On Attack
             this.onATK(index, code)
           } else if (phase === 'MP1' || phase === 'MP2') {
-            this.onEFF(index, code)
+            if (this.effect.player.active === true && this.effect.player.target.isField === true) {
+              this.$emit('unit', { who: 'Player', index: index, from: 'FIELD', todo: this.effect.player.todo, RES: this.effect.player.RES })
+            } else {
+              this.onEFF(index, code)
+            }
+          }
+        } else {
+          if (this.opponent.phase === 'BP' && this.player.isBlock === true) { // On Block
+            this.onDEF(index, code)
+          }
+          if ((this.opponent.phase === 'MP1' || this.opponent.phase === 'MP2') && (this.effect.opponent.active === true && this.effect.opponent.target.who === 'OTHER')) { // Target By Opponent
+            console.log('DITARGET LAWAN')
+            this.$emit('unit', { who: 'Player', index: index, from: 'FIELD', todo: this.effect.opponent.todo })
           }
         }
       }
     },
     onATK (index, code) {
-      console.log('attack')
       this.$emit('onATK', { who: 'Player', index: index, code: code })
     },
+    onDEF (index, code) {
+      this.$emit('onDEF', { who: 'Player', index: index, code: code })
+    },
     onEFF (index, code) {
-      console.log('effect ACT')
       this.$emit('EFACT', { who: 'Player', index: index, code: code })
     }
   }

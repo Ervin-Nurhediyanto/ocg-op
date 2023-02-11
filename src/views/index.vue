@@ -133,6 +133,28 @@ import C049 from '../assets/cards/049.png'
 import CM049 from '../assets/mini-cards/049.png'
 import C050 from '../assets/cards/050.png'
 import CM050 from '../assets/mini-cards/050.png'
+import C051 from '../assets/cards/051.png'
+import CM051 from '../assets/mini-cards/051.png'
+import C052 from '../assets/cards/052.png'
+import CM052 from '../assets/mini-cards/052.png'
+import C053 from '../assets/cards/053.png'
+import CM053 from '../assets/mini-cards/053.png'
+import C054 from '../assets/cards/054.png'
+import CM054 from '../assets/mini-cards/054.png'
+import C055 from '../assets/cards/055.png'
+import CM055 from '../assets/mini-cards/055.png'
+import C056 from '../assets/cards/056.png'
+import CM056 from '../assets/mini-cards/056.png'
+import C057 from '../assets/cards/057.png'
+import CM057 from '../assets/mini-cards/057.png'
+import C058 from '../assets/cards/058.png'
+import CM058 from '../assets/mini-cards/058.png'
+import C059 from '../assets/cards/059.png'
+import CM059 from '../assets/mini-cards/059.png'
+import C060 from '../assets/cards/060.png'
+import CM060 from '../assets/mini-cards/060.png'
+import C061 from '../assets/cards/061.png'
+import CM061 from '../assets/mini-cards/061.png'
 
 export default {
   name: 'Main',
@@ -143,20 +165,174 @@ export default {
           title: '',
           deck: [],
           display: {
-            name: 'Inuarashi',
-            image: C050,
-            imageM: CM050,
+            name: 'Eustass Kid',
+            image: C061,
+            imageM: CM061,
             grade: 3,
             type: {
-              race: 'Beast',
-              job: 'Swordman',
-              special: 'Sulong'
+              race: 'Human',
+              job: 'Fighter',
+              special: 'Paramecia'
             },
-            text: '[Auto]: At the end your phase. Put this unit into bottom your deck. Call up to one random Grade 2 "Inuarashi" in its card name from your deck. Shuffle your deck. [Auto]: When this unit attack. Pay 500 life points, this unit get Power + 500 for each "Beast" unit your control until end this turn.',
+            text: '[Auto]: When this unit attack. Put top of your deck into drop zone. This unit get Power equal that unit send into drop zone by this effect.',
             power: 2500,
-            code: '050'
+            code: '061'
           },
           cards: [
+            {
+              name: 'Eustass Kid',
+              image: C061,
+              imageM: CM061,
+              grade: 3,
+              type: {
+                race: 'Human',
+                job: 'Fighter',
+                special: 'Paramecia'
+              },
+              text: '[Auto]: When this unit attack. Put top of your deck into drop zone. This unit get Power equal that unit send into drop zone by this effect.',
+              power: 2500,
+              code: '061'
+            },
+            {
+              name: 'Coby',
+              image: C060,
+              imageM: CM060,
+              grade: 2,
+              type: {
+                race: 'Human',
+                job: 'Fighter',
+                special: ''
+              },
+              text: '[Auto]: When this unit attack. This unit get Power + 500 for each "Fighter" unit your control until end this turn.',
+              power: 1500,
+              code: '060'
+            },
+            {
+              name: 'Boa Hancock',
+              image: C059,
+              imageM: CM059,
+              grade: 3,
+              type: {
+                race: 'Human',
+                job: 'Fighter',
+                special: 'Paramecia'
+              },
+              text: '[Cont]: During opponent Stanby Phase. Rest unit your opponent control cannot be Stand.',
+              power: 2500,
+              code: '059'
+            },
+            {
+              name: 'Jack',
+              image: C058,
+              imageM: CM058,
+              grade: 3,
+              type: {
+                race: 'Fishman',
+                job: 'Fighter',
+                special: 'Zoan'
+              },
+              text: '[Cont]: At the end of your turn. This unit get Power + 1000. (Stack)',
+              power: 2500,
+              code: '058'
+            },
+            {
+              name: 'Basil Hawkins',
+              image: C057,
+              imageM: CM057,
+              grade: 2,
+              type: {
+                race: 'Human',
+                job: 'Spellcaster',
+                special: 'Paramecia'
+              },
+              text: '[Auto]: When this unit is send into drop zone. Pay 500 life points, then call a random unit from your deck.',
+              power: 1500,
+              code: '057'
+            },
+            {
+              name: 'Brook',
+              image: C056,
+              imageM: CM056,
+              grade: 1,
+              type: {
+                race: 'Undead',
+                job: 'Swordman',
+                special: 'Paramecia'
+              },
+              text: '[Auto]: When this unit is send into drop zone. Pay 500 life points, then call a random unit from your drop zone.',
+              power: 500,
+              code: '056'
+            },
+            {
+              name: 'Arlong',
+              image: C055,
+              imageM: CM055,
+              grade: 1,
+              type: {
+                race: 'Fishman',
+                job: 'Fighter',
+                special: ''
+              },
+              text: '[Auto]: When this unit is placed on battlefield. Add up to one "Fishman" card from your deck into your hand, then shuffle your deck.',
+              power: 500,
+              code: '055'
+            },
+            {
+              name: 'Gordon',
+              image: C054,
+              imageM: CM054,
+              grade: 1,
+              type: {
+                race: 'Human',
+                job: '',
+                special: ''
+              },
+              text: '[Act][1/Turn]: Rest this unit. Choose up to one your opponent Grade 1 and Rest that unit.',
+              power: 0,
+              code: '054'
+            },
+            {
+              name: 'Uta',
+              image: C053,
+              imageM: CM053,
+              grade: 2,
+              type: {
+                race: 'Human',
+                job: 'Swordman',
+                special: 'Paramecia'
+              },
+              text: '[Auto]: When this unit attack. Pay 500 life points, then this unit get Power + 500 for each Rest unit on battlefield until end this turn.',
+              power: 1500,
+              code: '053'
+            },
+            {
+              name: 'Nekomamushi',
+              image: C052,
+              imageM: CM052,
+              grade: 3,
+              type: {
+                race: 'Beast',
+                job: 'Gunner',
+                special: 'Sulong'
+              },
+              text: '[Auto]: At the end your phase. Put this unit into bottom your deck. Call up to one random Grade 2 "Nekomamushi" in its card name from your deck. Shuffle your deck. [Act][1/Turn]: Search your deck. Choose up to one "Beast" unit other "Nekomamushi" and put that into your hand. Shuffle your deck.',
+              power: 2500,
+              code: '052'
+            },
+            {
+              name: 'Nekomamushi',
+              image: C051,
+              imageM: CM051,
+              grade: 2,
+              type: {
+                race: 'Beast',
+                job: 'Swordman',
+                special: ''
+              },
+              text: '[Act]: Put this unit into bottom your deck. Call up to one Grade 3 "Nekomamushi" in its card name from your deck. Shuffle your deck.',
+              power: 1500,
+              code: '051'
+            },
             {
               name: 'Inuarashi',
               image: C050,
@@ -307,7 +483,7 @@ export default {
                 job: 'Swordman',
                 special: 'Zoan'
               },
-              text: '[Act]: Put this unit into bottom your deck. Call up to one Grade 3 "Jackr" in its card name from your deck. Shuffle your deck.',
+              text: '[Act]: Put this unit into bottom your deck. Call up to one Grade 3 "Jack" in its card name from your deck. Shuffle your deck.',
               power: 1500,
               code: '040'
             },
@@ -489,7 +665,7 @@ export default {
                 job: '',
                 special: ''
               },
-              text: '[Auto]: When this unit send into drop zone. Put this unit into bottom of your deck, then choose up to one "Vinsmoke" in its card name from your drop zone, and put that card into your hand.',
+              text: '[Auto]: When this unit send into drop zone. Put this unit into bottom of your deck, then choose up to two "Vinsmoke" in its card name from your drop zone, and put that card into your hand.',
               power: 0,
               code: '027'
             },
@@ -932,6 +1108,33 @@ export default {
         sortedData = this.data.edit.cards.sort((a, b) => {
           const x = a.power
           const y = b.power
+          if (x > y) { return 1 }
+          if (x < y) { return -1 }
+          return 0
+        })
+      }
+      if (byKey === 'race') {
+        sortedData = this.data.edit.cards.sort((a, b) => {
+          const x = a.type.race
+          const y = b.type.race
+          if (x > y) { return 1 }
+          if (x < y) { return -1 }
+          return 0
+        })
+      }
+      if (byKey === 'job') {
+        sortedData = this.data.edit.cards.sort((a, b) => {
+          const x = a.type.job
+          const y = b.type.job
+          if (x > y) { return 1 }
+          if (x < y) { return -1 }
+          return 0
+        })
+      }
+      if (byKey === 'special') {
+        sortedData = this.data.edit.cards.sort((a, b) => {
+          const x = a.type.special
+          const y = b.type.special
           if (x > y) { return 1 }
           if (x < y) { return -1 }
           return 0

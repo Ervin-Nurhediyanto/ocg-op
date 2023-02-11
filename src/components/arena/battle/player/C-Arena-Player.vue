@@ -2,26 +2,31 @@
   <div class="h-50vh">
     <div class="row m-0 h-50vh">
       <Field
-        :info='info'
-        :turn='turn'
+        v-on:onDisplay="onDisplay"
+        v-on:unit="unit"
+        :effect="effect"
+        :info="info"
+        :turn="turn"
         :phases="phases"
         :player="player"
         :opponent="opponent"
         v-on:openDeck="openDeck"
         v-on:openBind="openBind"
         v-on:openDrop="openDrop"
-        v-on:OD="OD"
         v-on:onATK="onATK"
+        v-on:onDEF="onDEF"
         v-on:EFACT="EFACT"
       />
       <Hand
-        :info='info'
-        :turn='turn'
+        v-on:onDisplay="onDisplay"
+        v-on:HAND="HAND"
+        v-on:unit="unit"
+        :effect="effect"
+        :info="info"
+        :turn="turn"
         :phases="phases"
         :player="player"
         :opponent="opponent"
-        v-on:CFH="CFH"
-        v-on:OD="OD"
         v-on:EFAUTO="EFAUTO"
         v-on:EFCONT="EFCONT"
       />
@@ -35,16 +40,18 @@ import Hand from './C-Arena-Hand.vue'
 
 export default {
   name: 'Arena Player',
-  props: ['info', 'turn', 'phases', 'player', 'opponent'],
+  props: ['info', 'turn', 'phases', 'player', 'opponent', 'effect'],
   data () {
-    return {
-    }
+    return {}
   },
   components: {
     Field,
     Hand
   },
   methods: {
+    onDisplay (data) { // On Display
+      this.$emit('onDisplay', data)
+    },
     openDeck (data) {
       this.$emit('openDeck', data)
     },
@@ -54,14 +61,21 @@ export default {
     openDrop (data) {
       this.$emit('openDrop', data)
     },
-    CFH (data) { // Call From Hand
-      this.$emit('CFH', data)
+    HAND (data) {
+      this.$emit('HAND', data)
     },
-    OD (data) { // On Display
-      this.$emit('OD', data)
+    unit (data) {
+      this.$emit('unit', data)
     },
-    onATK (data) { // On Display
+    // Old COde
+    // CFH (data) { // Call From Hand
+    //   this.$emit('CFH', data)
+    // },
+    onATK (data) {
       this.$emit('onATK', data)
+    },
+    onDEF (data) {
+      this.$emit('onDEF', data)
     },
     EFAUTO (data) { // Effect AUTO
       this.$emit('EFAUTO', data)

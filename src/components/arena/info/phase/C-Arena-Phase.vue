@@ -47,62 +47,13 @@ export default {
   methods: {
     changePhase (index) {
       const who = this.turn
-      const BPS = this.phases[index] // Button Phase Click
-      if (BPS === 'BP') {
-        if (who === 'Player') { // BP Player
-          const phase = this.player.phase
-          if (phase === 'MP1') {
-            console.log('Masuk ke BP')
-            this.$emit('BCP', { who: who, phase: BPS })
-          } else {
-            console.log('Tidak Bisa ke Phase Ini')
-          }
-        } else { // BP Opponent
-          const phase = this.opponent.phase
-          if (phase === 'MP1') {
-            console.log('Masuk ke BP')
-            this.$emit('BCP', { who: who, phase: BPS })
-          } else {
-            console.log('Tidak Bisa ke Phase Ini')
-          }
-        }
-      } else if (BPS === 'MP2') {
-        if (who === 'Player') { // MP2 Player
-          const phase = this.player.phase
-          if (phase === 'BP') {
-            console.log('Masuk ke MP2')
-            this.$emit('BCP', { who: who, phase: BPS })
-          } else {
-            console.log('Tidak Bisa ke Phase Ini')
-          }
-        } else { // MP2 Opponent
-          const phase = this.opponent.phase
-          if (phase === 'BP') {
-            console.log('Masuk ke MP2')
-            this.$emit('BCP', { who: who, phase: BPS })
-          } else {
-            console.log('Tidak Bisa ke Phase Ini')
-          }
-        }
-      } else if (BPS === 'EP') {
-        if (who === 'Player') { // EP Player
-          const phase = this.player.phase
-          if (phase === 'MP1' || phase === 'BP' || phase === 'MP2') {
-            console.log('Masuk ke EP')
-            this.$emit('BCP', { who: who, phase: BPS })
-          } else {
-            console.log('Tidak Bisa ke Phase Ini')
-          }
-        } else { // EP Opponent
-          const phase = this.opponent.phase
-          if (phase === 'MP1' || phase === 'BP' || phase === 'MP2') {
-            console.log('Masuk ke EP')
-            this.$emit('BCP', { who: who, phase: BPS })
-          } else {
-            console.log('Tidak Bisa ke Phase Ini')
-          }
-        }
-      }
+      const changePhase = this.phases[index]
+      let phase = ''
+      if (who === 'Player') { phase = this.player.phase }
+      if (who === 'Opponent') { phase = this.opponent.phase }
+      if (changePhase === 'BP' && phase === 'MP1') { this.$emit('changePhase', { who: who, phase: changePhase }) }
+      if (changePhase === 'MP2' && phase === 'BP') { this.$emit('changePhase', { who: who, phase: changePhase }) }
+      if (changePhase === 'EP' && (phase === 'MP1' || phase === 'BP' || phase === 'MP2')) { this.$emit('changePhase', { who: who, phase: changePhase }) }
     }
   }
 }

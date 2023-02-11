@@ -1,6 +1,10 @@
 <template>
   <div class="col-6 h-100vh p-0">
     <Opponent
+      v-on:onDisplay="onDisplay"
+      v-on:HAND="HAND"
+      v-on:unit="unit"
+      :effect='effect'
       :info='info'
       :turn='turn'
       :phases="phases"
@@ -9,14 +13,17 @@
       v-on:openDeck="openDeck"
       v-on:openBind="openBind"
       v-on:openDrop="openDrop"
-      v-on:CFH="CFH"
-      v-on:OD="OD"
       v-on:onATK="onATK"
+      v-on:onDEF="onDEF"
       v-on:EFAUTO="EFAUTO"
       v-on:EFCONT="EFCONT"
       v-on:EFACT="EFACT"
     />
     <Player
+      v-on:onDisplay="onDisplay"
+      v-on:HAND="HAND"
+      v-on:unit="unit"
+      :effect="effect"
       :info='info'
       :turn='turn'
       :phases="phases"
@@ -25,9 +32,8 @@
       v-on:openDeck="openDeck"
       v-on:openBind="openBind"
       v-on:openDrop="openDrop"
-      v-on:CFH="CFH"
-      v-on:OD="OD"
       v-on:onATK="onATK"
+      v-on:onDEF="onDEF"
       v-on:EFAUTO="EFAUTO"
       v-on:EFCONT="EFCONT"
       v-on:EFACT="EFACT"
@@ -41,12 +47,15 @@ import Opponent from './opponent/C-Arena-Opponent.vue'
 
 export default {
   name: 'Arena Battle',
-  props: ['data', 'info', 'turn', 'phases', 'player', 'opponent'],
+  props: ['data', 'info', 'turn', 'phases', 'player', 'opponent', 'effect'],
   components: {
     Player,
     Opponent
   },
   methods: {
+    onDisplay (data) {
+      this.$emit('onDisplay', data)
+    },
     openDeck (data) {
       this.$emit('openDeck', data)
     },
@@ -56,14 +65,18 @@ export default {
     openDrop (data) {
       this.$emit('openDrop', data)
     },
-    CFH (data) {
-      this.$emit('CFH', data)
+    HAND (data) {
+      this.$emit('HAND', data)
     },
-    OD (data) {
-      this.$emit('OD', data)
+    unit (data) {
+      this.$emit('unit', data)
     },
+    // OLD CODE
     onATK (data) {
       this.$emit('onATK', data)
+    },
+    onDEF (data) {
+      this.$emit('onDEF', data)
     },
     EFAUTO (data) {
       this.$emit('EFAUTO', data)

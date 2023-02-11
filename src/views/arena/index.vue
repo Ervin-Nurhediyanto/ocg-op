@@ -2,32 +2,22 @@
   <div class="row h-100vh d-flex align-content-center m-0 p-0 bg-op">
     <ArenaInfo
       :info="info"
+      v-on:changePhase="changePhase"
+      v-on:onDisplay="onDisplay"
+      v-on:card="card"
       :data="data"
       :turn="turn"
       :phases="phases"
       :player="player"
       :opponent="opponent"
-      v-on:OD="OD"
-      v-on:BCP="BCP"
-      v-on:AFD="AFD"
-      v-on:HTD="HTD"
-      v-on:UDF="UDF"
-      v-on:UTR="UTR"
-      v-on:UBF="UBF"
-      v-on:DTF="DTF"
-      v-on:FTH="FTH"
-      v-on:FTD="FTD"
-      v-on:DRTF="DRTF"
-      v-on:DRTH="DRTH"
-      v-on:ACT017="ACT017"
-      v-on:ACT022="ACT022"
-      v-on:ACT023="ACT023"
-      v-on:ACT024="ACT024"
-      v-on:ACT026="ACT026"
-      v-on:ACT033="ACT033"
-      v-on:ACT045="ACT045"
     />
     <ArenaBattle
+      v-on:onDisplay="onDisplay"
+      v-on:onATK="onATK"
+      v-on:onDEF="onDEF"
+      v-on:HAND="HAND"
+      v-on:unit="unit"
+      :effect="effect"
       :data="data"
       :info="info"
       :turn="turn"
@@ -37,14 +27,29 @@
       v-on:openDeck="openDeck"
       v-on:openBind="openBind"
       v-on:openDrop="openDrop"
-      v-on:CFH="CFH"
-      v-on:OD="OD"
-      v-on:onATK="onATK"
       v-on:EFAUTO="EFAUTO"
       v-on:EFCONT="EFCONT"
       v-on:EFACT="EFACT"
     />
     <ArenaDisplay :data="display"/>
+    <!-- v-on:AFD="AFD"
+    v-on:HTD="HTD"
+    v-on:UDF="UDF"
+    v-on:UTR="UTR"
+    v-on:UBF="UBF"
+    v-on:DTF="DTF"
+    v-on:FTH="FTH"
+    v-on:FTD="FTD"
+    v-on:DRTF="DRTF"
+    v-on:DRTH="DRTH"
+    v-on:ACT017="ACT017"
+    v-on:ACT022="ACT022"
+    v-on:ACT023="ACT023"
+    v-on:ACT024="ACT024"
+    v-on:ACT026="ACT026"
+    v-on:ACT033="ACT033"
+    v-on:ACT045="ACT045"
+    v-on:CFH="CFH" -->
   </div>
 </template>
 
@@ -62,6 +67,16 @@ export default {
       phases: ['SP', 'DP', 'MP1', 'BP', 'MP2', 'EP'],
       turn: 'Player',
       cTurn: 0,
+      effect: {
+        player: {
+          active: false,
+          todo: ''
+        },
+        opponent: {
+          active: false,
+          todo: ''
+        }
+      },
       info: {
         isOpen: false,
         who: '',
@@ -121,7 +136,8 @@ export default {
         atk: 0,
         def: 0,
         indexATK: '',
-        indexDEF: ''
+        indexDEF: '',
+        isBlock: false
       },
       opponent: {
         name: 'Nama Lawan',
@@ -135,7 +151,8 @@ export default {
         atk: 0,
         def: 0,
         indexATK: '',
-        indexDEF: ''
+        indexDEF: '',
+        isBlock: false
       }
     }
   },
@@ -170,937 +187,912 @@ export default {
       })
       this.opponent.deck = parseOp // Test Mirror Match
     },
-    openDeck (data) {
+    Toast (icon, title) {
+      this.$swal.mixin().fire({
+        icon: icon,
+        title: title,
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true
+      })
+    },
+    open (data) {
       if (this.info.isOpen === false) {
-        if (data === 'Player') {
-          this.info = {
-            isOpen: true,
-            who: data,
-            zone: 'Deck',
-            card: this.player.deck.deck,
-            todo: ''
-          }
-        } else {
-          this.info = {
-            isOpen: true,
-            who: data,
-            zone: 'Deck',
-            card: this.opponent.deck.deck,
-            todo: ''
-          }
+        this.info = {
+          isOpen: true,
+          who: data.who,
+          zone: data.zone,
+          card: data.card,
+          todo: '',
+          uindex: ''
         }
       } else {
         this.closeInfo()
       }
     },
-    openBind (data) {
-      if (this.info.isOpen === false) {
-        if (data === 'Player') {
-          this.info = {
-            isOpen: true,
-            who: data,
-            zone: 'Bind',
-            card: this.player.bind,
-            todo: ''
-          }
-        } else {
-          this.info = {
-            isOpen: true,
-            who: data,
-            zone: 'Bind',
-            card: this.opponent.bind,
-            todo: ''
-          }
-        }
-      } else {
-        this.closeInfo()
-      }
+    openDeck (who) {
+      const data = { who: who, zone: 'Deck', card: [], todo: '' }
+      if (who === 'Player') { data.card = this.player.deck.deck }
+      if (who === 'Opponent') { data.card = this.opponent.deck.deck }
+      this.open(data)
     },
-    openDrop (data) {
-      if (this.info.isOpen === false) {
-        if (data === 'Player') {
-          this.info = {
-            isOpen: true,
-            who: data,
-            zone: 'Drop',
-            card: this.player.drop,
-            todo: ''
-          }
-        } else {
-          this.info = {
-            isOpen: true,
-            who: data,
-            zone: 'Drop',
-            card: this.opponent.drop,
-            todo: ''
-          }
-        }
-      } else {
-        this.closeInfo()
-      }
+    openDrop (who) {
+      const data = { who: who, zone: 'Drop', card: [], todo: '' }
+      if (who === 'Player') { data.card = this.player.drop }
+      if (who === 'Opponent') { data.card = this.opponent.drop }
+      this.open(data)
+    },
+    openBind (who) {
+      const data = { who: who, zone: 'Bind', card: [], todo: '' }
+      if (who === 'Player') { data.card = this.player.bind }
+      if (who === 'Opponent') { data.card = this.opponent.bind }
+      this.open(data)
     },
     closeInfo () {
       this.info = { isOpen: false, who: '', zone: '', card: [], todo: '' }
     },
-    DPS () { // Deck Player Shuffle
-      const DP = this.player.deck.deck
-      const DPS = []
-      while (DP.length > 0) {
-        const IR = Math.floor(Math.random() * DP.length) // Index Random
-        const CR = DP[IR] // Card Random
-        DPS.push(CR)
-        DP.splice(IR, 1)
-      }
-      this.player.deck.deck = DPS
+    openInfo (data) {
+      this.info = { isOpen: true, who: data.who, zone: data.zone, card: data.card, todo: data.todo, uindex: data.index }
     },
-    DOS () { // Deck Opponent Shuffle
-      const DO = this.opponent.deck.deck
-      const DOS = []
-      while (DO.length > 0) {
-        const IR = Math.floor(Math.random() * DO.length) // Index Random
-        const CR = DO[IR] // Card Random
-        DOS.push(CR)
-        DO.splice(IR, 1)
-      }
-      this.opponent.deck.deck = DOS
+    onDisplay (data) {
+      this.display = data
     },
-    ODP () { // Opening Draw Player
-      for (let i = 0; i < 5; i++) {
-        const DP = this.player.deck.deck
-        const HP = this.player.hand
-        HP.push(DP[0])
-        DP.splice(0, 1)
+    FIRST () {
+      const user = ['Player', 'Opponent']
+      const index = Math.floor(Math.random() * user.length)
+      alert(`${user[index]} First Turn`)
+      this.turn = user[index]
+      this.changePhase({ who: user[index], phase: 'SP' })
+    },
+    gameover (data) {
+      if (data.deck.length === 0) {
+        this.Toast('error', data.notif)
+        this.$router.replace({
+          name: 'Home'
+        })
       }
     },
-    ODO () { // Opening Draw Opponent
-      for (let i = 0; i < 5; i++) {
-        const DO = this.opponent.deck.deck
-        const HO = this.opponent.hand
-        HO.push(DO[0])
-        DO.splice(0, 1)
-      }
+    changePhase (data) {
+      this.handleChangePhase(data)
     },
-    RFT () { // Random First Turn
-      const FT = ['Player', 'Opponent']
-      const RFT = Math.floor(Math.random() * FT.length)
-      alert(`${FT[RFT]} First Turn`)
-      this.turn = FT[RFT]
-      this.CP(FT[RFT], 'SP')
-    },
-    BCP (data) { // Button Change Phase
-      this.CP(data.who, data.phase)
-    },
-    CP (who, phase) { // Change Phase
-      if (who === 'Player') {
-        this.player.phase = phase
-      } else {
-        this.opponent.phase = phase
+    handleChangePhase (data) {
+      if (data.who === 'Player') { this.player.phase = data.phase }
+      if (data.who === 'Opponent') { this.opponent.phase = data.phase }
+      if (data.phase === 'SP') {
+        this.SP(data)
+        setTimeout(() => this.changePhase({ who: data.who, phase: 'DP' }), 500)
       }
-      if (phase === 'SP') {
-        this.SP(who)
-        setTimeout(() => this.CP(who, 'DP'), 500)
+      if (data.phase === 'DP') {
+        this.DP(data)
+        setTimeout(() => this.changePhase({ who: data.who, phase: 'MP1' }), 500)
       }
-      if (phase === 'DP') {
-        this.DP(who)
-        setTimeout(() => this.CP(who, 'MP1'), 500)
-      }
-      if (phase === 'BP') {
+      if (data.phase === 'BP') {
         if (this.cTurn === 0) {
           alert('First Turn Cannot ATK')
-          setTimeout(() => this.CP(who, 'EP'), 500)
+          setTimeout(() => this.changePhase({ who: data.who, phase: 'EP' }), 500)
         }
       }
-      if (phase === 'EP') {
-        this.EP(who)
+      if (data.phase === 'EP') {
+        this.EP(data)
+        if (data.who === 'Player') {
+          this.turn = 'Opponent'
+          setTimeout(() => this.handleChangePhase({ who: 'Opponent', phase: 'SP' }), 500)
+        } else {
+          this.turn = 'Player'
+          setTimeout(() => this.handleChangePhase({ who: 'Player', phase: 'SP' }), 500)
+        }
+        this.cTurn += 1
       }
     },
-    EP (who) { // End Phase
-      const PBF = this.player.field
-      PBF.map((unit) => {
+    SP (data) { // Standby Phase
+      let BF = []
+      let BFOP = []
+      let isStun = false
+      if (data.who === 'Player') {
+        BF = this.player.field
+        BFOP = this.opponent.field
+      }
+      if (data.who === 'Opponent') {
+        BF = this.opponent.field
+        BFOP = this.player.field
+      }
+      BFOP.map((unit) => {
+        if (unit.card.code === '059') { isStun = true } // Boa Hancock
+      })
+      if (isStun === false) {
+        BF.map((unit) => {
+          if (unit.position === 'Rest') {
+            unit.position = 'Stand'
+            this.EFCONT({ who: data.who, event: 'UNIT TO STAND' })
+            this.EFCONT({ who: data.who, event: 'UNIT TO REST' })
+          }
+        })
+      }
+    },
+    DP (data) { // Draw Phase
+      this.draw(data)
+    },
+    EP (data) { // End Phase
+      let BF = []
+      if (data.who === 'Player') {
+        BF = this.player.field
+      } else {
+        BF = this.opponent.field
+      }
+      BF.map((unit) => {
         unit.totalPow -= unit.gainAuto
         unit.gainAuto = 0
         unit.OPT = false
       })
-      const OBF = this.opponent.field
-      OBF.map((unit) => {
-        unit.totalPow -= unit.gainAuto
-        unit.gainAuto = 0
-        unit.OPT = false
+      this.EFAUTO({ who: data.who, stat: 'EFEP' })
+      this.EFAUTO({ who: data.who, stat: 'EFEPCALL' })
+    },
+    onATK (data) {
+      let unit = {}
+      if (data.who === 'Player') {
+        unit = this.player.field[data.index]
+        this.player.indexATK = data.index
+      } else {
+        unit = this.opponent.field[data.index]
+        this.opponent.indexATK = data.index
+      }
+      unit.position = 'Rest'
+      this.EFCONT({ who: data.who, event: 'UNIT TO REST' })
+      this.EFAUTO({ who: data.who, unit: unit, code: unit.card.code, index: data.index, stat: 'EFATK' })
+      if (data.who === 'Player') { this.player.atk = unit.totalPow }
+      if (data.who === 'Opponent') { this.opponent.atk = unit.totalPow }
+      data.unitname = unit.card.name
+      // this.confirmBlock(data)
+      if (data.who === 'Player') {
+        if (this.effect.player.active === false) {
+          this.confirmBlock(data)
+        }
+      } else {
+        if (this.effect.opponent.active === false) {
+          this.confirmBlock(data)
+        }
+      }
+    },
+    confirmBlock (data) {
+      if (data.who === 'Player') { data.BF = this.opponent.field }
+      if (data.who === 'Opponent') { data.BF = this.player.field }
+      const units = []
+      data.BF.map((unit) => {
+        if (unit.position === 'Stand') {
+          units.push(unit)
+        }
       })
-      this.EFAUTO({ who: who, stat: 'EFENDPHASE' })
-      if (who === 'Player') {
-        this.turn = 'Opponent'
-        setTimeout(() => this.CP('Opponent', 'SP'), 500)
-        this.cTurn += 1
-      } else {
-        this.turn = 'Player'
-        setTimeout(() => this.CP('Player', 'SP'), 500)
-        this.cTurn += 1
-      }
-    },
-    SP (who) { // Standby Phase
-      if (who === 'Player') {
-        const BF = this.player.field
-        BF.map((unit) => {
-          unit.position = 'Stand'
-          this.EFCONT({ who: 'Player', event: 'UNIT TO STAND' })
-          this.EFCONT({ who: 'Player', event: 'UNIT TO REST' })
+      if (units.length > 0) {
+        this.$swal.fire({
+          title: `Block ${data.unitname} ?`,
+          showCancelButton: true,
+          confirmButtonText: 'YES',
+          cancelButtonText: 'NO'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            if (data.who === 'Player') { this.opponent.isBlock = true }
+            if (data.who === 'Opponent') { this.player.isBlock = true }
+            alert('Choose an unit to block')
+          } else {
+            alert('DAMAGE GAN')
+            if (data.who === 'Player') {
+              this.DMG({ who: 'Opponent', deal: this.player.atk })
+              this.player.atk = 0
+            } else {
+              this.DMG({ who: 'Player', deal: this.opponent.atk })
+              this.opponent.atk = 0
+            }
+          }
         })
       } else {
-        const BF = this.opponent.field
-        BF.map((unit) => {
-          unit.position = 'Stand'
-          this.EFCONT({ who: 'Opponent', event: 'UNIT TO STAND' })
-          this.EFCONT({ who: 'Opponent', event: 'UNIT TO REST' })
-        })
+        alert('DAMAGE GAN')
+        if (data.who === 'Player') {
+          this.DMG({ who: 'Opponent', deal: this.player.atk })
+          this.player.atk = 0
+        } else {
+          this.DMG({ who: 'Player', deal: this.opponent.atk })
+          this.opponent.atk = 0
+        }
       }
     },
-    DP (who) { // Draw Phase
-      const Toast = (icon, title) => {
-        this.$swal.mixin().fire({
-          icon: icon,
-          title: title,
-          toast: true,
-          position: 'top-end',
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true
-        })
+    onDEF (data) {
+      let unit = {}
+      if (data.who === 'Player') {
+        unit = this.player.field[data.index]
+        data.index = { def: data.index, atk: this.opponent.indexATK }
       }
+      if (data.who === 'Opponent') {
+        unit = this.opponent.field[data.index]
+        data.index = { def: data.index, atk: this.player.indexATK }
+      }
+      unit.position = 'Rest'
+      this.EFCONT({ who: data.who, event: 'UNIT TO REST' })
+      this.EFAUTO({ who: data.who, code: unit.card.code, index: data.index, stat: 'EFDEF' })
+      if (data.who === 'Player') { this.player.def = unit.totalPow }
+      if (data.who === 'Opponent') { this.opponent.def = unit.totalPow }
+      this.onResBattle(data)
+    },
+    onResBattle (data) {
+      let ATK = 0
+      let DEF = 0
+      let OP = ''
+      if (data.who === 'Player') {
+        ATK = this.opponent.atk
+        DEF = this.player.def
+        OP = 'Opponent'
+      } else {
+        ATK = this.player.atk
+        DEF = this.opponent.def
+        OP = 'Player'
+      }
+      if (ATK > DEF) {
+        this.FIELD({ who: data.who, index: data.index.def, todo: 'FIELD TO DROP' })
+      } else if (ATK < DEF) {
+        this.FIELD({ who: OP, index: data.index.atk, todo: 'FIELD TO DROP' })
+      } else if (ATK === DEF) {
+        this.FIELD({ who: data.who, index: data.index.def, todo: 'FIELD TO DROP' })
+        this.FIELD({ who: OP, index: data.index.atk, todo: 'FIELD TO DROP' })
+      }
+      if (data.who === 'Player') {
+        this.player.def = 0
+        this.opponent.atk = 0
+      } else {
+        this.opponent.def = 0
+        this.player.atk = 0
+      }
+    },
+    DECK (data) {
+      if (data.who === 'Player') { data.deck = this.player.deck.deck }
+      if (data.who === 'Opponent') { data.deck = this.opponent.deck.deck }
+      if (data.todo === 'shuffle') { this.shuffle(data) }
+      if (data.todo === 'draw') { this.draw(data) }
+      if (data.todo === 'mill') { this.mill(data) }
+      if (data.todo === 'search') { this.search(data) }
+      if (data.todo === 'ADD TO HAND') { this.addToHand(data) }
+      if (data.todo === 'DECK TO FIELD') { this.deckToField(data) }
+    },
+    HAND (data) {
+      if (data.who === 'Player') { data.hand = this.player.hand }
+      if (data.who === 'Opponent') { data.hand = this.opponent.hand }
+      if (data.todo === 'select') { this.select(data) }
+      if (data.todo === 'HAND TO DECK') { this.handToDeck(data) }
+      if (data.todo === 'HAND TO FIELD') { this.handToField(data) }
+      if (data.todo === 'HAND TO DROP') { this.handToDrop(data) }
+    },
+    FIELD (data) {
+      if (data.who === 'Player') { data.BF = this.player.field }
+      if (data.who === 'Opponent') { data.BF = this.opponent.field }
+      if (data.todo === 'choose') { this.choose(data) }
+      if (data.todo === 'FIELD TO DROP') { this.fieldToDrop(data) }
+      if (data.todo === 'FIELD TO BIND') { this.fieldToBind(data) }
+      if (data.todo === 'FIELD TO HAND') { this.fieldToHand(data) }
+      if (data.todo === 'FIELD TO DECK') { this.fieldToDeck(data) }
+      if (data.todo === 'UNIT TO REST') { this.unitToRest(data) }
+      if (data.todo === 'UNIT TO STAND') { this.unitToStand(data) }
+      if (data.todo === 'EFOPT') { this.EFOPT(data) }
+    },
+    DROP (data) {
+      if (data.who === 'Player') { data.drop = this.player.drop }
+      if (data.who === 'Opponent') { data.drop = this.opponent.drop }
+      if (data.todo === 'pick') { this.pick(data) }
+      if (data.todo === 'DROP TO HAND') { this.dropToHand(data) }
+      if (data.todo === 'DROP TO BIND') { this.dropToBind(data) }
+      if (data.todo === 'DROP TO DECK') { this.dropToDeck(data) }
+      if (data.todo === 'DROP TO FIELD') { this.dropToField(data) }
+    },
+    clearEffect (data) {
+      const clear = {
+        active: false,
+        todo: '',
+        target: {
+          isTarget: false,
+          grade: ''
+        }
+      }
+      this.effect.player = { clear }
+      this.effect.opponent = { clear }
+    },
+    unit (data) {
+      if (data.who === 'Opponent') {
+        if (data.who === this.turn) { // TARGET OPPONENT SELF
+          const target = this.effect.opponent.target
+          if (target.who === 'SELF') {
+            if (data.from === 'HAND') {
+              const card = this.opponent.hand[data.index]
+              if (card.name.search(target.name) >= 0) {
+                this.HAND(data)
+                if (data.RES.todo === 'GET AUTO POWER') {
+                  this.GAP({ who: data.who, index: data.RES.index, gain: data.RES.gain })
+                }
+                if (data.RES.todo === 'search') {
+                  this.DECK({ who: data.who, todo: data.RES.todo, RESEFF: data.RES.effect.todo, filter: true, filterSearch: data.RES.effect.target.filterName, filterNotName: data.RES.effect.target.filterNotName })
+                }
+                this.clearEffect(data)
+                if (data.RES.todo === 'TARGET OPPONENT UNIT') {
+                  alert('Effect actived, choose opponent unit')
+                  this.effect.opponent = data.RES.effect
+                }
+              } else {
+                alert('Target tidak sesuai')
+              }
+            }
+            if (data.from === 'FIELD') {
+              const unit = this.opponent.field[data.index]
+              if (data.RES.todo === 'DAMAGE TO OPPONENT') {
+                this.DMG({ who: 'Player', deal: unit.totalPow })
+              }
+              this.FIELD(data)
+              if (data.RES.todo === 'pick') {
+                this.DROP({ who: data.who, todo: data.RES.todo, RESEFF: data.RES.effect.todo })
+              }
+              this.clearEffect(data)
+            }
+          }
+        } else { // TARGET BY PLAYER
+          const BF = this.opponent.field
+          const target = this.effect.player.target
+          if (target.isTarget) {
+            if (target.grade === '2 OR LESS') {
+              if (BF[data.index].card.grade <= 2) {
+                if (data.from === 'FIELD') { this.FIELD(data) }
+                this.clearEffect(data)
+              } else {
+                alert('Target tidak sesuai')
+              }
+            }
+            if (target.grade === 'EQUAL 1') {
+              if (BF[data.index].card.grade === 1) {
+                if (data.from === 'FIELD') { this.FIELD(data) }
+                this.clearEffect(data)
+              } else {
+                alert('Target tidak sesuai')
+              }
+            }
+            if (target.grade === 'ALL') {
+              if (data.from === 'FIELD') { this.FIELD(data) }
+              this.clearEffect(data)
+            }
+          }
+        }
+      } else {
+        if (data.who === this.turn) { // TARGET PLAYER SELF
+          const target = this.effect.player.target
+          if (target.who === 'SELF') {
+            if (data.from === 'HAND') {
+              const card = this.player.hand[data.index]
+              if (card.name.search(target.name) >= 0) {
+                this.HAND(data)
+                if (data.RES.todo === 'GET AUTO POWER') {
+                  this.GAP({ who: data.who, index: data.RES.index, gain: data.RES.gain })
+                }
+                if (data.RES.todo === 'search') {
+                  this.DECK({ who: data.who, todo: data.RES.todo, RESEFF: data.RES.effect.todo, filter: true, filterSearch: data.RES.effect.target.filterName, filterNotName: data.RES.effect.target.filterNotName })
+                }
+                this.clearEffect(data)
+                if (data.RES.todo === 'TARGET OPPONENT UNIT') {
+                  alert('Effect actived, choose opponent unit')
+                  this.effect.player = data.RES.effect
+                }
+              } else {
+                alert('Target tidak sesuai')
+              }
+            }
+            if (data.from === 'FIELD') {
+              const unit = this.player.field[data.index]
+              if (data.RES.todo === 'DAMAGE TO OPPONENT') {
+                this.DMG({ who: 'Opponent', deal: unit.totalPow })
+              }
+              this.FIELD(data)
+              if (data.RES.todo === 'pick') {
+                this.DROP({ who: data.who, todo: data.RES.todo, RESEFF: data.RES.effect.todo })
+              }
+              this.clearEffect(data)
+            }
+          }
+        } else { // TARGET BY OPPONENT
+          const BF = this.player.field
+          const target = this.effect.opponent.target
+          if (target.isTarget) {
+            if (target.grade === '2 OR LESS') {
+              if (BF[data.index].card.grade <= 2) {
+                if (data.from === 'FIELD') { this.FIELD(data) }
+                this.clearEffect(data)
+              } else {
+                alert('Target tidak sesuai')
+              }
+            }
+            if (target.grade === 'EQUAL 1') {
+              if (BF[data.index].card.grade === 1) {
+                if (data.from === 'FIELD') { this.FIELD(data) }
+                this.clearEffect(data)
+              } else {
+                alert('Target tidak sesuai')
+              }
+            }
+            if (target.grade === 'ALL') {
+              if (data.from === 'FIELD') { this.FIELD(data) }
+              this.clearEffect(data)
+            }
+          }
+        }
+      }
+    },
+    shuffle (data) {
+      const deck = data.deck
+      const shuffle = []
+      while (deck.length > 0) {
+        const index = Math.floor(Math.random() * deck.length) // RANDOM
+        const card = deck[index] // RANDOM CARD
+        shuffle.push(card)
+        deck.splice(index, 1)
+      }
+      if (data.who === 'Player') { this.player.deck.deck = shuffle }
+      if (data.who === 'Opponent') { this.opponent.deck.deck = shuffle }
+    },
+    draw (data) {
       let deck = []
       let hand = []
-      let drop = []
       let notif = ''
-      if (who === 'Player') {
+      if (data.who === 'Player') {
         deck = this.player.deck.deck
         hand = this.player.hand
-        drop = this.player.drop
         notif = 'You Lose'
-      } else {
+      }
+      if (data.who === 'Opponent') {
         deck = this.opponent.deck.deck
         hand = this.opponent.hand
-        drop = this.opponent.drop
         notif = 'You Win'
       }
       if (hand.length < 12) {
         hand.push(deck[0])
         deck.splice(0, 1)
-        this.EFCONT({ who: who, event: 'DRAW A CARD' })
-        if (deck.length === 0) {
-          Toast('error', notif)
-          this.$router.replace({
-            name: 'Home'
-          })
-        }
+        this.EFCONT({ who: data.who, event: 'DRAW A CARD' })
+        this.gameover({ deck: deck, notif: notif })
       } else {
-        Toast('error', 'Maksimal 12 Kartu Ditangan')
-        drop.push(deck[0])
-        deck.splice(0, 1)
-        const ID = drop.length - 1
-        const UD = drop[ID]
-        this.EFAUTO({ who: who, code: UD.code, index: ID, stat: 'EFDROP' })
-        this.EFCONT({ who: who, event: 'SEND TO DROP' })
-        if (deck.length === 0) {
-          Toast('error', notif)
-          this.$router.replace({
-            name: 'Home'
-          })
-        }
+        this.Toast('error', 'Maksimal 12 Kartu Ditangan')
+        this.DECK({ who: data.who, todo: 'mill' })
       }
     },
-    OD (data) { // On Display
-      this.display = data
-    },
-    onATK (data) {
+    mill (data) {
       if (data.who === 'Player') {
-        const unit = this.player.field[data.index]
-        this.player.indexATK = data.index
-        if (unit.position === 'Stand') {
-          unit.position = 'Rest'
-          this.EFCONT({ who: 'Player', event: 'UNIT TO REST' })
-          this.EFAUTO({ who: 'Player', code: unit.card.code, index: data.index, stat: 'EFATK' })
-          this.player.atk = unit.totalPow
-        }
+        data.drop = this.player.drop
+        data.deck = this.player.deck.deck
       } else {
-        const unit = this.opponent.field[data.index]
-        this.opponent.indexATK = data.index
-        if (unit.position === 'Stand') {
-          unit.position = 'Rest'
-          this.EFCONT({ who: 'Opponent', event: 'UNIT TO REST' })
-          this.EFAUTO({ who: 'Opponent', code: unit.card.code, index: data.index, stat: 'EFATK' })
-          this.opponent.atk = unit.totalPow
+        data.drop = this.opponent.drop
+        data.deck = this.opponent.deck.deck
+      }
+      data.drop.push(data.deck[0])
+      data.deck.splice(0, 1)
+      const index = data.drop.length - 1
+      const card = data.drop[index]
+      this.EFAUTO({ who: data.who, code: card.code, index: index, stat: 'EFDROP' })
+      this.EFCONT({ who: data.who, event: 'SEND TO DROP' })
+      this.gameover(data)
+    },
+    search (data) { // Search Deck
+      let cards = []
+      if (!data.filter) {
+        cards = data.deck
+      } else {
+        if (data.filterGrade === 'EQUAL 1') {
+          data.deck.map((card) => {
+            if (card.grade === 1) {
+              cards.push(card)
+            }
+          })
+        }
+        if (data.filterRaceOrSpecial) {
+          data.deck.map((card) => {
+            if (card.type.race === data.race || card.type.special === data.special) {
+              cards.push(card)
+            }
+          })
+        }
+        if (data.filterRace) {
+          data.deck.map((card) => {
+            if (card.type.race === data.race) {
+              cards.push(card)
+            }
+          })
+          if (data.filterNotName) {
+            const notCards = []
+            cards.map((card) => {
+              if (card.name !== data.filterNotName) {
+                notCards.push(card)
+              }
+            })
+            cards = notCards
+          }
+        }
+        if (data.filterJob) {
+          data.deck.map((card) => {
+            if (card.type.job === data.job) {
+              cards.push(card)
+            }
+          })
+        }
+        if (data.filterName === true) {
+          data.deck.map((card) => {
+            if (card.name === data.name) {
+              cards.push(card)
+            }
+          })
+        }
+        if (data.filterSearch) {
+          data.deck.map((card) => {
+            if (card.name.search(data.filterSearch) >= 0) {
+              cards.push(card)
+            }
+          })
+          if (data.filterNotName) {
+            const notCards = []
+            cards.map((card) => {
+              if (card.name !== data.filterNotName) {
+                notCards.push(card)
+              }
+            })
+            cards = notCards
+          }
         }
       }
-    },
-    onDef (data) {
-      if (data.who.def === 'Player') {
-        const BF = this.player.field
-        const units = {}
-        for (let i = 0; i < BF.length; i++) {
-          const unit = BF[i]
-          if (i === 0 && unit.position === 'Stand') { units.u0 = unit.card.name }
-          if (i === 1 && unit.position === 'Stand') { units.u1 = unit.card.name }
-          if (i === 2 && unit.position === 'Stand') { units.u2 = unit.card.name }
-          if (i === 3 && unit.position === 'Stand') { units.u3 = unit.card.name }
-          if (i === 4 && unit.position === 'Stand') { units.u4 = unit.card.name }
-          if (i === 5 && unit.position === 'Stand') { units.u5 = unit.card.name }
-        }
-        this.$swal.fire({
-          title: 'Select Unit to Block',
-          input: 'select',
-          inputOptions: { units },
-          showCancelButton: true,
-          inputValidator: (value) => {
-            let index = ''
-            if (value === 'u0') { index = 0 }
-            if (value === 'u1') { index = 1 }
-            if (value === 'u2') { index = 2 }
-            if (value === 'u3') { index = 3 }
-            if (value === 'u4') { index = 4 }
-            if (value === 'u5') { index = 5 }
-            data.index.def = index
-            const unit = BF[index]
-            unit.position = 'Rest'
-            this.EFCONT({ who: 'Player', event: 'UNIT TO REST' })
-            this.EFAUTO({ who: 'Player', code: unit.card.code, index: index, stat: 'EFDEF' })
-            this.player.def = unit.totalPow
-            this.onRB(data)
-          }
-        }).then((res) => {
-          if (res.dismiss === 'cancel') {
-            this.DMG({ who: 'Player', deal: this.opponent.atk })
-            this.opponent.atk = 0
-          }
-        })
-      } else {
-        const BF = this.opponent.field
-        const units = {}
-        for (let i = 0; i < BF.length; i++) {
-          const unit = BF[i]
-          if (i === 0 && unit.position === 'Stand') { units.u0 = unit.card.name }
-          if (i === 1 && unit.position === 'Stand') { units.u1 = unit.card.name }
-          if (i === 2 && unit.position === 'Stand') { units.u2 = unit.card.name }
-          if (i === 3 && unit.position === 'Stand') { units.u3 = unit.card.name }
-          if (i === 4 && unit.position === 'Stand') { units.u4 = unit.card.name }
-          if (i === 5 && unit.position === 'Stand') { units.u5 = unit.card.name }
-        }
-        this.$swal.fire({
-          title: 'Select Unit to Block',
-          input: 'select',
-          inputOptions: { units },
-          showCancelButton: true,
-          inputValidator: (value) => {
-            let index = ''
-            if (value === 'u0') { index = 0 }
-            if (value === 'u1') { index = 1 }
-            if (value === 'u2') { index = 2 }
-            if (value === 'u3') { index = 3 }
-            if (value === 'u4') { index = 4 }
-            if (value === 'u5') { index = 5 }
-            data.index.def = index
-            const unit = BF[index]
-            unit.position = 'Rest'
-            this.EFCONT({ who: 'Opponent', event: 'UNIT TO REST' })
-            this.EFAUTO({ who: 'Opponent', code: unit.card.code, index: index, stat: 'EFDEF' })
-            this.opponent.def = unit.totalPow
-            this.onRB(data)
-          }
-        }).then((res) => {
-          if (res.dismiss === 'cancel') {
-            this.DMG({ who: 'Opponent', deal: this.player.atk })
-            this.player.atk = 0
-          }
-        })
-      }
-    },
-    onRB (data) { // Rest Battle
-      if (data.who.atk === 'Player') {
-        const ATK = this.player.atk
-        const DEF = this.opponent.def
-        if (ATK > DEF) {
-          this.UDF({ who: 'Opponen', index: data.index.def })
-        } else if (ATK < DEF) {
-          this.UDF({ who: 'Player', index: data.index.atk })
-        } else if (ATK === DEF) {
-          this.UDF({ who: 'Opponen', index: data.index.def })
-          this.UDF({ who: 'Player', index: data.index.atk })
-        }
-        this.player.atk = 0
-        this.opponent.def = 0
-      } else {
-        const ATK = this.opponent.atk
-        const DEF = this.player.def
-        if (ATK > DEF) {
-          this.UDF({ who: 'Player', index: data.index.def })
-        } else if (ATK < DEF) {
-          this.UDF({ who: 'Opponen', index: data.index.atk })
-        } else if (ATK === DEF) {
-          this.UDF({ who: 'Player', index: data.index.def })
-          this.UDF({ who: 'Opponen', index: data.index.atk })
-        }
-        this.opponent.atk = 0
-        this.player.def = 0
-      }
-    },
-    ADD (data) { // Add Card
       this.info = {
         isOpen: true,
         who: data.who,
-        zone: data.zone,
-        card: data.card,
-        todo: data.todo,
-        uindex: data.uindex
+        zone: 'DECK',
+        card: cards,
+        todo: data.RESEFF,
+        uindex: data.index
       }
     },
-    AFD (data) { // Add From Deck
-      if (data.who === 'Player') {
-        const deck = this.player.deck.deck
-        const card = deck[data.index]
-        this.player.hand.push(card)
-        deck.splice(data.index, 1)
-        this.DPS()
+    pick (data) { // Search Deck
+      let cards = []
+      if (!data.filter) {
+        cards = data.drop
       } else {
-        const deck = this.opponent.deck.deck
-        const card = deck[data.index]
-        this.opponent.hand.push(card)
-        deck.splice(data.index, 1)
-        this.DOS()
-      }
-      this.closeInfo()
-    },
-    HTD (data) { // Hand to Deck
-      if (data.who === 'Player') {
-        const hand = this.player.hand
-        const card = hand[data.index]
-        this.player.deck.deck.push(card)
-        hand.splice(data.index, 1)
-      } else {
-        const hand = this.opponent.hand
-        const card = hand[data.index]
-        this.opponent.deck.deck.push(card)
-        hand.splice(data.index, 1)
-      }
-      this.closeInfo()
-    },
-    DTF (data) { // Deck to Field
-      const Toast = (icon, title) => {
-        this.$swal.mixin().fire({
-          icon: icon,
-          title: title,
-          toast: true,
-          position: 'top-end',
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true
-        })
-      }
-      if (data.who === 'Player') {
-        const deck = this.player.deck.deck
-        const card = deck[data.index]
-        const BF = this.player.field
-        if (BF.length < 6) {
-          BF.push({
-            card: card,
-            position: 'Stand',
-            gainAuto: 0,
-            gaintCont: 0,
-            totalPow: card.power,
-            otherCont: [],
-            OPT: false, // One Per Turn
-            CON: false // Continu Effect
+        if (data.filterGrade === 'EQUAL 1') {
+          data.drop.map((card) => {
+            if (card.grade === 1) {
+              cards.push(card)
+            }
           })
-          deck.splice(data.index, 1)
-          this.DPS()
-          this.closeInfo()
-          const index = BF.length - 1
-          const unit = BF[index].card
-          this.EFAUTO({ who: 'Player', code: unit.code, index: index, stat: 'EFCAL' })
-          this.EFCONT({ who: 'Player', event: 'COUNT UNIT ON FIELD' })
-        } else {
-          Toast('error', 'Field Penuh')
-          this.closeInfo()
         }
-      } else {
-        const deck = this.opponent.deck.deck
-        const card = deck[data.index]
-        const BF = this.opponent.field
-        if (BF.length < 6) {
-          BF.push({
-            card: card,
-            position: 'Stand',
-            gainAuto: 0,
-            gaintCont: 0,
-            totalPow: card.power,
-            otherCont: [],
-            OPT: false, // One Per Turn
-            CON: false // Continu Effect
+        if (data.filterName === true) {
+          data.drop.map((card) => {
+            if (card.name === data.name) {
+              cards.push(card)
+            }
           })
-          deck.splice(data.index, 1)
-          this.DOS()
-          this.closeInfo()
-          const index = BF.length - 1
-          const unit = BF[index].card
-          this.EFAUTO({ who: 'Opponent', code: unit.code, index: index, stat: 'EFCAL' })
-          this.EFCONT({ who: 'Opponent', event: 'COUNT UNIT ON FIELD' })
-        } else {
-          Toast('error', 'Field Penuh')
-          this.closeInfo()
+        }
+      }
+      if (cards.length > 0) {
+        this.info = {
+          isOpen: true,
+          who: data.who,
+          zone: 'DROP',
+          card: cards,
+          todo: data.RESEFF,
+          uindex: data.index
         }
       }
     },
-    CFH (data) { // Call From Hand
-      if (data.who === 'Player') {
-        const BF = this.player.field
-        const HP = this.player.hand
-        const unit = this.player.hand[data.index]
-        BF.push({
-          card: unit,
-          position: 'Stand',
-          gainAuto: 0,
-          gaintCont: 0,
-          totalPow: unit.power,
-          otherCont: [],
-          OPT: false, // One Per Turn
-          CON: false // Continu Effect
-        })
-        this.EFAUTO({ who: 'Player', code: unit.code, index: data.index, stat: 'EFCAL' })
-        this.EFCONT({ who: 'Player', event: 'COUNT UNIT ON FIELD' })
-        HP.splice(data.index, 1)
+    choose (data) { // choose an unit
+      let cards = []
+      if (!data.filter) {
+        cards = data.BF
       } else {
-        const BF = this.opponent.field
-        const HO = this.opponent.hand
-        const unit = this.opponent.hand[data.index]
-        BF.push({
-          card: unit,
-          position: 'Stand',
-          gainAuto: 0,
-          gaintCont: 0,
-          totalPow: unit.power,
-          otherCont: [],
-          OPT: false, // One Per Turn
-          CON: false // Continu Effect
-        })
-        this.EFAUTO({ who: 'Opponent', code: unit.code, index: data.index, stat: 'EFCAL' })
-        this.EFCONT({ who: 'Opponent', event: 'COUNT UNIT ON FIELD' })
-        HO.splice(data.index, 1)
+        if (data.filterGrade === 'EQUAL 1') {
+          data.BF.map((unit) => {
+            if (unit.card.grade === 1) {
+              cards.push(unit.card)
+            }
+          })
+        }
+      }
+      if (cards.length > 0) {
+        this.info = {
+          isOpen: true,
+          who: data.who,
+          zone: 'FIELD',
+          card: cards,
+          todo: data.RESEFF,
+          uindex: data.index
+        }
       }
     },
-    UTR (data) { // UNIT TO REST
-      let BF = []
-      let unit = {}
-      if (data.who === 'Player') {
-        BF = this.player.field
-        unit = BF[data.index]
-      } else {
-        BF = this.opponent.field
-        unit = BF[data.index]
+    select (data) { // Select Card Hand
+      let cards = []
+      if (!data.filter) {
+        cards = data.hand
       }
-      unit.position = 'Rest'
-      this.EFCONT({ who: 'Opponent', event: 'UNIT TO REST' })
+      this.info = {
+        isOpen: true,
+        who: data.who,
+        zone: 'HAND',
+        card: cards,
+        todo: data.RESEFF,
+        uindex: data.index
+      }
+    },
+    card (data) {
+      if (data.from === 'DECK') { this.DECK(data) }
+      if (data.from === 'HAND') { this.HAND(data) }
+      if (data.from === 'FIELD') { this.FIELD(data) }
+      if (data.from === 'DROP') { this.DROP(data) }
+    },
+    addToHand (data) {
+      let cards = []
+      let hand = []
+      if (data.from === 'DECK') { cards = data.deck }
+      if (data.who === 'Player') { hand = this.player.hand }
+      if (data.who === 'Opponent') { hand = this.opponent.hand }
+      const card = cards[data.index]
+      hand.push(card)
+      cards.splice(data.index, 1)
+      if (data.from === 'DECK') { this.DECK({ who: data.who, todo: 'shuffle' }) }
       this.closeInfo()
     },
-    UDF (data) { // Unit Destroy on Field
-      let BF = []
-      let DZ = []
-      let unit = {}
-      if (data.who === 'Player') {
-        BF = this.player.field
-        DZ = this.player.drop
-        unit = this.player.field[data.index].card
-      } else {
-        BF = this.opponent.field
-        DZ = this.opponent.drop
-        unit = this.opponent.field[data.index].card
-      }
-      DZ.push(unit)
-      BF.splice(data.index, 1)
+    handToDeck (data) {
+      const card = data.hand[data.index]
+      if (data.who === 'Player') { this.player.deck.deck.push(card) }
+      if (data.who === 'Opponent') { this.opponent.deck.deck.push(card) }
+      data.hand.splice(data.index, 1)
       this.closeInfo()
-      const ID = DZ.length - 1
-      const UD = DZ[ID]
-      this.EFAUTO({ who: data.who, code: UD.code, index: ID, stat: 'EFDROP' })
-      this.EFAUTO({ who: data.who, code: UD.code, index: ID, stat: 'EFDSBT' })
+    },
+    handToField (data) {
+      if (data.who === 'Player') { data.BF = this.player.field }
+      if (data.who === 'Opponent') { data.BF = this.opponent.field }
+      data.unit = data.hand[data.index]
+      this.call(data)
+      if (data.who === 'Player') { this.player.hand.splice(data.index, 1) }
+      if (data.who === 'Opponent') { this.opponent.hand.splice(data.index, 1) }
+    },
+    handToDrop (data) { // DISCARD
+      const card = data.hand[data.index]
+      let drop = []
+      if (data.who === 'Player') { drop = this.player.drop }
+      if (data.who === 'Opponent') { drop = this.opponent.drop }
+      data.hand.splice(data.index, 1)
+      drop.push(card)
+      const index = drop.length - 1
+      const unit = drop[index]
+      this.EFAUTO({ who: data.who, code: unit.code, index: index, stat: 'EFDROP' })
+      this.closeInfo()
+    },
+    deckToField (data) {
+      if (data.who === 'Player') { data.BF = this.player.field }
+      if (data.who === 'Opponent') { data.BF = this.opponent.field }
+      data.unit = data.deck[data.index]
+      this.call(data)
+      if (data.who === 'Player') { this.player.deck.deck.splice(data.index, 1) }
+      if (data.who === 'Opponent') { this.opponent.deck.deck.splice(data.index, 1) }
+      if (data.from === 'DECK') { this.DECK({ who: data.who, todo: 'shuffle' }) }
+      this.closeInfo()
+    },
+    fieldToDrop (data) {
+      data.unit = data.BF[data.index].card
+      let drop = []
+      if (data.who === 'Player') { drop = this.player.drop }
+      if (data.who === 'Opponent') { drop = this.opponent.drop }
+      drop.push(data.unit)
+      if (data.who === 'Player') { this.player.field.splice(data.index, 1) }
+      if (data.who === 'Opponent') { this.opponent.field.splice(data.index, 1) }
+      this.closeInfo()
+      const index = drop.length - 1
+      const unit = drop[index]
+      this.EFAUTO({ who: data.who, code: unit.code, index: index, stat: 'EFDROP' })
+      this.EFAUTO({ who: data.who, code: unit.code, index: index, stat: 'EFDSBT' })
       this.EFCONT({ who: data.who, event: 'SEND TO DROP' })
       this.EFCONT({ who: data.who, event: 'COUNT UNIT ON FIELD' })
     },
-    UBF (data) { // Unit Field to Bind
-      let BF = []
+    fieldToBind (data) {
+      data.unit = data.BF[data.index].card
       let bind = []
-      let unit = {}
-      if (data.who === 'Player') {
-        BF = this.player.field
-        bind = this.player.bind
-        unit = this.player.field[data.index].card
-      } else {
-        BF = this.opponent.field
-        bind = this.opponent.bind
-        unit = this.opponent.field[data.index].card
-      }
-      bind.push(unit)
-      BF.splice(data.index, 1)
+      if (data.who === 'Player') { bind = this.player.bind }
+      if (data.who === 'Opponent') { bind = this.opponent.bind }
+      bind.push(data.unit)
+      if (data.who === 'Player') { this.player.field.splice(data.index, 1) }
+      if (data.who === 'Opponent') { this.opponent.field.splice(data.index, 1) }
       this.closeInfo()
       this.EFCONT({ who: data.who, event: 'COUNT UNIT ON FIELD' })
-      // const ID = bind.length - 1
-      // const UB = bind[IB]
-      // this.EFAUTO({ who: data.who, code: UB.code, index: ID, stat: 'EFBIND' })
-      // this.EFCONT({ who: data.who, event: 'SEND TO BIND' })
     },
-    FTH (data) { // Field to Hand
-      let BF = []
-      let DZ = []
+    fieldToHand (data) {
+      data.unit = data.BF[data.index].card
       let hand = []
-      let unit = {}
-      if (data.who === 'Player') {
-        BF = this.player.field
-        DZ = this.player.drop
-        hand = this.player.hand
-        unit = this.player.field[data.index].card
-      } else {
-        BF = this.opponent.field
-        DZ = this.opponent.drop
-        hand = this.opponent.hand
-        unit = this.opponent.field[data.index].card
-      }
-      if (hand.length < 12) {
-        hand.push(unit)
-        BF.splice(data.index, 1)
-        this.EFCONT({ who: data.who, event: 'COUNT UNIT ON FIELD' })
-      } else {
-        DZ.push(unit)
-        BF.splice(data.index, 1)
-      }
+      if (data.who === 'Player') { hand = this.player.hand }
+      if (data.who === 'Opponent') { hand = this.opponent.hand }
+      hand.push(data.unit)
+      if (data.who === 'Player') { this.player.field.splice(data.index, 1) }
+      if (data.who === 'Opponent') { this.opponent.field.splice(data.index, 1) }
       this.closeInfo()
+      this.EFCONT({ who: data.who, event: 'COUNT UNIT ON FIELD' })
     },
-    FTD (data) { // FIELD TO DECK
-      let BF = []
+    fieldToDeck (data) {
+      data.unit = data.BF[data.index].card
       let deck = []
-      let unit = {}
-      if (data.who === 'Player') {
-        BF = this.player.field
-        deck = this.player.deck.deck
-        unit = BF[data.index].card
-      } else {
-        BF = this.opponent.field
-        deck = this.opponent.deck.deck
-        unit = BF[data.index].card
-      }
-      deck.push(unit)
-      BF.splice(data.index, 1)
+      if (data.who === 'Player') { deck = this.player.deck.deck }
+      if (data.who === 'Opponent') { deck = this.opponent.deck.deck }
+      deck.push(data.unit)
+      if (data.who === 'Player') { this.player.field.splice(data.index, 1) }
+      if (data.who === 'Opponent') { this.opponent.field.splice(data.index, 1) }
+      this.closeInfo()
+      this.EFCONT({ who: data.who, event: 'COUNT UNIT ON FIELD' })
+    },
+    unitToRest (data) {
+      data.unit = data.BF[data.index]
+      data.unit.position = 'Rest'
+      this.EFCONT({ who: data.who, event: 'UNIT TO REST' })
       this.closeInfo()
     },
-    DRTH (data) { // DROP TO HAND
-      let drop = []
+    unitToStand (data) {
+      data.unit = data.BF[data.index]
+      data.unit.position = 'Stand'
+      this.EFCONT({ who: data.who, event: 'UNIT TO STAND' })
+      this.EFCONT({ who: data.who, event: 'UNIT TO REST' })
+      this.closeInfo()
+    },
+    dropToHand (data) {
+      data.unit = data.drop[data.index]
       let hand = []
-      let card = {}
-      if (data.who === 'Player') {
-        drop = this.player.drop
-        hand = this.player.hand
-        card = this.player.drop[data.index]
-      } else {
-        drop = this.opponent.drop
-        hand = this.opponent.hand
-        card = this.opponent.drop[data.index]
-      }
+      if (data.who === 'Player') { hand = this.player.hand }
+      if (data.who === 'Opponent') { hand = this.opponent.hand }
       if (hand.length < 12) {
-        hand.push(card)
-        drop.splice(data.index, 1)
+        hand.push(data.unit)
+        if (data.who === 'Player') { this.player.drop.splice(data.index, 1) }
+        if (data.who === 'Opponent') { this.opponent.drop.splice(data.index, 1) }
       } else {
         alert('Cards Hand is Full')
       }
       this.closeInfo()
     },
-    DRTB (data) { // Drop to Bind
-      let drop = []
+    dropToBind (data) {
+      data.unit = data.drop[data.index]
       let bind = []
-      if (data.who === 'Player') {
-        drop = this.player.drop
-        bind = this.player.bind
-      } else {
-        drop = this.opponent.drop
-        bind = this.opponent.bind
-      }
-      const unit = drop[data.index]
-      bind.push(unit)
-      drop.splice(data.index, 1)
+      if (data.who === 'Player') { bind = this.player.bind }
+      if (data.who === 'Opponent') { bind = this.opponent.bind }
+      bind.push(data.unit)
+      if (data.who === 'Player') { this.player.drop.splice(data.index, 1) }
+      if (data.who === 'Opponent') { this.opponent.drop.splice(data.index, 1) }
+      this.closeInfo()
     },
-    DRTD (data) { // Drop to Deck
-      let drop = []
+    dropToDeck (data) {
+      data.unit = data.drop[data.index]
       let deck = []
-      if (data.who === 'Player') {
-        drop = this.player.drop
-        deck = this.player.deck.deck
-      } else {
-        drop = this.opponent.drop
-        deck = this.opponent.deck.deck
-      }
-      const unit = drop[data.index]
-      deck.push(unit)
-      drop.splice(data.index, 1)
+      if (data.who === 'Player') { deck = this.player.deck.deck }
+      if (data.who === 'Opponent') { deck = this.opponent.deck.deck }
+      deck.push(data.unit)
+      if (data.who === 'Player') { this.player.drop.splice(data.index, 1) }
+      if (data.who === 'Opponent') { this.opponent.drop.splice(data.index, 1) }
+      this.closeInfo()
     },
-    DRTF (data) { // Drop to Field
-      console.log('DROP TO FIELD')
-      const Toast = (icon, title) => {
-        this.$swal.mixin().fire({
-          icon: icon,
-          title: title,
-          toast: true,
-          position: 'top-end',
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true
+    dropToField (data) {
+      data.unit = data.drop[data.index]
+      if (data.who === 'Player') { data.BF = this.player.field }
+      if (data.who === 'Opponent') { data.BF = this.opponent.field }
+      if (data.BF.length < 6) {
+        this.call(data)
+        const index = data.BF.length - 1
+        this.EFAUTO({ who: data.who, code: data.BF[index].card.code, index: index, stat: 'EFCALDR' })
+        if (data.who === 'Player') { this.player.drop.splice(data.index, 1) }
+        if (data.who === 'Opponent') { this.opponent.drop.splice(data.index, 1) }
+      }
+      this.closeInfo()
+    },
+    call (data) {
+      if (data.BF.length < 6) {
+        data.BF.push({
+          card: data.unit,
+          position: 'Stand',
+          gainAuto: 0,
+          gaintCont: 0,
+          totalPow: data.unit.power,
+          otherCont: [],
+          OPT: false // One Per Turn
+        })
+        const index = data.BF.length - 1
+        const unit = data.BF[index].card
+        this.EFAUTO({ who: data.who, code: unit.code, index: index, stat: 'EFCAL' })
+        this.EFCONT({ who: data.who, event: 'COUNT UNIT ON FIELD' })
+      } else {
+        this.Toast('error', 'Field Penuh')
+        this.closeInfo()
+      }
+    },
+    callEvo (data) {
+      this.$swal.fire({
+        title: `Aktifkan Effek ${data.name}?`,
+        showCancelButton: true,
+        confirmButtonText: 'YES',
+        cancelButtonText: 'NO'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          data.todo = 'FIELD TO DECK'
+          this.FIELD(data)
+          this.randomCall(data)
+        }
+      })
+    },
+    randomCall (data) {
+      const cards = []
+      if (data.who === 'Player') { data.deck = this.player.deck.deck }
+      if (data.who === 'Opponent') { data.deck = this.opponent.deck.deck }
+      for (let i = 0; i < data.deck.length; i++) {
+        if (data.deck[i].grade === data.grade && data.deck[i].name === data.name) {
+          cards.push({ card: data.deck[i], index: i })
+        }
+      }
+      if (cards.length > 0) {
+        const index = Math.floor(Math.random() * cards.length)
+        const unit = cards[index]
+        data.todo = 'DECK TO FIELD'
+        data.index = unit.index
+        this.DECK(data)
+      } else {
+        alert('Target tidak ditemukan')
+      }
+    },
+    randomCallBack (data) {
+      const cards = []
+      let deck = []
+      let BF = []
+      if (data.who === 'Player') {
+        deck = this.player.deck.deck
+        BF = this.player.field
+      } else {
+        deck = this.opponent.deck.deck
+        BF = this.opponent.field
+      }
+      for (let i = 0; i < deck.length; i++) {
+        if (deck[i].name === data.name && deck[i].grade <= data.grade) {
+          cards.push({ card: deck[i], index: i })
+        }
+      }
+      if (cards.length > 0) {
+        const random = Math.floor(Math.random() * cards.length)
+        BF[data.index] = {
+          card: cards[random].card,
+          position: 'Stand',
+          gainAuto: 0,
+          gaintCont: 0,
+          totalPow: cards[random].card.power,
+          otherCont: [],
+          OPT: false
+        }
+        deck.splice(cards[random].index, 1)
+        const index = BF.length - 1
+        const unit = BF[index].card
+        this.EFAUTO({ who: 'Player', code: unit.code, index: index, stat: 'EFCAL' })
+        this.EFCONT({ who: 'Player', event: 'COUNT UNIT ON FIELD' })
+      } else {
+        BF.splice(data.index, 1)
+      }
+    },
+    EFOPT (data) {
+      data.unit = data.BF[data.index]
+      if (data.unit.OPT === false) {
+        data.unit.OPT = true
+      } else {
+        alert('Effect One Per Turn')
+      }
+    },
+    COST (data) {
+      if (data.COST === 'PAY LIFE POINTS') {
+        this.DMG({ who: data.who, deal: data.pay })
+      }
+    },
+    RESEF (data) {
+      if (data.RESEFF === 'UNIT TO REST') {
+        if (data.who === 'Player') { data.op = 'Opponent' }
+        if (data.who === 'Opponent') { data.op = 'Player' }
+        this.FIELD({
+          who: data.op,
+          filter: true,
+          filterGrade: data.target,
+          todo: 'choose',
+          RESEFF: data.RESEFF
         })
       }
-      if (data.who === 'Player') {
-        const drop = this.player.drop
-        const card = drop[data.index]
-        const BF = this.player.field
-        if (BF.length < 6) {
-          BF.push({
-            card: card,
-            position: 'Stand',
-            gainAuto: 0,
-            gaintCont: 0,
-            totalPow: card.power,
-            otherCont: [],
-            OPT: false, // One Per Turn
-            CON: false // Continu Effect
-          })
-          drop.splice(data.index, 1)
-          this.closeInfo()
-          const index = BF.length - 1
-          const unit = BF[index]
-          console.log(unit)
-          console.log(index)
-          this.EFAUTO({ who: 'Player', code: unit.card.code, index: index, stat: 'EFCAL' })
-          this.EFAUTO({ who: 'Player', code: unit.card.code, index: index, stat: 'EFCALDR' })
-          this.EFCONT({ who: 'Player', event: 'COUNT UNIT ON FIELD' })
-        } else {
-          Toast('error', 'Field Penuh')
-          this.closeInfo()
-        }
-      } else {
-        const drop = this.opponent.drop
-        const card = drop[data.index]
-        const BF = this.opponent.field
-        if (BF.length < 6) {
-          BF.push({
-            card: card,
-            position: 'Stand',
-            gainAuto: 0,
-            gaintCont: 0,
-            totalPow: card.power,
-            otherCont: [],
-            OPT: false, // One Per Turn
-            CON: false // Continu Effect
-          })
-          drop.splice(data.index, 1)
-          this.closeInfo()
-          const index = BF.length - 1
-          const unit = BF[index]
-          this.EFAUTO({ who: 'Opponent', code: unit.code, index: index, stat: 'EFCAL' })
-          this.EFAUTO({ who: 'Opponent', code: unit.card.code, index: index, stat: 'EFCALDR' })
-          this.EFCONT({ who: 'Opponent', event: 'COUNT UNIT ON FIELD' })
-        } else {
-          Toast('error', 'Field Penuh')
-          this.closeInfo()
-        }
-      }
-    },
-    TARGETSELF (data) { // TARGET SELF UNIT
-      let unit = {}
-      if (data.who === 'Player') {
-        unit = this.player.field[data.index]
-      } else {
-        unit = this.opponent.field[data.index]
-      }
-      if (data.todo === 'STAND UNIT') {
-        unit.position = 'Stand'
-        this.EFCONT({ who: data.who, event: 'UNIT TO STAND' })
-      }
-    },
-    TARGETOWNER (data) { // TARGET NOT SELF UNIT
-      const cards = []
-      let BF = []
-      if (data.who === 'Player') {
-        BF = this.player.field
-        data.who = 'Player'
-      } else {
-        BF = this.opponent.field
-        data.who = 'Opponent'
-      }
-      for (let i = 0; i < BF.length; i++) {
-        if (i !== data.index) {
-          cards.push(BF[i].card)
-        } else {
-          cards.push({})
-        }
-      }
-      this.ADD({ who: data.who, zone: 'FIELD', card: cards, todo: data.todo, uindex: data.index })
-    },
-    TARGETALL (data) { // TARGET ALL
-      const cards = []
-      let BF = []
-      if (data.who === 'Player') {
-        BF = this.player.field
-      } else {
-        BF = this.opponent.field
-      }
-      BF.map((unit) => {
-        cards.push(unit.card)
-      })
-      this.ADD({ who: data.who, zone: 'FIELD', card: cards, todo: data.todo, uindex: data.index })
-    },
-    TARGETG2LESS (data) {
-      const cards = []
-      let BF = []
-      if (data.who === 'Player') {
-        BF = this.opponent.field
-        data.who = 'Opponent'
-      } else {
-        BF = this.player.field
-        data.who = 'Player'
-      }
-      BF.map((unit) => {
-        if (unit.card.grade < 3) {
-          cards.push(unit.card)
-        } else {
-          cards.push({})
-        }
-      })
-      if (cards.length > 0) {
-        this.ADD({ who: data.who, zone: 'FIELD', card: cards, todo: data.todo })
-      } else {
-        // alert('Tidak ada target')
-      }
-    },
-    TARGETG1 (data) { // Target G1 on Battle Field
-      const cards = []
-      let BF = []
-      if (data.who === 'Player') {
-        BF = this.opponent.field
-        data.who = 'Opponent'
-      } else {
-        BF = this.player.field
-        data.who = 'Player'
-      }
-      BF.map((unit) => {
-        if (unit.card.grade === 1) {
-          cards.push(unit.card)
-        } else {
-          cards.push({})
-        }
-      })
-      if (cards.length > 0) {
-        this.ADD({ who: data.who, zone: 'FIELD', card: cards, todo: data.todo })
-      } else {
-        // alert('Tidak ada target')
-      }
-    },
-    TARGETDECK (data) { // Target Deck by Name
-      const cards = []
-      let deck = []
-      if (data.who === 'Player') {
-        deck = this.player.deck.deck
-      } else {
-        deck = this.opponent.deck.deck
-      }
-      deck.map((unit) => {
-        if (unit.name.search(data.search) >= 0) {
-          if (data.notSearch !== '') {
-            if (unit.name !== data.notSearch) {
-              cards.push(unit)
-            }
-          } else {
-            cards.push(unit)
-          }
-        }
-      })
-      this.ADD({ who: data.who, zone: data.zone, card: cards, todo: data.todo })
-    },
-    TARGETDECKNG (data) { // TARGET DECK BY NAME AND GRADE
-      const cards = []
-      let deck = []
-      if (data.who === 'Player') {
-        deck = this.player.deck.deck
-      } else {
-        deck = this.opponent.deck.deck
-      }
-      deck.map((unit) => {
-        if (unit.name.search(data.name) >= 0 && unit.grade === data.grade) {
-          cards.push(unit)
-        }
-      })
-      if (cards.length > 0) {
-        this.ADD({ who: data.who, zone: 'FIELD', card: cards, todo: data.todo })
-      } else {
-        alert('Tidak ada target')
-      }
-    },
-    TARGETDECKNGLESS (data) { // TARGET DECK BY NAME AND GRADE
-      const cards = []
-      let deck = []
-      if (data.who === 'Player') {
-        deck = this.player.deck.deck
-      } else {
-        deck = this.opponent.deck.deck
-      }
-      deck.map((unit) => {
-        if (unit.name.search(data.name) >= 0 && unit.grade <= data.grade) {
-          cards.push(unit)
-        }
-      })
-      if (cards.length > 0) {
-        this.ADD({ who: data.who, zone: 'FIELD', card: cards, todo: data.todo })
-      } else {
-        alert('Tidak ada target')
-      }
-    },
-    TARGETDROP (data) { // Target Drop
-      const cards = []
-      let drop = []
-      if (data.who === 'Player') {
-        drop = this.player.drop
-      } else {
-        drop = this.opponent.drop
-      }
-      drop.map((unit) => {
-        if (unit.name.search(data.search) >= 0) {
-          if (data.notSearch !== '') {
-            if (unit.name !== data.notSearch) {
-              cards.push(unit)
-            }
-          } else {
-            cards.push(unit)
-          }
-        }
-      })
-      this.ADD({ who: data.who, zone: 'DROP', card: cards, todo: data.todo })
-    },
-    TARGETHAND (data) { // Target Card Hand
-      let cards = []
-      if (data.who === 'Player') {
-        cards = this.player.hand
-      } else {
-        cards = this.opponent.hand
-      }
-      this.ADD({ who: data.who, zone: 'HAND', card: cards, todo: data.todo, uindex: data.index })
-    },
-    Discard (data) { // Hand to Drop
-      let hand = []
-      let drop = []
-      if (data.who === 'Player') {
-        hand = this.player.hand
-        drop = this.player.drop
-      } else {
-        hand = this.opponent.hand
-        drop = this.opponent.drop
-      }
-      const unit = hand[data.index]
-      drop.push(unit)
-      hand.splice(data.index, 1)
-      const ID = drop.length - 1
-      const UD = drop[ID]
-      this.EFAUTO({ who: data.who, code: UD.code, index: ID, stat: 'EFDROP' })
-      this.EFCONT({ who: data.who, event: 'SEND TO DROP' })
     },
     DMG (data) {
       if (data.who === 'Player') {
@@ -1130,6 +1122,8 @@ export default {
       this.EFCONT({ who: data.who, event: 'GAIN LIFE POINT' })
     },
     GAP (data) { // Gain Auto Power
+      console.log('GAIN AUTO')
+      console.log(data)
       if (data.who === 'Player') {
         const unit = this.player.field[data.index]
         unit.gainAuto += data.gain
@@ -1171,19 +1165,66 @@ export default {
         }
       }
     },
-    EFCONT (data) { // Effect Cont
-      console.log('EFF CONT')
+    powerStack (data) {
+      let unit = {}
+      if (data.who === 'Player') {
+        unit = this.player.field[data.index]
+      } else {
+        unit = this.opponent.field[data.index]
+      }
+      console.log('UNIT')
+      console.log(unit)
       console.log(data)
+      data.gain += unit.gaintCont // (Stuck)
+      this.GCP(data)
+    },
+    ALLUNIT (units, code, gain) {
+      units.map((unit) => {
+        if (unit.otherCont.length > 0) {
+          let isCode = false
+          unit.otherCont.map((other) => {
+            if (other.code.search(code) >= 0) {
+              isCode = true
+            }
+            if (isCode) {
+              this.OTHER(unit, code, gain)
+            } else {
+              this.GETOP(unit, code, gain)
+              this.POWER(unit)
+            }
+          })
+        } else {
+          this.GETOP(unit, code, gain)
+          this.POWER(unit)
+        }
+        this.POWER(unit)
+      })
+    },
+    POWER (unit) { // TOTAL POWER
+      unit.totalPow = unit.card.power + unit.gaintCont + unit.gainAuto
+      unit.otherCont.map((other) => {
+        unit.totalPow += other.gain
+      })
+    },
+    OTHER (unit, code, gain) { // INCREASE OR DECREASE OTHER POWER
+      unit.otherCont.map((other) => {
+        if (other.code === code) {
+          other.gain = gain
+        }
+      })
+    },
+    GETOP (unit, code, gain) { // GET OTHER POWER
+      unit.otherCont.push({ code: code, gain: gain })
+    },
+    EFCONT (data) { // EFFECT CONT
+      if (data.event === 'COUNT UNIT ON FIELD') { this.EFFIELD(data) }
       if (data.event === 'SEND TO DROP') { this.EFSTD(data) }
       if (data.event === 'DRAW A CARD') { this.EFDRW(data) }
       if (data.event === 'GAIN LIFE POINT') { this.EFHEAL(data) }
-      if (data.event === 'COUNT UNIT ON FIELD') { this.EFFIELD(data) }
       if (data.event === 'UNIT TO REST') { this.EFREST(data) }
       if (data.event === 'UNIT TO STAND') { this.EFSTAND(data) }
     },
     EFFIELD (data) {
-      console.log('EFF FIELD')
-      console.log(data)
       let BF = []
       let BFOP = []
       let op = ''
@@ -1209,15 +1250,18 @@ export default {
         if (BFOP[i].card.code === '043') { this.EF043({ who: op, index: i }) }
       }
     },
-    EFHEAL (data) {
+    EFSTD (data) { // SEND TO DROP
       let BF = []
       if (data.who === 'Player') {
-        BF = this.player.field
-      } else {
+        data.who = 'Opponent'
         BF = this.opponent.field
+      } else {
+        data.who = 'Player'
+        BF = this.player.field
       }
       for (let i = 0; i < BF.length; i++) {
-        if (BF[i].card.code === '014') { this.EF014({ who: data.who, index: i }) }
+        if (BF[i].card.code === '012') { this.EF012({ who: data.who, index: i }) }
+        if (BF[i].card.code === '042') { this.EF042({ who: data.who, index: i }) }
       }
     },
     EFDRW (data) { // DRAW A CARD
@@ -1231,18 +1275,15 @@ export default {
         if (BF[i].card.code === '013') { this.EF013({ who: data.who, index: i }) }
       }
     },
-    EFSTD (data) { // SEND TO DROP
+    EFHEAL (data) {
       let BF = []
       if (data.who === 'Player') {
-        data.who = 'Opponent'
-        BF = this.opponent.field
-      } else {
-        data.who = 'Player'
         BF = this.player.field
+      } else {
+        BF = this.opponent.field
       }
       for (let i = 0; i < BF.length; i++) {
-        if (BF[i].card.code === '012') { this.EF012({ who: data.who, index: i }) }
-        if (BF[i].card.code === '042') { this.EF042({ who: data.who, index: i }) }
+        if (BF[i].card.code === '014') { this.EF014({ who: data.who, index: i }) }
       }
     },
     EFREST (data) { // REST UNIT
@@ -1259,8 +1300,6 @@ export default {
       }
     },
     EFSTAND (data) { // STAND UNIT
-      console.log('EFF STAND')
-      console.log(data)
       let BF = []
       if (data.who === 'Player') {
         BF = this.player.field
@@ -1271,7 +1310,7 @@ export default {
         if (BF[i].card.code === '044') { this.EF044({ who: data.who, index: i }) }
       }
     },
-    EFACT (data) { // Effect Act
+    EFACT (data) { // EFFECT ACT
       if (data.code === '017') { this.EF017({ who: data.who, index: data.index }) }
       if (data.code === '022') { this.EF022({ who: data.who, index: data.index }) }
       if (data.code === '023') { this.EF023({ who: data.who, index: data.index }) }
@@ -1288,208 +1327,37 @@ export default {
       if (data.code === '045') { this.EF045({ who: data.who, index: data.index }) }
       if (data.code === '046') { this.EF046({ who: data.who, index: data.index }) }
       if (data.code === '049') { this.EF049({ who: data.who, index: data.index }) }
+      if (data.code === '051') { this.EF051({ who: data.who, index: data.index }) }
+      if (data.code === '052') { this.EF052ACT({ who: data.who, index: data.index }) }
+      if (data.code === '054') { this.EF054({ who: data.who, index: data.index }) }
     },
-    ACTDSC (data) {
-      let unit = {}
-      if (data.who === 'Player') {
-        unit = this.player.field[data.uindex]
-      } else {
-        unit = this.opponent.field[data.uindex]
-      }
-      if (unit.OPT === false) {
-        this.Discard({ who: data.who, index: data.index })
-        unit.OPT = true
-        this.closeInfo()
-        this.RESDSC(data)
-      } else {
-        alert('Effect One Per Turn')
-        this.closeInfo()
-      }
-    },
-    RESDSC (data) {
-      if (data.code === '017') { this.RES017(data) }
-      if (data.code === '022') { this.RES022(data) }
-      if (data.code === '023') { this.RES023(data) }
-      if (data.code === '024') { this.RES024(data) }
-      if (data.code === '026') { this.RES026(data) }
-    },
-    RES017 (data) {
-      this.GAP({ who: data.who, index: data.uindex, gain: 2000 })
-    },
-    RES022 (data) {
-      this.GAP({ who: data.who, index: data.uindex, gain: 3000 })
-    },
-    RES023 (data) {
-      data.zone = 'FIELD'
-      data.todo = 'BIND UNIT'
-      this.TARGETG1(data)
-    },
-    RES024 (data) {
-      data.zone = 'FIELD'
-      data.todo = 'DESTROY UNIT'
-      this.TARGETG1(data)
-    },
-    RES026 (data) {
-      data.zone = 'DECK'
-      data.todo = 'DECK TO FIELD'
-      data.search = 'Vinsmoke'
-      data.notSearch = 'Vinsmoke Judge'
-      this.TARGETDECK(data)
-    },
-    ACTOPT (data) {
-      console.log('ACT OPT')
-      console.log(data)
-      let unit = {}
-      if (data.who === 'Player') {
-        unit = this.player.field[data.uindex]
-      } else {
-        unit = this.opponent.field[data.uindex]
-      }
-      if (unit.OPT === false) {
-        const costs = data.costs
-        costs.map((cost) => {
-          if (cost === 'FIELD TO DROP') { this.UDF(data) }
-          if (cost === 'PAY LIFE POINTS') { this.DMG({ who: data.who, deal: data.pay }) }
-        })
-        unit.OPT = true
-        this.closeInfo()
-        const rests = data.rests
-        rests.map((rest) => {
-          if (rest === 'DEAL DAMAGE') {
-            if (data.target === 'OPPONENT') {
-              let BF = []
-              let deal = ''
-              let who = ''
-              if (data.who === 'Player') {
-                who = 'Opponent'
-                BF = this.player.field
-              } else {
-                who = 'Player'
-                BF = this.opponent.field
-              }
-              deal = BF[data.index].totalPow
-              this.DMG({ who: who, deal: deal })
-            }
-          }
-          if (rest === 'FIELD TO DROP') { this.UDF(data) }
-          if (rest === 'FIELD TO DECK') {
-            if (data.who === 'Player') {
-              data.who = 'Opponent'
-            } else {
-              data.who = 'Player'
-            }
-            if (data.target === 'ALL') {
-              this.TARGETALL(data)
-            }
-          }
-          if (rest === 'DROP TO FIELD') {
-            data.todo = 'DROP TO FIELD'
-            this.TARGETDROP(data)
-          }
-          if (rest === 'GET AUTO POWER') {
-            this.GAP(data)
-          }
-          if (rest === 'DISCARD RANDOM OP') {
-            let who = ''
-            if (data.who === 'Player') {
-              who = 'Opponent'
-            } else {
-              who = 'Player'
-            }
-            this.DISCARDRANDOM({ who: who })
-          }
-          if (rest === 'DESTROY UNIT') {
-            if (data.who === 'Player') {
-              data.who = 'Opponent'
-            } else {
-              data.who = 'Player'
-            }
-            if (data.target === 'ALL') {
-              this.TARGETALL(data)
-            }
-          }
-          if (rest === 'UNIT TO REST') {
-            if (data.who === 'Player') {
-              data.who = 'Opponent'
-            } else {
-              data.who = 'Player'
-            }
-            if (data.target === 'ALL') {
-              this.TARGETALL(data)
-            }
-          }
-          if (rest === 'STAND UNIT') {
-            if (data.target === 'SELF') {
-              this.TARGETSELF(data)
-            }
-          }
-        })
-      } else {
-        alert('Effect One Per Turn')
-        this.closeInfo()
-      }
-    },
-    ACT017 (data) { // Vinsmoke Sanji
-      data.code = '017'
-      this.ACTDSC(data)
-    },
-    ACT022 (data) { // Vinsmoke Sanji
-      data.code = '022'
-      this.ACTDSC(data)
-    },
-    ACT023 (data) { // Vinsmoke Niji
-      data.code = '023'
-      this.ACTDSC(data)
-    },
-    ACT024 (data) { // Vinsmoke Ichiji
-      data.code = '024'
-      this.ACTDSC(data)
-    },
-    ACT026 (data) { // Vinsmoke Judge
-      data.code = '026'
-      this.ACTDSC(data)
-    },
-    ACT033 (data) { // Gecko Moria
-      data.costs = ['FIELD TO DROP', 'PAY LIFE POINTS']
-      data.pay = 1000
-      data.rests = ['DROP TO FIELD']
-      this.ACTOPT(data)
-    },
-    ACT045 (data) {
-      data.costs = ['PAY LIFE POINTS']
-      data.pay = 500
-      data.rests = ['DEAL DAMAGE', 'FIELD TO DROP']
-      data.target = 'OPPONENT'
-      this.ACTOPT(data)
-    },
-    EFAUTO (data) { // Effect Auto
-      console.log('EFF AUTO')
-      console.log(data)
+    EFAUTO (data) { // EFFECT AUTO
       if (data.stat === 'EFATK') { this.EFATK(data) }
       if (data.stat === 'EFDEF') { this.EFDEF(data) }
       if (data.stat === 'EFCAL') { this.EFCAL(data) }
       if (data.stat === 'EFDROP') { this.EFDROP(data) }
       if (data.stat === 'EFDSBT') { this.EFDSBT(data) }
-      if (data.stat === 'EFCALDR') { this.EFCALDR(data) } // Call From Drop
-      if (data.stat === 'EFENDPHASE') { this.EFENDPHASE(data) }
+      if (data.stat === 'EFCALDR') { this.EFCALDR(data) } // CALL FROM DROP
+      if (data.stat === 'EFEPCALL') { this.EFEPCALL(data) }
+      if (data.stat === 'EFEP') { this.EFEP(data) }
     },
     EFATK (data) {
-      if (data.code === '001') { this.EF001({ who: data.who, index: data.index }) }
-      if (data.code === '002') { this.EF002({ who: data.who, index: data.index }) }
-      if (data.code === '021') { this.EF021({ who: data.who, index: data.index }) }
-      if (data.code === '028') { this.EF028({ who: data.who, index: data.index }) }
-      if (data.code === '044') { this.EF044AUTO({ who: data.who, index: data.index }) }
-      if (data.code === '050') { this.EF050AUTO({ who: data.who, index: data.index }) }
+      if (data.code === '001') { this.EF001({ who: data.who, index: data.index, unit: data.unit }) }
+      if (data.code === '002') { this.EF002({ who: data.who, index: data.index, unit: data.unit }) }
+      if (data.code === '021') { this.EF021({ who: data.who, index: data.index, unit: data.unit }) }
+      if (data.code === '028') { this.EF028({ who: data.who, index: data.index, unit: data.unit }) }
+      if (data.code === '044') { this.EF044AUTO({ who: data.who, index: data.index, unit: data.unit }) }
+      if (data.code === '050') { this.EF050AUTO({ who: data.who, index: data.index, unit: data.unit }) }
+      if (data.code === '053') { this.EF053({ who: data.who, index: data.index, unit: data.unit }) }
+      if (data.code === '060') { this.EF060({ who: data.who, index: data.index, unit: data.unit }) }
+      if (data.code === '061') { this.EF061({ who: data.who, index: data.index, unit: data.unit }) }
     },
     EFDEF (data) {
-      if (data.code === '001') { this.EF001({ who: data.who, index: data.index }) }
-      if (data.code === '003') { this.EF003({ who: data.who, index: data.index }) }
-      if (data.code === '018') { this.EF018({ who: data.who, index: data.index }) }
-      if (data.code === '047') { this.EF047({ who: data.who, index: data.index }) }
-      if (data.code === '048') { this.EF048({ who: data.who, index: data.index }) }
-    },
-    EFCALDR (data) {
-      if (data.code === '034') { this.EF034({ who: data.who, index: data.index }) }
+      if (data.code === '001') { this.EF001({ who: data.who, index: data.index.def }) }
+      if (data.code === '003') { this.EF003({ who: data.who, index: data.index.def }) }
+      if (data.code === '018') { this.EF018({ who: data.who, index: data.index.def }) }
+      if (data.code === '047') { this.EF047({ who: data.who, index: data.index.def }) }
+      if (data.code === '048') { this.EF048({ who: data.who, index: data.index.def }) }
     },
     EFCAL (data) {
       if (data.code === '004') { this.EF004({ who: data.who, index: data.index }) }
@@ -1504,44 +1372,69 @@ export default {
       if (data.code === '029') { this.EF029({ who: data.who, index: data.index }) }
       if (data.code === '030') { this.EF030({ who: data.who, index: data.index }) }
       if (data.code === '041') { this.EF041({ who: data.who, index: data.index }) }
+      if (data.code === '055') { this.EF055({ who: data.who, index: data.index }) }
     },
-    EFDROP (data) { // Send to Drop
+    EFDROP (data) { // SEND TO DROP
       if (data.code === '009') { this.EF009({ who: data.who, index: data.index }) }
       if (data.code === '011') { this.EF011({ who: data.who, index: data.index }) }
       if (data.code === '025') { this.EF025({ who: data.who, index: data.index }) }
       if (data.code === '027') { this.EF027({ who: data.who, index: data.index }) }
       if (data.code === '036') { this.EF036({ who: data.who, index: data.index }) }
+      if (data.code === '056') { this.EF056({ who: data.who, index: data.index }) }
+      if (data.code === '057') { this.EF057({ who: data.who, index: data.index }) }
     },
-    EFDSBT (data) { // Effect Destroy by Battle
+    EFDSBT (data) { // DESTROY BY BATTLE
       if (data.code === '032') { this.EF032({ who: data.who, index: data.index }) }
     },
-    EFENDPHASE (who) { // Effect End Phase
+    EFCALDR (data) {
+      if (data.code === '034') { this.EF034({ who: data.who, index: data.index }) }
+    },
+    EFEPCALL (data) {
       let BF = []
-      let BFOP = []
-      let op = ''
-      if (who === 'Player') {
+      let deck = []
+      if (data.who === 'Player') {
         BF = this.player.field
-        BFOP = this.opponent.field
-        op = 'Opponent'
+        deck = this.player.deck.deck
       } else {
         BF = this.opponent.field
-        BFOP = this.player.field
-        op = 'Player'
+        deck = this.opponent.deck.deck
       }
       for (let i = 0; i < BF.length; i++) {
-        if (BF[i].card.code === '039') { this.EF039({ who: who, index: i }) }
-        if (BF[i].card.code === '050') { this.EF050({ who: who, index: i }) }
+        if (BF[i].card.code === '039') { deck.push(BF[i].card) }
+        if (BF[i].card.code === '050') { deck.push(BF[i].card) }
+        if (BF[i].card.code === '052') { deck.push(BF[i].card) }
       }
-      for (let i = 0; i < BFOP.length; i++) {
-        if (BFOP[i].card.code === '039') { this.EF039({ who: op, index: i }) }
-        if (BFOP[i].card.code === '050') { this.EF050({ who: op, index: i }) }
+      for (let i = 0; i < BF.length; i++) {
+        if (BF[i].card.code === '039') { this.EF039({ who: data.who, index: i }) }
+        if (BF[i].card.code === '050') { this.EF050({ who: data.who, index: i }) }
+        if (BF[i].card.code === '052') { this.EF052({ who: data.who, index: i }) }
       }
     },
+    EFEP (data) {
+      if (data.who === 'Player') { data.BF = this.player.field }
+      if (data.who === 'Opponent') { data.BF = this.opponent.field }
+      for (let i = 0; i < data.BF.length; i++) {
+        if (data.BF[i].card.code === '058') { this.EF058({ who: data.who, index: i }) }
+      }
+    },
+    // UNIT EFFECT CODE
     EF001 (data) { // Monkey D. Luffy
       data.gain = 1000
       this.GAP(data)
+      if (data.who === 'Player') {
+        if (this.player.phase === 'BP') {
+          this.player.atk = data.unit.totalPow
+        }
+      }
+      if (data.who === 'Opponent') {
+        if (this.opponent.phase === 'BP') {
+          this.opponent.atk = data.unit.totalPow
+        }
+      }
     },
     EF002 (data) { // Roronoa Zoro
+      if (data.who === 'Player') { this.effect.player = { active: true } }
+      if (data.who === 'Opponent') { this.effect.opponent = { active: true } }
       data.gain = 1000
       this.GAP(data)
       this.$swal.fire({
@@ -1554,6 +1447,12 @@ export default {
           this.DMG({ who: data.who, deal: 500 })
           data.gain = 1000
           this.GAP(data)
+          if (data.who === 'Player') { this.effect.player = { active: false } }
+          if (data.who === 'Opponent') { this.effect.opponent = { active: false } }
+          if (data.who === 'Player') { this.player.atk = data.unit.totalPow }
+          if (data.who === 'Opponent') { this.opponent.atk = data.unit.totalPow }
+          data.unitname = 'Roronoa Zoro'
+          this.confirmBlock(data)
         }
       })
     },
@@ -1562,113 +1461,127 @@ export default {
       this.GAP(data)
     },
     EF004 (data) { // Nami
-      this.DP(data.who)
+      this.DECK({ who: data.who, todo: 'draw' })
     },
     EF005 (data) { // Usopp
-      const cards = []
-      let deck = []
-      if (data.who === 'Player') {
-        deck = this.player.deck.deck
-      } else {
-        deck = this.opponent.deck.deck
-      }
-      deck.map((unit) => {
-        if (unit.grade === 1) {
-          cards.push(unit)
+      this.$swal.fire({
+        title: 'Aktifkan Effek Usopp?',
+        showCancelButton: true,
+        confirmButtonText: 'YES',
+        cancelButtonText: 'NO'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          data.todo = 'search'
+          data.filter = true
+          data.filterGrade = 'EQUAL 1'
+          data.RESEFF = 'ADD TO HAND'
+          this.DECK(data)
         }
       })
-      this.ADD({ who: data.who, zone: 'DECK', card: cards, todo: 'ADD TO HAND' })
     },
     EF006 (data) { // Chopper
       this.HEAL({ who: data.who, heal: 2000 })
     },
     EF007 (data) { // Nico Robin
       for (let i = 0; i < 2; i++) {
-        this.DP(data.who)
+        this.DECK({ who: data.who, todo: 'draw' })
       }
-      let cards = []
-      if (data.who === 'Player') {
-        cards = this.player.hand
+      const cards = []
+      if (data.who === 'Player') { data.hand = this.player.hand }
+      if (data.who === 'Opponent') { data.hand = this.opponent.hand }
+      for (let i = 0; i < data.hand.length; i++) {
+        cards.push({ card: data.hand[i], index: i })
+      }
+      if (cards.length > 0) {
+        const index = Math.floor(Math.random() * cards.length)
+        const unit = cards[index]
+        data.todo = 'HAND TO DECK'
+        data.index = unit.index
+        this.HAND(data)
       } else {
-        cards = this.opponent.hand
+        alert('Target tidak ditemukan')
       }
-      this.ADD({ who: data.who, zone: 'HAND', card: cards, todo: 'HAND TO DECK' })
     },
     EF008 (data) { // Franky
-      const cards = []
-      let BF = []
-      if (data.who === 'Player') {
-        BF = this.opponent.field
-        data.who = 'Opponent'
-      } else {
-        BF = this.player.field
-        data.who = 'Player'
-      }
-      BF.map((unit) => {
-        if (unit.card.grade === 1) {
-          cards.push(unit.card)
-        } else {
-          cards.push({})
+      alert('Franky effect, choose opponent unit')
+      const effect = {
+        active: true,
+        todo: 'FIELD TO DROP',
+        target: {
+          who: 'OTHER',
+          isTarget: true,
+          grade: 'EQUAL 1'
         }
-      })
-      this.ADD({ who: data.who, zone: 'FIELD', card: cards, todo: 'DESTROY UNIT' })
+      }
+      if (data.who === 'Player') {
+        this.effect.player = effect
+      } else {
+        this.effect.opponent = effect
+      }
     },
     EF009 (data) { // Brook
       const cards = []
-      let deck = []
-      if (data.who === 'Player') {
-        deck = this.player.deck.deck
-      } else {
-        deck = this.opponent.deck.deck
-      }
-      deck.map((unit) => {
-        if (unit.name === 'Brook') {
-          cards.push(unit)
+      if (data.who === 'Player') { data.deck = this.player.deck.deck }
+      if (data.who === 'Opponent') { data.deck = this.opponent.deck.deck }
+      for (let i = 0; i < data.deck.length; i++) {
+        if (data.deck[i].name === 'Brook') {
+          cards.push({ card: data.deck[i], index: i })
         }
-      })
-      this.ADD({ who: data.who, zone: 'DECK', card: cards, todo: 'DECK TO FIELD' })
+      }
+      if (cards.length > 0) {
+        const index = Math.floor(Math.random() * cards.length)
+        const unit = cards[index]
+        data.todo = 'DECK TO FIELD'
+        data.index = unit.index
+        this.DECK(data)
+      } else {
+        alert('Target tidak ditemukan')
+      }
     },
     EF010 (data) { // Jinbei
-      data.todo = 'FIELD TO HAND'
-      this.TARGETG2LESS(data)
+      alert('Jinbei effect, choose opponent unit')
+      const effect = {
+        active: true,
+        todo: 'FIELD TO HAND',
+        target: {
+          who: 'OTHER',
+          isTarget: true,
+          grade: '2 OR LESS'
+        }
+      }
+      if (data.who === 'Player') {
+        this.effect.player = effect
+      } else {
+        this.effect.opponent = effect
+      }
     },
     EF011 (data) { // Brook
-      this.DRTB({ who: data.who, index: data.index })
+      this.DROP({ who: data.who, index: data.index, todo: 'DROP TO BIND' })
       const cards = []
-      let drop = []
-      if (data.who === 'Player') {
-        drop = this.player.drop
-      } else {
-        drop = this.opponent.drop
-      }
-      drop.map((unit) => {
-        if (unit.name === 'Brook') {
-          cards.push(unit)
+      if (data.who === 'Player') { data.drop = this.player.drop }
+      if (data.who === 'Opponent') { data.drop = this.opponent.drop }
+      for (let i = 0; i < data.drop.length; i++) {
+        if (data.drop[i].name === 'Brook') {
+          cards.push({ card: data.drop[i], index: i })
         }
-      })
-      this.ADD({ who: data.who, zone: 'DROP', card: cards, todo: 'DROP TO FIELD' })
+      }
+      if (cards.length > 0) {
+        const index = Math.floor(Math.random() * cards.length)
+        const unit = cards[index]
+        data.todo = 'DROP TO FIELD'
+        data.index = unit.index
+        this.DROP(data)
+      } else {
+        alert('Target tidak ditemukan')
+      }
     },
     EF012 (data) { // Franky
       data.gain = 500
-      let unit = {}
-      if (data.who === 'Player') {
-        unit = this.player.field[data.index]
-      } else {
-        unit = this.opponent.field[data.index]
-      }
-      data.gain += unit.gaintCont
-      this.GCP(data)
+      this.powerStack(data)
     },
     EF013 (data) { // Nico Robin
       data.gain = 500
-      let unit = {}
-      if (data.who === 'Player') {
-        unit = this.player.field[data.index]
-      } else {
-        unit = this.opponent.field[data.index]
-      }
-      data.gain += unit.gaintCont
-      this.GCP(data)
+      this.powerStack(data)
     },
     EF014 (data) { // Chopper
       if (data.who === 'Player') {
@@ -1679,41 +1592,68 @@ export default {
     },
     EF015 (data) { // Usopp
       const cards = []
-      let deck = []
-      if (data.who === 'Player') {
-        deck = this.player.deck.deck
-      } else {
-        deck = this.opponent.deck.deck
-      }
-      deck.map((unit) => {
-        if (unit.grade === 1 && unit.grade !== 'Usopp') {
-          cards.push(unit)
+      if (data.who === 'Player') { data.deck = this.player.deck.deck }
+      if (data.who === 'Opponent') { data.deck = this.opponent.deck.deck }
+      for (let i = 0; i < data.deck.length; i++) {
+        if (data.deck[i].grade === 1 && data.deck[i].name !== 'Usopp') {
+          cards.push({ card: data.deck[i], index: i })
         }
-      })
-      this.ADD({ who: data.who, zone: 'DECK', card: cards, todo: 'DECK TO FIELD' })
+      }
+      if (cards.length > 0) {
+        const index = Math.floor(Math.random() * cards.length)
+        const unit = cards[index]
+        data.todo = 'DECK TO FIELD'
+        data.index = unit.index
+        this.DECK(data)
+      } else {
+        alert('Target tidak ditemukan')
+      }
     },
     EF016 (data) { // Nami
-      const cards = []
-      let BF = []
-      if (data.who === 'Player') {
-        BF = this.opponent.field
-        data.who = 'Opponent'
-      } else {
-        BF = this.player.field
-        data.who = 'Player'
-      }
-      BF.map((unit) => {
-        if (unit.card.grade === 1) {
-          cards.push(unit.card)
-        } else {
-          cards.push({})
+      alert('Nami effect, choose opponent unit')
+      const effect = {
+        active: true,
+        todo: 'FIELD TO BIND',
+        target: {
+          who: 'OTHER',
+          isTarget: true,
+          grade: 'EQUAL 1'
         }
-      })
-      this.ADD({ who: data.who, zone: 'FIELD', card: cards, todo: 'BIND UNIT' })
+      }
+      if (data.who === 'Player') {
+        this.effect.player = effect
+      } else {
+        this.effect.opponent = effect
+      }
     },
     EF017 (data) { // Vinsmoke Sanji
-      data.todo = 'ACT017'
-      this.TARGETHAND(data)
+      alert('Sanji effect, discard a card')
+      if (data.who === 'Player') { data.BF = this.player.field }
+      if (data.who === 'Opponent') { data.BF = this.opponent.field }
+      data.unit = data.BF[data.index]
+      if (data.unit.OPT === false) {
+        const effect = {
+          active: true,
+          todo: 'HAND TO DROP',
+          target: {
+            who: 'SELF',
+            isTarget: true,
+            grade: '',
+            name: ''
+          },
+          RES: {
+            todo: 'GET AUTO POWER',
+            gain: 2000,
+            index: data.index
+          }
+        }
+        if (data.who === 'Player') {
+          this.effect.player = effect
+        } else {
+          this.effect.opponent = effect
+        }
+      }
+      this.EFOPT(data)
     },
     EF018 (data) { // Roronoa Zoro
       data.gain = 2000
@@ -1754,24 +1694,25 @@ export default {
         cancelButtonText: 'NO'
       }).then((result) => {
         if (result.isConfirmed) {
+          data.todo = 'FIELD TO DECK'
+          this.FIELD(data)
           const cards = []
-          let deck = []
-          let BF = []
-          if (data.who === 'Player') {
-            deck = this.player.deck.deck
-            BF = this.player.field
-          } else {
-            deck = this.opponent.deck.deck
-            BF = this.opponent.field
-          }
-          const index = BF.length - 1
-          this.UBF({ who: data.who, index: index })
-          deck.map((unit) => {
-            if (unit.grade === 1 && unit.name !== 'Nefertari Vivi') {
-              cards.push(unit)
+          if (data.who === 'Player') { data.deck = this.player.deck.deck }
+          if (data.who === 'Opponent') { data.deck = this.opponent.deck.deck }
+          for (let i = 0; i < data.deck.length; i++) {
+            if (data.deck[i].grade === 1 && data.deck[i].name !== 'Nefertari Vivi') {
+              cards.push({ card: data.deck[i], index: i })
             }
-          })
-          this.ADD({ who: data.who, zone: 'DECK', card: cards, todo: 'DECK TO FIELD' })
+          }
+          if (cards.length > 0) {
+            const index = Math.floor(Math.random() * cards.length)
+            const unit = cards[index]
+            data.todo = 'DECK TO FIELD'
+            data.index = unit.index
+            this.DECK(data)
+          } else {
+            alert('Target tidak ditemukan')
+          }
         }
       })
     },
@@ -1793,46 +1734,112 @@ export default {
         this.GAP(data)
       }
     },
-    EFVSM (data) { // Effect Vinsmoke (Discard)
-      const cards = []
-      let hand
-      if (data.who === 'Player') {
-        hand = this.player.hand
-      } else {
-        hand = this.opponent.hand
-      }
-      hand.map((card) => {
-        if (card.name.search('Vinsmoke') >= 0) {
-          cards.push(card)
-        } else {
-          cards.push({})
-        }
-      })
-      this.ADD({ who: data.who, zone: 'HAND', card: cards, todo: data.todo, uindex: data.index })
-    },
     EF022 (data) { // Vinsmoke Sanji
-      data.todo = 'ACT022'
-      this.EFVSM(data)
+      alert('Sanji effect, discard a card')
+      if (data.who === 'Player') { data.BF = this.player.field }
+      if (data.who === 'Opponent') { data.BF = this.opponent.field }
+      data.unit = data.BF[data.index]
+      if (data.unit.OPT === false) {
+        const effect = {
+          active: true,
+          todo: 'HAND TO DROP',
+          target: {
+            who: 'SELF',
+            isTarget: true,
+            grade: '',
+            name: 'Vinsmoke'
+          },
+          RES: {
+            todo: 'GET AUTO POWER',
+            gain: 3000,
+            index: data.index
+          }
+        }
+        if (data.who === 'Player') {
+          this.effect.player = effect
+        } else {
+          this.effect.opponent = effect
+        }
+      }
+      this.EFOPT(data)
     },
     EF023 (data) { // Vinsmoke Niji
-      data.todo = 'ACT023'
-      this.EFVSM(data)
+      alert('Niji effect, discard a card')
+      if (data.who === 'Player') { data.BF = this.player.field }
+      if (data.who === 'Opponent') { data.BF = this.opponent.field }
+      data.unit = data.BF[data.index]
+      if (data.unit.OPT === false) {
+        const effect = {
+          active: true,
+          todo: 'HAND TO DROP',
+          target: {
+            who: 'SELF',
+            isTarget: true,
+            grade: '',
+            name: 'Vinsmoke'
+          },
+          RES: {
+            todo: 'TARGET OPPONENT UNIT',
+            effect: {
+              active: true,
+              todo: 'FIELD TO BIND',
+              target: {
+                who: 'OTHER',
+                isTarget: true,
+                grade: 'EQUAL 1'
+              }
+            }
+          }
+        }
+        if (data.who === 'Player') {
+          this.effect.player = effect
+        } else {
+          this.effect.opponent = effect
+        }
+      }
+      this.EFOPT(data)
     },
     EF024 (data) { // Vinsmoke Ichiji
-      data.todo = 'ACT024'
-      this.EFVSM(data)
+      alert('Ichiji effect, discard a card')
+      if (data.who === 'Player') { data.BF = this.player.field }
+      if (data.who === 'Opponent') { data.BF = this.opponent.field }
+      data.unit = data.BF[data.index]
+      if (data.unit.OPT === false) {
+        const effect = {
+          active: true,
+          todo: 'HAND TO DROP',
+          target: {
+            who: 'SELF',
+            isTarget: true,
+            grade: '',
+            name: 'Vinsmoke'
+          },
+          RES: {
+            todo: 'TARGET OPPONENT UNIT',
+            effect: {
+              active: true,
+              todo: 'FIELD TO DROP',
+              target: {
+                who: 'OTHER',
+                isTarget: true,
+                grade: 'EQUAL 1'
+              }
+            }
+          }
+        }
+        if (data.who === 'Player') {
+          this.effect.player = effect
+        } else {
+          this.effect.opponent = effect
+        }
+      }
+      this.EFOPT(data)
     },
     EF025 (data) { // Vinsmoke Reiju
       let BF = []
-      let drop
-      if (data.who === 'Player') {
-        BF = this.player.field
-        drop = this.player.drop
-      } else {
-        BF = this.opponent.field
-        drop = this.opponent.drop
-      }
-      this.DRTD({ who: data.who, index: drop.length - 1 })
+      if (data.who === 'Player') { BF = this.player.field }
+      if (data.who === 'Opponent') { BF = this.opponent.field }
+      this.DROP({ who: data.who, index: data.index, todo: 'DROP TO DECK' })
       for (let i = 0; i < BF.length; i++) {
         if (BF[i].card.name.search('Vinsmoke') >= 0) {
           this.GAP({ who: data.who, index: i, gain: 1000 })
@@ -1840,119 +1847,166 @@ export default {
       }
     },
     EF026 (data) { // Vinsmoke Judge
-      data.todo = 'ACT026'
-      this.EFVSM(data)
+      alert('Judge effect, discard a card')
+      if (data.who === 'Player') { data.BF = this.player.field }
+      if (data.who === 'Opponent') { data.BF = this.opponent.field }
+      data.unit = data.BF[data.index]
+      if (data.unit.OPT === false) {
+        const effect = {
+          active: true,
+          todo: 'HAND TO DROP',
+          target: {
+            who: 'SELF',
+            isTarget: true,
+            grade: '',
+            name: 'Vinsmoke'
+          },
+          RES: {
+            todo: 'search',
+            effect: {
+              active: true,
+              todo: 'DECK TO FIELD',
+              target: {
+                who: 'SELF',
+                isTarget: true,
+                filterName: 'Vinsmoke',
+                filterNotName: 'Vinsmoke Judge'
+              }
+            }
+          }
+        }
+        if (data.who === 'Player') {
+          this.effect.player = effect
+        } else {
+          this.effect.opponent = effect
+        }
+      }
+      this.EFOPT(data)
     },
     EF027 (data) { // Vinsmoke Sora
-      let drop
-      if (data.who === 'Player') {
-        drop = this.player.drop
-      } else {
-        drop = this.opponent.drop
+      this.DROP({ who: data.who, index: data.index, todo: 'DROP TO DECK' })
+      for (let i = 0; i < 2; i++) {
+        const cards = []
+        if (data.who === 'Player') { data.drop = this.player.drop }
+        if (data.who === 'Opponent') { data.drop = this.opponent.drop }
+        for (let i = 0; i < data.drop.length; i++) {
+          if (data.drop[i].name.search('Vinsmoke') >= 0) {
+            cards.push({ card: data.drop[i], index: i })
+          }
+        }
+        if (cards.length > 0) {
+          const index = Math.floor(Math.random() * cards.length)
+          const unit = cards[index]
+          data.todo = 'DROP TO HAND'
+          data.index = unit.index
+          this.DROP(data)
+        } else {
+          alert('Target tidak ditemukan')
+        }
       }
-      this.DRTD({ who: data.who, index: drop.length - 1 })
-      data.search = 'Vinsmoke'
-      data.notSearch = ''
-      data.zone = 'DROP'
-      data.todo = 'DROP TO HAND'
-      this.TARGETDROP(data)
     },
     EF028 (data) { // Smoker
       let phase = ''
-      let unit = {}
-      if (this.turn === 'Player') {
-        phase = this.player.phase
-        unit = this.player.field[data.index]
-      } else {
-        phase = this.opponent.phase
-        unit = this.opponent.field[data.index]
-      }
-      data.zone = 'FIELD'
-      data.todo = 'UNIT TO REST'
-      if (phase === 'MP1' || phase === 'MP2') {
-        if (unit.OPT === false) {
-          this.DMG({ who: data.who, deal: 500 })
-          this.TARGETG2LESS(data)
-          unit.OPT = true
-        } else {
-          alert('Effect One Per Turn')
-        }
-      }
-      if (phase === 'BP') {
-        this.$swal.fire({
-          title: 'Aktifkan Effek Smoker?',
-          showCancelButton: true,
-          confirmButtonText: 'YES',
-          cancelButtonText: 'NO'
-        }).then((result) => {
-          if (result.isConfirmed) {
-            this.DMG({ who: data.who, deal: 500 })
-            this.TARGETG2LESS(data)
+      data.COST = 'PAY LIFE POINTS'
+      data.pay = 500
+      if (data.who === 'Player') { phase = this.player.phase }
+      if (data.who === 'Opponent') { phase = this.opponent.phase }
+      if (data.who === 'Player') { data.BF = this.player.field }
+      if (data.who === 'Opponent') { data.BF = this.opponent.field }
+      data.unit = data.BF[data.index]
+      if (phase === 'MP1' || phase === 'MP2') { // ACT OPT
+        if (data.unit.OPT === false) {
+          alert('Smoker effect, Choose opponent unit')
+          this.COST(data)
+          const effect = {
+            active: true,
+            todo: 'UNIT TO REST',
+            target: {
+              who: 'OTHER',
+              isTarget: true,
+              grade: '2 OR LESS'
+            }
           }
-        })
+          if (data.who === 'Player') {
+            this.effect.player = effect
+          } else {
+            this.effect.opponent = effect
+          }
+        }
+        this.EFOPT(data)
+      }
+      if (phase === 'BP') { // AUTO ATK
+        this.COST(data)
+        let OP = ''
+        let BF = []
+        const units = []
+        if (data.who === 'Player') {
+          OP = 'Opponent'
+          BF = this.opponent.field
+        }
+        if (data.who === 'Opponent') {
+          OP = 'Player'
+          BF = this.player.field
+        }
+        for (let i = 0; i < BF.length; i++) {
+          if (BF[i].position === 'Stand' && BF[i].card.grade <= 2) {
+            units.push({ unit: BF[i], index: i })
+          }
+        }
+        if (units.length > 0) {
+          const OpIndex = Math.floor(Math.random() * units.length)
+          this.unitToRest({ who: OP, BF: BF, index: units[OpIndex].index })
+        }
+        data.unitname = 'Smoker'
+        this.confirmBlock(data)
       }
     },
     EF029 (data) { // Tama
-      const cards = []
-      let deck = []
-      if (data.who === 'Player') {
-        deck = this.player.deck.deck
-      } else {
-        deck = this.opponent.deck.deck
-      }
-      deck.map((unit) => {
-        if (unit.type.race === 'Beast' || unit.type.special === 'Zoan') {
-          cards.push(unit)
+      this.$swal.fire({
+        title: 'Aktifkan Effek Tama?',
+        showCancelButton: true,
+        confirmButtonText: 'YES',
+        cancelButtonText: 'NO'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          data.todo = 'search'
+          data.filter = true
+          data.filterRaceOrSpecial = true
+          data.race = 'Beast'
+          data.special = 'Zoan'
+          data.RESEFF = 'ADD TO HAND'
+          this.DECK(data)
         }
       })
-      this.ADD({ who: data.who, zone: 'DECK', card: cards, todo: 'ADD TO HAND' })
     },
     EF030 (data) { // Kozuki Momonosuke
-      const cards = []
-      let deck = []
-      if (data.who === 'Player') {
-        deck = this.player.deck.deck
-      } else {
-        deck = this.opponent.deck.deck
-      }
-      deck.map((unit) => {
-        if (unit.type.job === 'Swordman') {
-          cards.push(unit)
+      this.$swal.fire({
+        title: 'Aktifkan Effek Kozuki Momonosuke?',
+        showCancelButton: true,
+        confirmButtonText: 'YES',
+        cancelButtonText: 'NO'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          data.todo = 'search'
+          data.filter = true
+          data.filterJob = true
+          data.job = 'Swordman'
+          data.RESEFF = 'ADD TO HAND'
+          this.DECK(data)
         }
       })
-      this.ADD({ who: data.who, zone: 'DECK', card: cards, todo: 'ADD TO HAND' })
     },
     EF031ACT (data) { // Sir Crocodile EFFECT ACTIVE
-      let unit = {}
-      let drop = []
-      let deck = []
-      let notif = ''
-      if (this.turn === 'Player') {
-        unit = this.player.field[data.index]
-        drop = this.player.drop
-        deck = this.player.deck.deck
-        notif = 'You Lose Duel'
-      } else {
-        unit = this.opponent.field[data.index]
-        drop = this.player.drop
-        deck = this.player.deck.deck
-        notif = 'You Win Duel'
-      }
-      if (unit.OPT === false) {
-        drop.push(deck[0])
-        deck.splice(0, 1)
+      if (data.who === 'Player') { data.BF = this.player.field }
+      if (data.who === 'Opponent') { data.BF = this.opponent.field }
+      data.unit = data.BF[data.index]
+      if (data.unit.OPT === false) {
+        alert('Sir Crocodile effect')
+        this.DECK({ who: data.who, todo: 'mill' })
         data.gain = 1000
         this.GAP(data)
-        if (deck.length === 0) {
-          alert(notif)
-          this.$router.replace({
-            name: 'Home'
-          })
-        }
-        unit.OPT = true
-      } else {
-        alert('Effect One Per Turn')
       }
+      this.EFOPT(data)
     },
     EF031 (data) { // Sir Crocodile EFFECT CONTINUE
       let unit = {}
@@ -1982,11 +2036,47 @@ export default {
       this.ALLUNIT(BFOP, '031', (-500 * count))
     },
     EF032 (data) { // Buggy
-      this.DRTH(data)
+      data.todo = 'DROP TO HAND'
+      this.DROP(data)
     },
     EF033 (data) { // Gecko Moria
-      data.todo = 'ACT033'
-      this.TARGETOWNER(data)
+      alert('Gecko Moria effect, send unit to drop zone')
+      if (data.who === 'Player') { data.BF = this.player.field }
+      if (data.who === 'Opponent') { data.BF = this.opponent.field }
+      data.unit = data.BF[data.index]
+      if (data.unit.OPT === false) {
+        data.COST = 'PAY LIFE POINTS'
+        data.pay = 1000
+        this.COST(data)
+        const effect = {
+          active: true,
+          todo: 'FIELD TO DROP',
+          target: {
+            who: 'SELF',
+            isTarget: true,
+            isField: true,
+            grade: '',
+            name: ''
+          },
+          RES: {
+            todo: 'pick',
+            effect: {
+              active: true,
+              todo: 'DROP TO FIELD',
+              target: {
+                who: 'SELF',
+                isTarget: true
+              }
+            }
+          }
+        }
+        if (data.who === 'Player') {
+          this.effect.player = effect
+        } else {
+          this.effect.opponent = effect
+        }
+      }
+      this.EFOPT(data)
     },
     EF034 (data) { // Monkey D. Luffy
       let drop = []
@@ -1995,47 +2085,11 @@ export default {
       } else {
         drop = this.opponent.drop
       }
-      this.DMG({ who: data.who, deal: 500 })
+      data.COST = 'PAY LIFE POINTS'
+      data.pay = 500
+      this.COST(data)
       data.gain = (500 * drop.length)
       this.GAP(data)
-    },
-    POWER (unit) { // TOTAL POWER
-      unit.totalPow = unit.card.power + unit.gaintCont + unit.gainAuto
-      unit.otherCont.map((other) => {
-        unit.totalPow += other.gain
-      })
-    },
-    OTHER (unit, code, gain) { // INCREASE OR DECREASE OTHER POWER
-      unit.otherCont.map((other) => {
-        if (other.code === code) {
-          other.gain = gain
-        }
-      })
-    },
-    GETOP (unit, code, gain) { // GET OTHER POWER
-      unit.otherCont.push({ code: code, gain: gain })
-    },
-    ALLUNIT (units, code, gain) {
-      units.map((unit) => {
-        if (unit.otherCont.length > 0) {
-          let isCode = false
-          unit.otherCont.map((other) => {
-            if (other.code.search(code) >= 0) {
-              isCode = true
-            }
-            if (isCode) {
-              this.OTHER(unit, code, gain)
-            } else {
-              this.GETOP(unit, code, gain)
-              this.POWER(unit)
-            }
-          })
-        } else {
-          this.GETOP(unit, code, gain)
-          this.POWER(unit)
-        }
-        this.POWER(unit)
-      })
     },
     EF035 (data) { // Fisher Tiger
       let unit = {}
@@ -2062,77 +2116,89 @@ export default {
       this.ALLUNIT(BFFISH, '035', (500 * copy))
     },
     EF036 (data) { // Hody Jones
-      this.DRTH(data)
-    },
-    DISCARDRANDOM (data) { // Discard Random
-      let hand = []
-      if (data.who === 'Player') {
-        hand = this.player.hand
-      } else {
-        hand = this.opponent.hand
-      }
-      const index = Math.floor(Math.random() * hand.length)
-      this.Discard({ who: data.who, index: index })
+      data.todo = 'DROP TO HAND'
+      this.DROP(data)
     },
     EF037 (data) { // Donquixote Doflamingo
-      data.uindex = data.index
-      data.costs = []
-      data.rests = ['GET AUTO POWER']
-      data.gain = 1000
-      let hand = []
-      if (data.who === 'Player') {
-        hand = this.opponent.hand
-      } else {
-        hand = this.player.hand
+      alert('Donquixote Doflamingo effect, discard opponent hand card')
+      if (data.who === 'Player') { data.BF = this.player.field }
+      if (data.who === 'Opponent') { data.BF = this.opponent.field }
+      data.unit = data.BF[data.index]
+      if (data.unit.OPT === false) {
+        if (data.who === 'Player') {
+          data.op = 'Opponent'
+          data.hand = this.opponent.hand
+        } else {
+          data.op = 'Player'
+          data.hand = this.player.hand
+        }
+        if (data.hand.length > 0) {
+          const index = Math.floor(Math.random() * data.hand.length)
+          this.HAND({ who: data.op, index: index, todo: 'HAND TO DROP' })
+          data.gain = 1000
+          this.GAP(data)
+        }
       }
-      if (hand.length > 0) {
-        data.rests.push('DISCARD RANDOM OP')
-      }
-      this.ACTOPT(data)
+      this.EFOPT(data)
     },
     EF038 (data) { // Chopper
-      this.FTD(data)
-      data.todo = 'DECK TO FIELD'
       data.name = 'Tony Tony Chopper'
       data.grade = 3
-      this.TARGETDECKNG(data)
+      this.callEvo(data)
     },
     EF039 (data) { // Chopper
-      this.FTD(data)
-      data.todo = 'DECK TO FIELD'
-      data.name = 'Tony Tony Chopper'
       data.grade = 2
-      this.TARGETDECKNGLESS(data)
+      data.name = 'Tony Tony Chopper'
+      this.randomCallBack(data)
     },
     EF040 (data) { // Jack
-      this.FTD(data)
-      data.todo = 'DECK TO FIELD'
       data.name = 'Jack'
       data.grade = 3
-      this.TARGETDECKNG(data)
+      this.callEvo(data)
     },
     EF041 (data) { // Aladdin
-      data.todo = 'FIELD TO HAND'
-      this.TARGETG1(data)
+      alert('Aladdin effect, choose opponent unit')
+      const effect = {
+        active: true,
+        todo: 'FIELD TO HAND',
+        target: {
+          who: 'OTHER',
+          isTarget: true,
+          grade: 'EQUAL 1'
+        }
+      }
+      if (data.who === 'Player') {
+        this.effect.player = effect
+      } else {
+        this.effect.opponent = effect
+      }
     },
     EF042 (data) { // Akainu Effect Cont
       data.gain = 500
-      let unit = {}
-      if (data.who === 'Player') {
-        unit = this.player.field[data.index]
-      } else {
-        unit = this.opponent.field[data.index]
-      }
-      data.gain += unit.gaintCont
-      this.GCP(data)
+      this.powerStack(data)
     },
     EF042ACT (data) { // Akainu
-      data.uindex = data.index
-      data.todo = 'DESTROY UNIT'
-      data.costs = []
-      data.rests = ['DESTROY UNIT']
-      data.target = 'ALL'
-      this.ACTOPT(data)
+      if (data.who === 'Player') { data.BF = this.player.field }
+      if (data.who === 'Opponent') { data.BF = this.opponent.field }
+      data.unit = data.BF[data.index]
+      if (data.unit.OPT === false) {
+        alert('Akainu effect, choose opponent unit')
+        const effect = {
+          active: true,
+          todo: 'FIELD TO DROP',
+          target: {
+            who: 'OTHER',
+            isTarget: true,
+            grade: 'ALL'
+          }
+        }
+        if (data.who === 'Player') {
+          this.effect.player = effect
+        } else {
+          this.effect.opponent = effect
+        }
+      }
+      this.EFOPT(data)
     },
     EF043 (data) { // Aokiji Effect Cont
       let BFOP = []
@@ -2151,54 +2217,115 @@ export default {
       this.GCP(data)
     },
     EF043ACT (data) { // Aokiji Effect Act
-      data.uindex = data.index
-      data.todo = 'UNIT TO REST'
-      data.costs = []
-      data.rests = ['UNIT TO REST']
-      data.target = 'ALL'
-      this.ACTOPT(data)
+      if (data.who === 'Player') { data.BF = this.player.field }
+      if (data.who === 'Opponent') { data.BF = this.opponent.field }
+      data.unit = data.BF[data.index]
+      if (data.unit.OPT === false) {
+        alert('Aokiji effect, choose opponent unit')
+        const effect = {
+          active: true,
+          todo: 'UNIT TO REST',
+          target: {
+            who: 'OTHER',
+            isTarget: true,
+            grade: 'ALL'
+          }
+        }
+        if (data.who === 'Player') {
+          this.effect.player = effect
+        } else {
+          this.effect.opponent = effect
+        }
+      }
+      this.EFOPT(data)
     },
     EF044 (data) { // Kizaru Effect Cont
-      console.log('KIZARUUU')
-      console.log(data)
       data.gain = 500
-      let unit = {}
-      if (data.who === 'Player') {
-        unit = this.player.field[data.index]
-      } else {
-        unit = this.opponent.field[data.index]
-      }
-      data.gain += unit.gaintCont
-      this.GCP(data)
+      this.powerStack(data)
     },
     EF044AUTO (data) { // Kizaru Effect Auto
+      if (data.who === 'Player') { this.effect.player = { active: true } }
+      if (data.who === 'Opponent') { this.effect.opponent = { active: true } }
+      if (data.who === 'Player') { data.BF = this.player.field }
+      if (data.who === 'Opponent') { data.BF = this.opponent.field }
+      data.unit = data.BF[data.index]
+      data.unitname = 'Kizaru'
       this.$swal.fire({
-        title: 'Aktifkan Effek Kizaru ?',
+        title: 'Aktifkan Effek Kizaru?',
         showCancelButton: true,
         confirmButtonText: 'YES',
         cancelButtonText: 'NO'
       }).then((result) => {
         if (result.isConfirmed) {
-          data.uindex = data.index
-          data.todo = 'STAND UNIT'
-          data.costs = []
-          data.rests = ['STAND UNIT']
-          data.target = 'SELF'
-          this.ACTOPT(data)
+          if (data.unit.OPT === false) {
+            data.todo = 'UNIT TO STAND'
+            this.FIELD(data)
+            if (data.who === 'Player') { this.effect.player = { active: false } }
+            if (data.who === 'Opponent') { this.effect.opponent = { active: false } }
+            if (data.who === 'Player') { this.player.atk = data.unit.totalPow }
+            if (data.who === 'Opponent') { this.opponent.atk = data.unit.totalPow }
+          }
+          this.EFOPT(data)
+          this.confirmBlock(data)
+        } else {
+          if (data.who === 'Player') { this.effect.player = { active: false } }
+          if (data.who === 'Opponent') { this.effect.opponent = { active: false } }
+          if (data.who === 'Player') { this.player.atk = data.unit.totalPow }
+          if (data.who === 'Opponent') { this.opponent.atk = data.unit.totalPow }
+          this.confirmBlock(data)
         }
       })
     },
     EF045 (data) { // Trafalgal D. Water Law
-      data.todo = 'ACT045'
-      this.TARGETOWNER(data)
+      alert('Trafalgal D. Water Law effect, send unit to drop zone')
+      if (data.who === 'Player') { data.BF = this.player.field }
+      if (data.who === 'Opponent') { data.BF = this.opponent.field }
+      data.unit = data.BF[data.index]
+      if (data.unit.OPT === false) {
+        const effect = {
+          active: true,
+          todo: 'FIELD TO DROP',
+          target: {
+            who: 'SELF',
+            isTarget: true,
+            isField: true,
+            grade: '',
+            name: ''
+          },
+          RES: {
+            todo: 'DAMAGE TO OPPONENT'
+          }
+        }
+        if (data.who === 'Player') {
+          this.effect.player = effect
+        } else {
+          this.effect.opponent = effect
+        }
+      }
+      this.EFOPT(data)
     },
     EF046 (data) { // Bartholomew Kuma
-      data.uindex = data.index
-      data.todo = 'FIELD TO DECK'
-      data.costs = []
-      data.rests = ['FIELD TO DECK']
-      data.target = 'ALL'
-      this.ACTOPT(data)
+      if (data.who === 'Player') { data.BF = this.player.field }
+      if (data.who === 'Opponent') { data.BF = this.opponent.field }
+      data.unit = data.BF[data.index]
+      if (data.unit.OPT === false) {
+        alert('Bartholomew Kuma effect, choose opponent unit')
+        const effect = {
+          active: true,
+          todo: 'FIELD TO DECK',
+          target: {
+            who: 'OTHER',
+            isTarget: true,
+            grade: 'ALL'
+          }
+        }
+        if (data.who === 'Player') {
+          this.effect.player = effect
+        } else {
+          this.effect.opponent = effect
+        }
+      }
+      this.EFOPT(data)
     },
     EF047 (data) { // Charlotte Cracker
       data.gain = 2000
@@ -2244,60 +2371,16 @@ export default {
       }
     },
     EF049 (data) { // Inuarashi
-      this.FTD(data)
-      data.todo = 'DECK TO FIELD'
       data.name = 'Inuarashi'
       data.grade = 3
-      this.TARGETDECKNG(data)
+      this.callEvo(data)
     },
-    EFSULONG (data) { // EFFECT SULONG
-      const cards = []
-      let deck = []
-      let BF = []
-      if (data.who === 'Player') {
-        deck = this.player.deck.deck
-        BF = this.player.field
-      } else {
-        deck = this.opponent.deck.deck
-        BF = this.opponent.field
-      }
-      for (let i = 0; i < deck.length; i++) {
-        if (deck[i].name === data.name && deck[i].grade === 2) {
-          cards.push({ card: deck[i], index: i })
-        }
-      }
-      if (cards.length > 0) {
-        const random = Math.floor(Math.random() * cards.length)
-        if (BF.length < 6) {
-          BF.push({
-            card: cards[random].card,
-            position: 'Stand',
-            gainAuto: 0,
-            gaintCont: 0,
-            totalPow: cards[random].power,
-            otherCont: [],
-            OPT: false, // One Per Turn
-            CON: false // Continu Effect
-          })
-          deck.splice(cards[random].index, 1)
-          if (data.who === 'Player') { this.DPS() }
-          if (data.who === 'Opponent') { this.DOS() }
-          const index = BF.length - 1
-          const unit = BF[index].card
-          this.EFAUTO({ who: 'Player', code: unit.code, index: index, stat: 'EFCAL' })
-          this.EFCONT({ who: 'Player', event: 'COUNT UNIT ON FIELD' })
-        } else {
-          alert('Field Penuh')
-          this.closeInfo()
-        }
-      }
-    },
-    EF050 (data) { // Inuarashi Sulong END PHASE
+    EF050 (data) { // Inuarashi
+      data.grade = 2
       data.name = 'Inuarashi'
-      this.FTD(data)
-      this.EFSULONG(data)
+      this.randomCallBack(data)
     },
-    EF050AUTO (data) { // Inuarashi Sulong AUTO ATK
+    EF050AUTO (data) { // Inuarashi Sulong
       let BF = []
       let count = 0
       if (data.who === 'Player') {
@@ -2305,78 +2388,204 @@ export default {
       } else {
         BF = this.opponent.field
       }
-      BF.map((unit) => {
-        if (unit.card.type.race === 'Beast') {
-          count += 1
+      BF.map((unit) => { if (unit.card.type.race === 'Beast') { count += 1 } })
+      if (data.who === 'Player') { this.effect.player = { active: true } }
+      if (data.who === 'Opponent') { this.effect.opponent = { active: true } }
+      data.unitname = 'Inuarashi'
+      this.$swal.fire({
+        title: 'Aktifkan Effek Inuarashi?',
+        showCancelButton: true,
+        confirmButtonText: 'YES',
+        cancelButtonText: 'NO'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.DMG({ who: data.who, deal: 500 })
+          data.gain = (500 * count)
+          this.GAP(data)
+          if (data.who === 'Player') { this.effect.player = { active: false } }
+          if (data.who === 'Opponent') { this.effect.opponent = { active: false } }
+          if (data.who === 'Player') { this.player.atk = data.unit.totalPow }
+          if (data.who === 'Opponent') { this.opponent.atk = data.unit.totalPow }
+          this.confirmBlock(data)
         }
       })
+    },
+    EF051 (data) { // Nekomamushi
+      data.name = 'Nekomamushi'
+      data.grade = 3
+      this.callEvo(data)
+    },
+    EF052 (data) { // Nekomamushi
+      data.grade = 2
+      data.name = 'Nekomamushi'
+      this.randomCallBack(data)
+    },
+    EF052ACT (data) { // Nekomamushi Sulong
+      if (data.who === 'Player') { data.BF = this.player.field }
+      if (data.who === 'Opponent') { data.BF = this.opponent.field }
+      data.unit = data.BF[data.index]
+      if (data.unit.OPT === false) {
+        this.$swal.fire({
+          title: 'Aktifkan Effek Nekomamushi?',
+          showCancelButton: true,
+          confirmButtonText: 'YES',
+          cancelButtonText: 'NO'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            data.todo = 'search'
+            data.filter = true
+            data.filterRace = true
+            data.race = 'Beast'
+            data.filterNotName = 'Nekomamushi'
+            data.RESEFF = 'ADD TO HAND'
+            this.DECK(data)
+          }
+        })
+      }
+      this.EFOPT(data)
+    },
+    EF053 (data) { // Uta
+      let count = 0
+      const BF = this.player.field
+      const BFOP = this.opponent.field
+      BF.map((unit) => { if (unit.position === 'Rest') { count += 1 } })
+      BFOP.map((unit) => { if (unit.position === 'Rest') { count += 1 } })
+      data.unitname = 'Uta'
+      if (data.who === 'Player') { this.effect.player = { active: true } }
+      if (data.who === 'Opponent') { this.effect.opponent = { active: true } }
+      this.$swal.fire({
+        title: `Aktifkan Effek ${data.unitname}?`,
+        showCancelButton: true,
+        confirmButtonText: 'YES',
+        cancelButtonText: 'NO'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.DMG({ who: data.who, deal: 500 })
+          data.gain = (500 * count)
+          this.GAP(data)
+          if (data.who === 'Player') { this.effect.player = { active: false } }
+          if (data.who === 'Opponent') { this.effect.opponent = { active: false } }
+          if (data.who === 'Player') { this.player.atk = data.unit.totalPow }
+          if (data.who === 'Opponent') { this.opponent.atk = data.unit.totalPow }
+          this.confirmBlock(data)
+        }
+      })
+    },
+    EF054 (data) { // Gordon
+      if (data.who === 'Player') { data.BF = this.player.field }
+      if (data.who === 'Opponent') { data.BF = this.opponent.field }
+      data.unit = data.BF[data.index]
+      if (data.unit.OPT === false) {
+        alert('Gordon effect')
+        data.todo = 'UNIT TO REST'
+        this.FIELD(data)
+        const effect = {
+          active: true,
+          todo: 'UNIT TO REST',
+          target: {
+            who: 'OTHER',
+            isTarget: true,
+            grade: 'EQUAL 1'
+          }
+        }
+        if (data.who === 'Player') {
+          this.effect.player = effect
+        } else {
+          this.effect.opponent = effect
+        }
+      }
+      this.EFOPT(data)
+    },
+    EF055 (data) { // Arlong
+      this.$swal.fire({
+        title: 'Aktifkan Effek Arlong?',
+        showCancelButton: true,
+        confirmButtonText: 'YES',
+        cancelButtonText: 'NO'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          data.todo = 'search'
+          data.filter = true
+          data.filterRace = true
+          data.race = 'Fishman'
+          data.RESEFF = 'ADD TO HAND'
+          this.DECK(data)
+        }
+      })
+    },
+    EF056 (data) { // Brook
       this.DMG({ who: data.who, deal: 500 })
+      const cards = []
+      if (data.who === 'Player') { data.drop = this.player.drop }
+      if (data.who === 'Opponent') { data.drop = this.opponent.drop }
+      for (let i = 0; i < data.drop.length; i++) {
+        cards.push({ card: data.drop[i], index: i })
+      }
+      if (cards.length > 0) {
+        const index = Math.floor(Math.random() * cards.length)
+        const unit = cards[index]
+        data.todo = 'DROP TO FIELD'
+        data.index = unit.index
+        this.DROP(data)
+      } else {
+        alert('Target tidak ditemukan')
+      }
+    },
+    EF057 (data) { // Basil Hawkins
+      this.DMG({ who: data.who, deal: 500 })
+      const cards = []
+      if (data.who === 'Player') { data.deck = this.player.deck.deck }
+      if (data.who === 'Opponent') { data.deck = this.opponent.deck.deck }
+      for (let i = 0; i < data.deck.length; i++) {
+        cards.push({ card: data.deck[i], index: i })
+      }
+      if (cards.length > 0) {
+        const index = Math.floor(Math.random() * cards.length)
+        const unit = cards[index]
+        data.todo = 'DECK TO FIELD'
+        data.index = unit.index
+        this.DECK(data)
+      } else {
+        alert('Target tidak ditemukan')
+      }
+    },
+    EF058 (data) { // Jack
+      data.gain = 1000
+      this.powerStack(data)
+    },
+    EF060 (data) { // Coby
+      let BF = []
+      let count = 0
+      if (data.who === 'Player') { BF = this.player.field }
+      if (data.who === 'Opponent') { BF = this.opponent.field }
+      BF.map((unit) => { if (unit.card.type.job === 'Fighter') { count += 1 } })
       data.gain = (500 * count)
+      this.GAP(data)
+    },
+    EF061 (data) { // Eustass Kid
+      this.DECK({ who: data.who, todo: 'mill' })
+      let drop = []
+      if (data.who === 'Player') {
+        drop = this.player.drop
+      } else {
+        drop = this.opponent.drop
+      }
+      const index = drop.length - 1
+      data.gain = drop[index].power
       this.GAP(data)
     }
   },
   created () {
     this.parseDP()
-    this.DPS() // Shuffle Deck Player
-    this.DOS()
-    this.ODP()
-    this.ODO()
-    this.RFT()
+    this.DECK({ who: 'Player', todo: 'shuffle' })
+    this.DECK({ who: 'Opponent', todo: 'shuffle' })
+    for (let i = 0; i < 5; i++) {
+      this.DECK({ who: 'Player', todo: 'draw' })
+      this.DECK({ who: 'Opponent', todo: 'draw' })
+    }
+    this.FIRST()
   },
   updated () {
-    if (this.turn === 'Player') {
-      if (this.player.phase === 'BP') {
-        if (this.player.atk !== 0) {
-          let OPU = 0
-          this.opponent.field.map((U) => {
-            if (U.position === 'Stand') { OPU += 1 }
-          })
-          if (OPU > 0) {
-            if (this.info.isOpen !== true) {
-              this.onDef({
-                who: {
-                  atk: 'Player',
-                  def: 'Opponent'
-                },
-                index: {
-                  atk: this.player.indexATK,
-                  def: 0
-                }
-              })
-            }
-          } else {
-            this.DMG({ who: 'Opponent', deal: this.player.atk })
-            this.player.atk = 0
-          }
-        }
-      }
-    } else {
-      if (this.opponent.phase === 'BP') {
-        if (this.opponent.atk !== 0) {
-          let PLU = 0
-          this.player.field.map((U) => {
-            if (U.position === 'Stand') { PLU += 1 }
-          })
-          if (PLU > 0) {
-            if (this.info.isOpen !== true) {
-              this.onDef({
-                who: {
-                  atk: 'Opponent',
-                  def: 'Player'
-                },
-                index: {
-                  atk: this.opponent.indexATK,
-                  def: 0
-                }
-              })
-            }
-          } else {
-            this.DMG({ who: 'Player', deal: this.opponent.atk })
-            this.opponent.atk = 0
-          }
-        }
-      }
-    }
   }
 }
 </script>

@@ -2,11 +2,12 @@
   <div class="col-3 h-100vh p-0">
     <div class="row h-10vh m-0">
       <div class="col-12 text-white shadow-text-2"><b>{{ opponent.name }}</b></div>
-      <div class="col-12 text-white shadow-text-2"><b>Life: {{ opponent.life }}</b></div>
+      <div class="col-12 text-danger shadow-text-2"><b>Life: {{ opponent.life }} {{ info.isOpen }}</b></div>
     </div>
     <div class="row h-80vh m-0">
       <Open
         v-if="info.isOpen === true"
+        v-on:card="card"
         :info="info"
         :turn='turn'
         :phases="phases"
@@ -34,11 +35,11 @@
       <div v-else class="col-10 h-80vh px-2 text-white shadow-text-1">Chat Player</div>
       <div class="col-2">
         <Phase
+          v-on:changePhase="changePhase"
           :turn='turn'
           :phases="phases"
           :player="player"
           :opponent="opponent"
-          v-on:BCP="BCP"
         />
       </div>
     </div>
@@ -55,21 +56,24 @@ import Open from './open/C-Arena-Open.vue'
 
 export default {
   name: 'Arena Info',
-  props: ['info', 'data', 'turn', 'phases', 'player', 'opponent'],
+  props: ['info', 'turn', 'phases', 'player', 'opponent'],
   data () {
-    return {
-    }
+    return {}
   },
   components: {
     Phase,
     Open
   },
   methods: {
+    changePhase (data) {
+      this.$emit('changePhase', data)
+    },
+    card (data) {
+      this.$emit('card', data)
+    },
+    // OLD CODE
     OD (data) {
       this.$emit('OD', data)
-    },
-    BCP (data) {
-      this.$emit('BCP', data)
     },
     AFD (data) {
       this.$emit('AFD', data)

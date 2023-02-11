@@ -42,51 +42,12 @@ export default {
         const index = deck.findIndex(x => x.code === code)
         const data = {
           who: this.info.who,
-          index: index
+          index: index,
+          from: 'DECK',
+          todo: this.info.todo
         }
-        this.$emit('AFD', data)
-      }
-      if (this.info.todo === 'HAND TO DECK') {
-        const data = {
-          who: this.info.who,
-          index: i
-        }
-        this.$emit('HTD', data)
-      }
-      if (this.info.todo === 'UNIT TO REST') {
-        const data = {
-          who: this.info.who,
-          index: i
-        }
-        this.$emit('UTR', data)
-      }
-      if (this.info.todo === 'DESTROY UNIT') {
-        const data = {
-          who: this.info.who,
-          index: i
-        }
-        this.$emit('UDF', data)
-      }
-      if (this.info.todo === 'FIELD TO DECK') {
-        const data = {
-          who: this.info.who,
-          index: i
-        }
-        this.$emit('FTD', data)
-      }
-      if (this.info.todo === 'BIND UNIT') {
-        const data = {
-          who: this.info.who,
-          index: i
-        }
-        this.$emit('UBF', data)
-      }
-      if (this.info.todo === 'FIELD TO HAND') {
-        const data = {
-          who: this.info.who,
-          index: i
-        }
-        this.$emit('FTH', data)
+        // this.$emit('AFD', data)
+        this.$emit('card', data)
       }
       if (this.info.todo === 'DECK TO FIELD') {
         const unit = this.info.card[i]
@@ -100,9 +61,12 @@ export default {
         const index = deck.findIndex(x => x.code === code)
         const data = {
           who: this.info.who,
-          index: index
+          index: index,
+          from: 'DECK',
+          todo: this.info.todo
         }
-        this.$emit('DTF', data)
+        // this.$emit('DTF', data)
+        this.$emit('card', data)
       }
       if (this.info.todo === 'DROP TO FIELD') {
         const unit = this.info.card[i]
@@ -116,9 +80,68 @@ export default {
         const index = drop.findIndex(x => x.code === code)
         const data = {
           who: this.info.who,
-          index: index
+          index: index,
+          from: 'DROP',
+          todo: this.info.todo
         }
-        this.$emit('DRTF', data)
+        this.$emit('card', data)
+        // this.$emit('DRTF', data)
+      }
+      if (this.info.todo === 'FIELD TO DROP') {
+      // if (this.info.todo === 'DESTROY UNIT') {
+        const data = {
+          who: this.info.who,
+          index: i,
+          from: 'FIELD',
+          todo: this.info.todo
+        }
+        // this.$emit('UDF', data)
+        this.$emit('card', data)
+      }
+      // if (this.info.todo === 'BIND UNIT') {
+      if (this.info.todo === 'FIELD TO BIND') {
+        const data = {
+          who: this.info.who,
+          index: i,
+          from: 'FIELD',
+          todo: this.info.todo
+        }
+        this.$emit('card', data)
+        // this.$emit('UBF', data)
+      }
+      if (this.info.todo === 'FIELD TO HAND') {
+        const data = {
+          who: this.info.who,
+          index: i,
+          from: 'FIELD',
+          todo: this.info.todo
+        }
+        this.$emit('card', data)
+        // this.$emit('FTH', data)
+      }
+      if (this.info.todo === 'HAND TO DECK') {
+        const data = {
+          who: this.info.who,
+          index: i,
+          from: 'HAND',
+          todo: this.info.todo
+        }
+        // this.$emit('HTD', data)
+        this.$emit('card', data)
+      }
+      if (this.info.todo === 'UNIT TO REST') {
+        const data = {
+          who: this.info.who,
+          index: i
+        }
+        this.$emit('UTR', data)
+      }
+      if (this.info.todo === 'FIELD TO DECK') {
+        const data = {
+          who: this.info.who,
+          index: i
+        }
+        this.$emit('FTD', data)
       }
       if (this.info.todo === 'DROP TO HAND') {
         const card = this.info.card[i]
