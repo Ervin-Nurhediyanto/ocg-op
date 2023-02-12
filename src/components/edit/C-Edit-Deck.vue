@@ -9,11 +9,14 @@
       >
     </div>
     <div v-if="isLoad" class="row h-75vh m-0 d-flex justify-content-center align-content-start overflow scrollbar-none border border-2 border-dark">
-      <div v-for="i in playerDecks.length" :key="i" class="h-10vh my-1 p-0 d-flex justify-content-center shadow-box-inset-2 bg-warning">
-        <div class="w-100 text-center py-2 py-xl-4 text-white font-14px cursor-pointer" @click.prevent="loadDeck((i - 1))">
-          <b>{{ playerDecks[i - 1].title }}</b>
+      <span v-if="playerDecks.length < 1">No Data</span>
+      <span v-else>
+        <div v-for="i in playerDecks.length" :key="i" class="h-10vh my-1 p-0 d-flex justify-content-center shadow-box-inset-2 bg-warning">
+          <div class="w-100 text-center py-2 py-xl-4 text-white font-14px cursor-pointer" @click.prevent="loadDeck((i - 1))">
+            <b>{{ playerDecks[i - 1].title }}</b>
+          </div>
         </div>
-      </div>
+      </span>
     </div>
     <div v-else class="row h-75vh m-0 px-3 d-flex justify-content-center align-content-start overflow scrollbar-none border border-2 border-dark">
       <div v-for="i in data.length" :key="i" class="col-2 h-10vh my-1 d-flex justify-content-center">

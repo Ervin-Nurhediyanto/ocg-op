@@ -334,30 +334,21 @@ export default {
       this.EFAUTO({ who: data.who, stat: 'EFEPDROP' })
     },
     onATK (data) {
-      let unit = {}
       if (data.who === 'Player') {
-        unit = this.player.field[data.index]
+        data.unit = this.player.field[data.index]
         this.player.indexATK = data.index
       } else {
-        unit = this.opponent.field[data.index]
+        data.unit = this.opponent.field[data.index]
         this.opponent.indexATK = data.index
       }
-      unit.position = 'Rest'
+      data.unit.position = 'Rest'
+      if (data.who === 'Player') { this.player.atk = data.unit.totalPow }
+      if (data.who === 'Opponent') { this.opponent.atk = data.unit.totalPow }
+      data.unitname = data.unit.card.name
+      data.code = data.unit.card.code
+      data.stat = 'EFATK'
       this.EFCONT({ who: data.who, event: 'UNIT TO REST' })
-      this.EFAUTO({ who: data.who, unit: unit, code: unit.card.code, index: data.index, stat: 'EFATK' })
-      if (data.who === 'Player') { this.player.atk = unit.totalPow }
-      if (data.who === 'Opponent') { this.opponent.atk = unit.totalPow }
-      data.unitname = unit.card.name
-      // this.confirmBlock(data)
-      if (data.who === 'Player') {
-        if (this.effect.player.active === false) {
-          this.confirmBlock(data)
-        }
-      } else {
-        if (this.effect.opponent.active === false) {
-          this.confirmBlock(data)
-        }
-      }
+      this.EFAUTO(data)
     },
     confirmBlock (data) {
       if (data.who === 'Player') { data.BF = this.opponent.field }
@@ -1123,18 +1114,48 @@ export default {
       if (data.COST === 'PAY LIFE POINTS') {
         this.DMG({ who: data.who, deal: data.pay })
       }
+      if (data.COST === 'MILL') {
+        this.DECK({ who: data.who, todo: 'mill' })
+      }
     },
     RESEF (data) {
+      if (data.RESEFF === 'GET AUTO POWER') {
+        this.GAP(data)
+      }
+      if (data.RESEFF === 'GET LOTS OF AUTO POWER') {
+        for (let i = 0; i < data.units.length; i++) {
+          data.index = data.units[i].index
+          this.GAP(data)
+        }
+      }
       if (data.RESEFF === 'UNIT TO REST') {
-        if (data.who === 'Player') { data.op = 'Opponent' }
-        if (data.who === 'Opponent') { data.op = 'Player' }
-        this.FIELD({
-          who: data.op,
-          filter: true,
-          filterGrade: data.target,
-          todo: 'choose',
-          RESEFF: data.RESEFF
+        this.unitToRest({ who: data.op, BF: data.BFOP, index: data.units[data.IndexOP].index })
+      }
+      if (data.RESEFF === 'UNIT TO STAND') {
+        data.todo = 'UNIT TO STAND'
+        this.FIELD(data)
+      }
+      if (data.RESEFF === 'DESTROY THE WEAK') {
+        if (data.who === 'Player') {
+          data.BFOP = this.opponent.field
+          data.dropOp = this.opponent.drop
+        } else {
+          data.BFOP = this.player.field
+          data.dropOp = this.player.drop
+        }
+        const units = []
+        data.BFOP.map((card) => { // NOT DESTROY UNIT
+          if (card.totalPow >= data.unit.totalPow) {
+            units.push(card)
+          }
         })
+        data.BFOP.map((card) => { // DESTROY UNIT
+          if (card.totalPow < data.unit.totalPow) {
+            data.dropOp.push(card.card)
+          }
+        })
+        if (data.who === 'Player') { this.opponent.field = units }
+        if (data.who === 'Opponent') { this.player.field = units }
       }
     },
     DMG (data) {
@@ -1383,21 +1404,39 @@ export default {
     },
     EFATK (data) {
       this.EFATKstack(data)
-      if (data.code === '001') { this.EF001({ who: data.who, index: data.index, unit: data.unit }) }
-      if (data.code === '002') { this.EF002({ who: data.who, index: data.index, unit: data.unit }) }
-      if (data.code === '021') { this.EF021({ who: data.who, index: data.index, unit: data.unit }) }
-      if (data.code === '028') { this.EF028({ who: data.who, index: data.index, unit: data.unit }) }
-      if (data.code === '044') { this.EF044AUTO({ who: data.who, index: data.index, unit: data.unit }) }
-      if (data.code === '050') { this.EF050AUTO({ who: data.who, index: data.index, unit: data.unit }) }
-      if (data.code === '053') { this.EF053({ who: data.who, index: data.index, unit: data.unit }) }
-      if (data.code === '060') { this.EF060({ who: data.who, index: data.index, unit: data.unit }) }
-      if (data.code === '061') { this.EF061({ who: data.who, index: data.index, unit: data.unit }) }
-      if (data.code === '067') { this.EF067({ who: data.who, index: data.index, unit: data.unit }) }
-      if (data.code === '070') { this.EF070({ who: data.who, index: data.index, unit: data.unit }) }
-      if (data.code === '071') { this.EF071({ who: data.who, index: data.index, unit: data.unit }) }
-      if (data.code === '076') { this.EF076({ who: data.who, index: data.index, unit: data.unit }) }
-      if (data.code === '079') { this.EF079({ who: data.who, index: data.index, unit: data.unit }) }
-      if (data.code === '082') { this.EF082({ who: data.who, index: data.index, unit: data.unit }) }
+      if (data.code === '001') {
+        this.EF001(data)
+      } else if (data.code === '002') {
+        this.EF002(data)
+      } else if (data.code === '021') {
+        this.EF021(data)
+      } else if (data.code === '028') {
+        this.EF028(data)
+      } else if (data.code === '044') {
+        this.EF044AUTO(data)
+      } else if (data.code === '050') {
+        this.EF050AUTO(data)
+      } else if (data.code === '053') {
+        this.EF053(data)
+      } else if (data.code === '060') {
+        this.EF060(data)
+      } else if (data.code === '061') {
+        this.EF061(data)
+      } else if (data.code === '067') {
+        this.EF067(data)
+      } else if (data.code === '070') {
+        this.EF070(data)
+      } else if (data.code === '071') {
+        this.EF071(data)
+      } else if (data.code === '076') {
+        this.EF076(data)
+      } else if (data.code === '079') {
+        this.EF079(data)
+      } else if (data.code === '082') {
+        this.EF082(data)
+      } else {
+        this.confirmBlock(data)
+      }
     },
     EFATKstack (data) {
       if (data.who === 'Player') { data.BF = this.player.field }
@@ -1489,6 +1528,24 @@ export default {
         if (drop[i].code === '066') { this.EF066({ who: data.who, index: i }) }
       }
     },
+    optionalEFATK (data) {
+      this.$swal.fire({
+        title: `Aktifkan Effek ${data.unitname}?`,
+        showCancelButton: true,
+        confirmButtonText: 'YES',
+        cancelButtonText: 'NO'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.COST(data)
+          this.RESEF(data)
+          if (data.who === 'Player') { this.player.atk = data.unit.totalPow }
+          if (data.who === 'Opponent') { this.opponent.atk = data.unit.totalPow }
+          this.confirmBlock(data)
+        } else {
+          this.confirmBlock(data)
+        }
+      })
+    },
     // UNIT EFFECT CODE
     EF001 (data) { // Monkey D. Luffy
       data.gain = 1000
@@ -1503,30 +1560,15 @@ export default {
           this.opponent.atk = data.unit.totalPow
         }
       }
+      if (data.stat === 'EFATK') { this.confirmBlock(data) }
     },
     EF002 (data) { // Roronoa Zoro
-      if (data.who === 'Player') { this.effect.player = { active: true } }
-      if (data.who === 'Opponent') { this.effect.opponent = { active: true } }
       data.gain = 1000
       this.GAP(data)
-      this.$swal.fire({
-        title: 'Aktifkan Effek Roronoa Zoro?',
-        showCancelButton: true,
-        confirmButtonText: 'YES',
-        cancelButtonText: 'NO'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.DMG({ who: data.who, deal: 500 })
-          data.gain = 1000
-          this.GAP(data)
-          if (data.who === 'Player') { this.effect.player = { active: false } }
-          if (data.who === 'Opponent') { this.effect.opponent = { active: false } }
-          if (data.who === 'Player') { this.player.atk = data.unit.totalPow }
-          if (data.who === 'Opponent') { this.opponent.atk = data.unit.totalPow }
-          data.unitname = 'Roronoa Zoro'
-          this.confirmBlock(data)
-        }
-      })
+      data.COST = 'PAY LIFE POINTS'
+      data.pay = 500
+      data.RESEFF = 'GET AUTO POWER'
+      this.optionalEFATK(data)
     },
     EF003 (data) { // Vinsmoke Sanji
       data.gain = 2000
@@ -1789,6 +1831,7 @@ export default {
       })
     },
     EF021 (data) { // Vinsmoke Yonji
+      data.gain = 0
       let BF = []
       if (data.who === 'Player') {
         BF = this.player.field
@@ -1803,8 +1846,10 @@ export default {
       })
       if (vinsmoke > 1) {
         data.gain = 1500
-        this.GAP(data)
       }
+      data.COST = ''
+      data.RESEFF = 'GET AUTO POWER'
+      this.optionalEFATK(data)
     },
     EF022 (data) { // Vinsmoke Sanji
       alert('Sanji effect, discard a card')
@@ -1979,14 +2024,15 @@ export default {
     },
     EF028 (data) { // Smoker
       let phase = ''
-      data.COST = 'PAY LIFE POINTS'
       data.pay = 500
+      data.COST = 'PAY LIFE POINTS'
+      data.RESEFF = 'UNIT TO REST'
       if (data.who === 'Player') { phase = this.player.phase }
       if (data.who === 'Opponent') { phase = this.opponent.phase }
-      if (data.who === 'Player') { data.BF = this.player.field }
-      if (data.who === 'Opponent') { data.BF = this.opponent.field }
-      data.unit = data.BF[data.index]
       if (phase === 'MP1' || phase === 'MP2') { // ACT OPT
+        if (data.who === 'Player') { data.BF = this.player.field }
+        if (data.who === 'Opponent') { data.BF = this.opponent.field }
+        data.unit = data.BF[data.index]
         if (data.unit.OPT === false) {
           alert('Smoker effect, Choose opponent unit')
           this.COST(data)
@@ -2008,29 +2054,24 @@ export default {
         this.EFOPT(data)
       }
       if (phase === 'BP') { // AUTO ATK
-        this.COST(data)
-        let OP = ''
-        let BF = []
-        const units = []
+        data.units = []
         if (data.who === 'Player') {
-          OP = 'Opponent'
-          BF = this.opponent.field
+          data.op = 'Opponent'
+          data.BFOP = this.opponent.field
         }
         if (data.who === 'Opponent') {
-          OP = 'Player'
-          BF = this.player.field
+          data.op = 'Player'
+          data.BFOP = this.player.field
         }
-        for (let i = 0; i < BF.length; i++) {
-          if (BF[i].position === 'Stand' && BF[i].card.grade <= 2) {
-            units.push({ unit: BF[i], index: i })
+        for (let i = 0; i < data.BFOP.length; i++) {
+          if (data.BFOP[i].position === 'Stand' && data.BFOP[i].card.grade <= 2) {
+            data.units.push({ unit: data.BFOP[i], index: i })
           }
         }
-        if (units.length > 0) {
-          const OpIndex = Math.floor(Math.random() * units.length)
-          this.unitToRest({ who: OP, BF: BF, index: units[OpIndex].index })
+        if (data.units.length > 0) {
+          data.IndexOP = Math.floor(Math.random() * data.units.length)
         }
-        data.unitname = 'Smoker'
-        this.confirmBlock(data)
+        this.optionalEFATK(data)
       }
     },
     EF029 (data) { // Tama
@@ -2316,37 +2357,15 @@ export default {
       this.powerStack(data)
     },
     EF044AUTO (data) { // Kizaru Effect Auto
-      if (data.who === 'Player') { this.effect.player = { active: true } }
-      if (data.who === 'Opponent') { this.effect.opponent = { active: true } }
-      if (data.who === 'Player') { data.BF = this.player.field }
-      if (data.who === 'Opponent') { data.BF = this.opponent.field }
-      data.unit = data.BF[data.index]
-      data.unitname = 'Kizaru'
-      this.$swal.fire({
-        title: `Aktifkan Effek ${data.unitname}?`,
-        showCancelButton: true,
-        confirmButtonText: 'YES',
-        cancelButtonText: 'NO'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          if (data.unit.OPT === false) {
-            data.todo = 'UNIT TO STAND'
-            this.FIELD(data)
-            if (data.who === 'Player') { this.effect.player = { active: false } }
-            if (data.who === 'Opponent') { this.effect.opponent = { active: false } }
-            if (data.who === 'Player') { this.player.atk = data.unit.totalPow }
-            if (data.who === 'Opponent') { this.opponent.atk = data.unit.totalPow }
-          }
-          this.EFOPT(data)
-          this.confirmBlock(data)
-        } else {
-          if (data.who === 'Player') { this.effect.player = { active: false } }
-          if (data.who === 'Opponent') { this.effect.opponent = { active: false } }
-          if (data.who === 'Player') { this.player.atk = data.unit.totalPow }
-          if (data.who === 'Opponent') { this.opponent.atk = data.unit.totalPow }
-          this.confirmBlock(data)
-        }
-      })
+      data.COST = ''
+      if (data.unit.OPT === false) {
+        data.RESEFF = 'UNIT TO STAND'
+        this.optionalEFATK(data)
+      } else {
+        data.RESEFF = ''
+        this.optionalEFATK(data)
+      }
+      this.EFOPT(data)
     },
     EF045 (data) { // Trafalgal D. Water Law
       alert('Trafalgal D. Water Law effect, send unit to drop zone')
@@ -2453,34 +2472,15 @@ export default {
       this.randomCallBack(data)
     },
     EF050AUTO (data) { // Inuarashi Sulong
-      let BF = []
       let count = 0
-      if (data.who === 'Player') {
-        BF = this.player.field
-      } else {
-        BF = this.opponent.field
-      }
-      BF.map((unit) => { if (unit.card.type.race === 'Beast') { count += 1 } })
-      if (data.who === 'Player') { this.effect.player = { active: true } }
-      if (data.who === 'Opponent') { this.effect.opponent = { active: true } }
-      data.unitname = 'Inuarashi'
-      this.$swal.fire({
-        title: 'Aktifkan Effek Inuarashi?',
-        showCancelButton: true,
-        confirmButtonText: 'YES',
-        cancelButtonText: 'NO'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.DMG({ who: data.who, deal: 500 })
-          data.gain = (500 * count)
-          this.GAP(data)
-          if (data.who === 'Player') { this.effect.player = { active: false } }
-          if (data.who === 'Opponent') { this.effect.opponent = { active: false } }
-          if (data.who === 'Player') { this.player.atk = data.unit.totalPow }
-          if (data.who === 'Opponent') { this.opponent.atk = data.unit.totalPow }
-          this.confirmBlock(data)
-        }
-      })
+      if (data.who === 'Player') { data.BF = this.player.field }
+      if (data.who === 'Opponent') { data.BF = this.opponent.field }
+      data.BF.map((unit) => { if (unit.card.type.race === 'Beast') { count += 1 } })
+      data.pay = 500
+      data.gain = (500 * count)
+      data.COST = 'PAY LIFE POINTS'
+      data.RESEFF = 'GET AUTO POWER'
+      this.optionalEFATK(data)
     },
     EF051 (data) { // Nekomamushi
       data.name = 'Nekomamushi'
@@ -2522,26 +2522,11 @@ export default {
       const BFOP = this.opponent.field
       BF.map((unit) => { if (unit.position === 'Rest') { count += 1 } })
       BFOP.map((unit) => { if (unit.position === 'Rest') { count += 1 } })
-      data.unitname = 'Uta'
-      if (data.who === 'Player') { this.effect.player = { active: true } }
-      if (data.who === 'Opponent') { this.effect.opponent = { active: true } }
-      this.$swal.fire({
-        title: `Aktifkan Effek ${data.unitname}?`,
-        showCancelButton: true,
-        confirmButtonText: 'YES',
-        cancelButtonText: 'NO'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.DMG({ who: data.who, deal: 500 })
-          data.gain = (500 * count)
-          this.GAP(data)
-          if (data.who === 'Player') { this.effect.player = { active: false } }
-          if (data.who === 'Opponent') { this.effect.opponent = { active: false } }
-          if (data.who === 'Player') { this.player.atk = data.unit.totalPow }
-          if (data.who === 'Opponent') { this.opponent.atk = data.unit.totalPow }
-          this.confirmBlock(data)
-        }
-      })
+      data.pay = 500
+      data.gain = (500 * count)
+      data.COST = 'PAY LIFE POINTS'
+      data.RESEFF = 'GET AUTO POWER'
+      this.optionalEFATK(data)
     },
     EF054 (data) { // Gordon
       if (data.who === 'Player') { data.BF = this.player.field }
@@ -2626,25 +2611,24 @@ export default {
       this.powerStack(data)
     },
     EF060 (data) { // Coby
-      let BF = []
       let count = 0
-      if (data.who === 'Player') { BF = this.player.field }
-      if (data.who === 'Opponent') { BF = this.opponent.field }
-      BF.map((unit) => { if (unit.card.type.job === 'Fighter') { count += 1 } })
+      if (data.who === 'Player') { data.BF = this.player.field }
+      if (data.who === 'Opponent') { data.BF = this.opponent.field }
+      data.BF.map((unit) => { if (unit.card.type.job === 'Fighter') { count += 1 } })
       data.gain = (500 * count)
-      this.GAP(data)
+      data.COST = ''
+      data.RESEFF = 'GET AUTO POWER'
+      this.optionalEFATK(data)
     },
     EF061 (data) { // Eustass Kid
       this.DECK({ who: data.who, todo: 'mill' })
-      let drop = []
-      if (data.who === 'Player') {
-        drop = this.player.drop
-      } else {
-        drop = this.opponent.drop
-      }
-      const index = drop.length - 1
-      data.gain = drop[index].power
-      this.GAP(data)
+      data.COST = ''
+      if (data.who === 'Player') { data.drop = this.player.drop }
+      if (data.who === 'Opponent') { data.drop = this.opponent.drop }
+      const index = data.drop.length - 1
+      data.gain = data.drop[index].power
+      data.RESEFF = 'GET AUTO POWER'
+      this.optionalEFATK(data)
     },
     EF062 (data) { // Fujitora
       if (data.who === 'Player') {
@@ -2700,32 +2684,10 @@ export default {
       this.HEAL(data)
     },
     EF067 (data) { // Dracule Mihawk
-      this.DMG({ who: data.who, deal: 500 })
-      let unit = {}
-      let BF = []
-      let drop = []
-      if (data.who === 'Player') {
-        unit = this.player.field[data.index]
-        BF = this.opponent.field
-        drop = this.opponent.drop
-      } else {
-        unit = this.opponent.field[data.index]
-        BF = this.player.field
-        drop = this.player.drop
-      }
-      const units = []
-      BF.map((card) => {
-        if (card.totalPow >= unit.totalPow) {
-          units.push(card)
-        }
-      })
-      BF.map((card) => {
-        if (card.totalPow < unit.totalPow) {
-          drop.push(card.card)
-        }
-      })
-      if (data.who === 'Player') { this.opponent.field = units }
-      if (data.who === 'Opponent') { this.player.field = units }
+      data.pay = 500
+      data.COST = 'PAY LIFE POINTS'
+      data.RESEFF = 'DESTROY THE WEAK'
+      this.optionalEFATK(data)
     },
     EF068 (data) { // Monkey D. Garp
       data.gain = 1000
@@ -2754,31 +2716,30 @@ export default {
       if (data.who === 'Opponent') { this.player.atk = 0 }
     },
     EF070 (data) { // Edward Newgate
-      data.COST = 'PAY LIFE POINTS'
       data.pay = 500
-      this.COST(data)
       data.gain = 5000
-      this.GAP(data)
+      data.COST = 'PAY LIFE POINTS'
+      data.RESEFF = 'GET AUTO POWER'
+      this.optionalEFATK(data)
     },
     EF070EP (data) { // Edward Newgate (EP)
       this.DMG({ who: data.who, deal: 500 })
     },
     EF071 (data) { // Bohemian
-      data.COST = 'PAY LIFE POINTS'
-      data.pay = 500
-      this.COST(data)
-      let BF = []
-      if (data.who === 'Player') { BF = this.player.field }
-      if (data.who === 'Opponent') { BF = this.opponent.field }
+      if (data.who === 'Player') { data.BF = this.player.field }
+      if (data.who === 'Opponent') { data.BF = this.opponent.field }
       const units = []
-      for (let i = 0; i < BF.length; i++) {
-        if (BF[i].card.name === 'Edward Newgate' && BF[i].position === 'Rest') {
-          units.push({ unit: BF[i], index: i })
+      for (let i = 0; i < data.BF.length; i++) {
+        if (data.BF[i].card.name === 'Edward Newgate' && data.BF[i].position === 'Rest') {
+          units.push({ unit: data.BF[i], index: i })
         }
       }
-      if (units.length > 0) {
-        this.FIELD({ who: data.who, index: units[0].index, todo: 'UNIT TO STAND' })
-      }
+      if (units.length > 0) { data.index = units[0].index }
+      data.pay = 500
+      data.gain = 5000
+      data.COST = 'PAY LIFE POINTS'
+      data.RESEFF = 'UNIT TO STAND'
+      this.optionalEFATK(data)
     },
     EF072 (data) { // Squard
       if (data.who === 'Player') { data.BF = this.player.field }
@@ -2866,17 +2827,19 @@ export default {
       this.EFOPT(data)
     },
     EF076 (data) { // Blenheim
-      data.COST = 'PAY LIFE POINTS'
-      data.pay = 500
-      this.COST(data)
-      let BF = []
-      if (data.who === 'Player') { BF = this.player.field }
-      if (data.who === 'Opponent') { BF = this.opponent.field }
-      for (let i = 0; i < BF.length; i++) {
-        if (BF[i].card.name === 'Edward Newgate') {
-          this.GAP({ who: data.who, index: i, gain: 1000 })
+      data.units = []
+      if (data.who === 'Player') { data.BF = this.player.field }
+      if (data.who === 'Opponent') { data.BF = this.opponent.field }
+      for (let i = 0; i < data.BF.length; i++) {
+        if (data.BF[i].card.name === 'Edward Newgate') {
+          data.units.push({ unit: data.BF[i], index: i })
         }
       }
+      data.pay = 500
+      data.gain = 1000
+      data.COST = 'PAY LIFE POINTS'
+      data.RESEFF = 'GET LOTS OF AUTO POWER'
+      this.optionalEFATK(data)
     },
     EF077 (data) { // Thatch
       const cards = []
@@ -2898,40 +2861,16 @@ export default {
       }
     },
     EF079 (data) { // Cavendish
-      if (data.who === 'Player') { this.effect.player = { active: true } }
-      if (data.who === 'Opponent') { this.effect.opponent = { active: true } }
-      if (data.who === 'Player') { data.BF = this.player.field }
-      if (data.who === 'Opponent') { data.BF = this.opponent.field }
-      data.unit = data.BF[data.index]
-      data.unitname = 'Cavendish'
-      this.$swal.fire({
-        title: `Aktifkan Effek ${data.unitname}?`,
-        showCancelButton: true,
-        confirmButtonText: 'YES',
-        cancelButtonText: 'NO'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          if (data.unit.OPT === false) {
-            data.COST = 'PAY LIFE POINTS'
-            data.pay = 500
-            this.COST(data)
-            data.todo = 'UNIT TO STAND'
-            this.FIELD(data)
-            if (data.who === 'Player') { this.effect.player = { active: false } }
-            if (data.who === 'Opponent') { this.effect.opponent = { active: false } }
-            if (data.who === 'Player') { this.player.atk = data.unit.totalPow }
-            if (data.who === 'Opponent') { this.opponent.atk = data.unit.totalPow }
-          }
-          this.EFOPT(data)
-          this.confirmBlock(data)
-        } else {
-          if (data.who === 'Player') { this.effect.player = { active: false } }
-          if (data.who === 'Opponent') { this.effect.opponent = { active: false } }
-          if (data.who === 'Player') { this.player.atk = data.unit.totalPow }
-          if (data.who === 'Opponent') { this.opponent.atk = data.unit.totalPow }
-          this.confirmBlock(data)
-        }
-      })
+      if (data.unit.OPT === false) {
+        data.pay = 500
+        data.COST = 'PAY LIFE POINTS'
+        data.RESEFF = 'UNIT TO STAND'
+        this.optionalEFATK(data)
+      } else {
+        data.RESEFF = ''
+        this.optionalEFATK(data)
+      }
+      this.EFOPT(data)
     },
     EF080 (data) { // Bartolomeo
       if (data.who === 'Player') { data.BF = this.player.field }
@@ -2979,14 +2918,18 @@ export default {
       this.EFOPT(data)
     },
     EF082 (data) { // Ideo
+      data.units = []
       if (data.who === 'Player') { data.BF = this.player.field }
       if (data.who === 'Opponent') { data.BF = this.opponent.field }
-      alert('Ideo effect')
       for (let i = 0; i < data.BF.length; i++) {
         if (data.BF[i].card.grade === 2) {
-          this.GAP({ who: data.who, index: i, gain: 500 })
+          data.units.push({ unit: data.BF[i], index: i })
         }
       }
+      data.gain = 500
+      data.COST = ''
+      data.RESEFF = 'GET LOTS OF AUTO POWER'
+      this.optionalEFATK(data)
     },
     EF083 (data) { // Leo
       if (data.who === 'Player') { data.BF = this.player.field }

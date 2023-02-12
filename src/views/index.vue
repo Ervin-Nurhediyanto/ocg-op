@@ -8,26 +8,8 @@
       v-on:changeTitle="changeTitle"
       v-on:loadDeck="loadDeck"
       v-on:sortData="sortData"
-    />
-    <!-- <router-view
-      :data="data"
-      v-on:removeCard="removeCard"
-      v-on:changeDisplay="changeDisplay"
-      v-on:changeTitle="changeTitle"
-      v-on:loadDeck="loadDeck"
       v-on:deleteDeck="deleteDeck"
-      v-on:addToDeck="addToDeck"
-      v-on:sortData="sortData"
-      v-on:selectPlayerDeck="selectPlayerDeck"
-      v-on:selectOpponentDeck="selectOpponentDeck"
-      v-on:ShowDeck="ShowDeck"
-      v-on:ShowDrop="ShowDrop"
-      v-on:ShowBind="ShowBind"
-      v-on:changePhase="changePhase"
-      v-on:unitAttack="unitAttack"
-      v-on:unitCall="unitCall"
-      v-on:handleToDo="handleToDo"
-    /> -->
+    />
   </div>
 </template>
 
@@ -1417,7 +1399,6 @@ export default {
     ]),
     changeDisplay (data) {
       this.data.edit.display = data
-      // this.data.arena.display = data
     },
     addToDeck (data) {
       this.checkDeck(data)
@@ -1451,6 +1432,10 @@ export default {
     loadDeck (data) {
       this.data.edit.title = data.title
       this.data.edit.deck = data.deck
+    },
+    deleteDeck (data) {
+      this.data.edit.title = ''
+      this.data.edit.deck = []
     },
     sortData (byKey) {
       let sortedData
