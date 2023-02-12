@@ -15,7 +15,9 @@
       <div class="col-11 p-0">
         <div class="row d-flex justify-content-center align-content-center h-5vh m-0">
           <div v-for="i in opponent.field.length" :key="i" class="col-2 h-5vh d-flex justify-content-center align-content-center">
-            <div class="text-white shadow-text-2"><b>{{ opponent.field[i - 1].totalPow }}</b></div>
+            <div v-if="opponent.field[i - 1].totalPow === opponent.field[i - 1].card.power" class="text-white shadow-text-2"><b>{{ opponent.field[i - 1].totalPow }}</b></div>
+            <div v-if="opponent.field[i - 1].totalPow < opponent.field[i - 1].card.power" class="text-danger shadow-text-2"><b>{{ opponent.field[i - 1].totalPow }}</b></div>
+            <div v-if="opponent.field[i - 1].totalPow > opponent.field[i - 1].card.power" class="text-info shadow-text-2"><b>{{ opponent.field[i - 1].totalPow }}</b></div>
           </div>
         </div>
         <div class="row d-flex justify-content-center align-content-center h-20vh m-0">
@@ -27,10 +29,10 @@
               @mouseover.prevent="mouseover(opponent.field[i - 1].card)"
             />
           </div>
-          <div v-if="turn === 'Opponent'" class="mt-3 text-center">
+          <div v-if="turn === 'Opponent'" class="mt-xl-3 text-center">
             <span v-if="opponent.phase === 'BP'" class="text-danger shadow-text-1"><b>ATK : {{ opponent.atk }}</b></span>
           </div>
-          <div v-else class="mt-3 text-center">
+          <div v-else class="mt-xl-3 text-center">
             <span v-if="player.phase === 'BP'" class="text-info shadow-text-1"><b>DEF : {{ opponent.def }}</b></span>
           </div>
         </div>

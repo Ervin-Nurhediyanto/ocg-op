@@ -68,6 +68,25 @@ export default {
         // this.$emit('DTF', data)
         this.$emit('card', data)
       }
+      if (this.info.todo === 'DROP TO HAND') {
+        const card = this.info.card[i]
+        const code = card.code
+        let drop = []
+        if (this.info.who === 'Player') {
+          drop = this.player.drop
+        } else {
+          drop = this.opponent.drop
+        }
+        const index = drop.findIndex(x => x.code === code)
+        const data = {
+          who: this.info.who,
+          index: index,
+          from: 'DROP',
+          todo: this.info.todo
+        }
+        this.$emit('card', data)
+        // this.$emit('DRTH', data)
+      }
       if (this.info.todo === 'DROP TO FIELD') {
         const unit = this.info.card[i]
         const code = unit.code
@@ -129,66 +148,50 @@ export default {
         // this.$emit('HTD', data)
         this.$emit('card', data)
       }
-      if (this.info.todo === 'UNIT TO REST') {
-        const data = {
-          who: this.info.who,
-          index: i
-        }
-        this.$emit('UTR', data)
-      }
-      if (this.info.todo === 'FIELD TO DECK') {
-        const data = {
-          who: this.info.who,
-          index: i
-        }
-        this.$emit('FTD', data)
-      }
-      if (this.info.todo === 'DROP TO HAND') {
-        const card = this.info.card[i]
-        const code = card.code
-        let drop = []
-        if (this.info.who === 'Player') {
-          drop = this.player.drop
-        } else {
-          drop = this.opponent.drop
-        }
-        const index = drop.findIndex(x => x.code === code)
-        const data = {
-          who: this.info.who,
-          index: index
-        }
-        this.$emit('DRTH', data)
-      }
-      if (this.info.todo === 'ACT017') { // Discard to get Power
-        this.ACT('ACT017', i)
-      }
-      if (this.info.todo === 'ACT022') { // Discard to get Power
-        this.ACT('ACT022', i)
-      }
-      if (this.info.todo === 'ACT023') { // Discard to bind
-        this.ACT('ACT023', i)
-      }
-      if (this.info.todo === 'ACT024') { // Discard to destroy
-        this.ACT('ACT024', i)
-      }
-      if (this.info.todo === 'ACT026') { // Call unit from deck
-        this.ACT('ACT026', i)
-      }
-      if (this.info.todo === 'ACT033') { // Call unit from drop
-        this.ACT('ACT033', i)
-      }
-      if (this.info.todo === 'ACT045') { // Deal damage
-        this.ACT('ACT045', i)
-      }
-    },
-    ACT (act, index) {
-      const data = {
-        who: this.info.who,
-        index: index,
-        uindex: this.info.uindex
-      }
-      this.$emit(act, data)
+      // if (this.info.todo === 'UNIT TO REST') {
+      //   const data = {
+      //     who: this.info.who,
+      //     index: i
+      //   }
+      //   this.$emit('UTR', data)
+      // }
+      // if (this.info.todo === 'FIELD TO DECK') {
+      //   const data = {
+      //     who: this.info.who,
+      //     index: i
+      //   }
+      //   this.$emit('FTD', data)
+      // }
+      // if (this.info.todo === 'ACT017') { // Discard to get Power
+      //   this.ACT('ACT017', i)
+      // }
+      // if (this.info.todo === 'ACT022') { // Discard to get Power
+      //   this.ACT('ACT022', i)
+      // }
+      // if (this.info.todo === 'ACT023') { // Discard to bind
+      //   this.ACT('ACT023', i)
+      // }
+      // if (this.info.todo === 'ACT024') { // Discard to destroy
+      //   this.ACT('ACT024', i)
+      // }
+      // if (this.info.todo === 'ACT026') { // Call unit from deck
+      //   this.ACT('ACT026', i)
+      // }
+      // if (this.info.todo === 'ACT033') { // Call unit from drop
+      //   this.ACT('ACT033', i)
+      // }
+      // if (this.info.todo === 'ACT045') { // Deal damage
+      //   this.ACT('ACT045', i)
+      // }
     }
+    // ACT (act, index) {
+    //   const data = {
+    //     who: this.info.who,
+    //     index: index,
+    //     uindex: this.info.uindex
+    //   }
+    //   this.$emit(act, data)
+    // }
   }
 }
 </script>

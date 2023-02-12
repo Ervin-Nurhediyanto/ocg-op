@@ -4,19 +4,22 @@
       class="col-12 h-10vh py-2 text-center text-white shadow-text-2 bg-sleeve-001 cursor-pointer"
       @click.prevent="openDrop"
     >
-      <b>Drop {{ opponent.drop.length }}</b>
+      <b class="d-none d-xl-flex">Drop</b>
+      <b class="font-12px">{{ opponent.drop.length }}</b>
     </div>
     <div
       class="col-12 h-10vh py-2 text-center text-white shadow-text-2 bg-sleeve-001 cursor-pointer"
       @click.prevent="openDeck"
     >
-      <b>Deck {{ opponent.deck.deck.length }}</b>
+      <b class="d-none d-xl-flex">Deck</b>
+      <b class="font-12px">{{ opponent.deck.deck.length }}</b>
     </div>
     <div
       class="col-12 h-10vh py-2 text-center text-white shadow-text-2 bg-sleeve-001 cursor-pointer"
       @click.prevent="openBind"
     >
-      <b>Bind {{ opponent.bind.length }}</b>
+      <b class="d-none d-xl-flex">Bind</b>
+      <b class="font-12px">{{ opponent.bind.length }}</b>
     </div>
   </div>
 </template>

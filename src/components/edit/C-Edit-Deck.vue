@@ -1,21 +1,21 @@
 <template>
-  <div class="row w-100">
+  <div class="row h-100vh w-100">
     <div class="col-12 h-10vh m-0 py-4 d-flex justify-content-center">
       <input
         type="text"
-        class="p-1 font-14px shadow text-center bg-white"
+        class="p-1 h-5vh w-100 mx-2 font-14px shadow text-center bg-white"
         v-model="title"
         @change.prevent="changeTitle(title)"
       >
     </div>
-    <div v-if="isLoad" class="row h-80vh m-0 d-flex justify-content-center align-content-start overflow scrollbar-none border border-2 border-dark">
+    <div v-if="isLoad" class="row h-75vh m-0 d-flex justify-content-center align-content-start overflow scrollbar-none border border-2 border-dark">
       <div v-for="i in playerDecks.length" :key="i" class="h-10vh my-1 p-0 d-flex justify-content-center shadow-box-inset-2 bg-warning">
-        <div class="w-100 text-center py-4 text-white cursor-pointer" @click.prevent="loadDeck((i - 1))">
+        <div class="w-100 text-center py-2 py-xl-4 text-white font-14px cursor-pointer" @click.prevent="loadDeck((i - 1))">
           <b>{{ playerDecks[i - 1].title }}</b>
         </div>
       </div>
     </div>
-    <div v-else class="row h-80vh m-0 d-flex justify-content-center align-content-start overflow scrollbar-none border border-2 border-dark">
+    <div v-else class="row h-75vh m-0 px-3 d-flex justify-content-center align-content-start overflow scrollbar-none border border-2 border-dark">
       <div v-for="i in data.length" :key="i" class="col-2 h-10vh my-1 d-flex justify-content-center">
         <img
           class="h-10vh w-auto"
@@ -25,26 +25,26 @@
         />
       </div>
     </div>
-    <div class="col-12 h-10vh m-0 d-flex justify-content-center">
-      <div class="row">
-        <div class="col">
-          <button class="btn btn-primary my-1 w-100px font-weight-bold font-12px text-center" @click.prevent="handleSave">
+    <div class="col-12 h-15vh m-0 p-0 d-flex justify-content-center overflow scrollbar-none">
+      <div class="row w-100">
+        <div class="col-3 col-sm col-md col-xl-2 p-0 px-1 mx-3">
+          <button class="d-flex justify-content-center btn btn-primary my-1 w-100 font-12px text-center" @click.prevent="handleSave">
             Save
           </button>
         </div>
-        <div class="col">
-          <button class="btn btn-success my-1 w-100px font-weight-bold font-12px text-center" @click.prevent="handleLoad">
+        <div class="col-3 col-sm col-md col-xl-2 p-0 px-1 mx-3">
+          <button class="d-flex justify-content-center btn btn-success my-1 w-100 font-12px text-center" @click.prevent="handleLoad">
             Load
           </button>
         </div>
-        <div class="col">
-          <button class="btn btn-danger my-1 w-100px font-weight-bold font-12px text-center" @click.prevent="handleDelete">
+        <div class="col-3 col-sm col-md col-xl-2 p-0 px-1 mx-3">
+          <button class="btn btn-danger my-1 w-100 font-weight-bold font-12px text-center" @click.prevent="handleDelete">
             Delete
           </button>
         </div>
-        <div class="col">
+        <div class="col-3 col-sm col-md col-xl-2 p-0 px-1 mx-3">
           <button
-            class="btn btn-danger w-100px border border-2 font-weight-bold font-12px text-white text-center"
+            class="btn btn-danger border my-1 w-100 border-2 font-weight-bold font-12px text-white text-center"
             @click.prevent="handleBack">
             Back
           </button>

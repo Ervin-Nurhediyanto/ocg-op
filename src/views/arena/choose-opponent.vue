@@ -1,6 +1,6 @@
 <template>
   <div class="row h-100vh d-flex align-content-center m-0 p-0 bg-op">
-    <div class="h-5vh py-2 d-flex justify-content-center text-white shadow-text-2 bg-danger"><b>Choose Your Opponent</b></div>
+    <div class="h-6vh py-xl-2 d-flex justify-content-center text-white shadow-text-2 bg-danger"><b>Choose Your Opponent</b></div>
     <div class="row m-0 h-95vh py-2 d-flex justify-content-center align-content-center">
       <div v-for="i in opponents.length" :key="i" class="col-2 d-flex justify-content-center">
         <img

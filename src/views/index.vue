@@ -155,6 +155,52 @@ import C060 from '../assets/cards/060.png'
 import CM060 from '../assets/mini-cards/060.png'
 import C061 from '../assets/cards/061.png'
 import CM061 from '../assets/mini-cards/061.png'
+import C062 from '../assets/cards/062.png'
+import CM062 from '../assets/mini-cards/062.png'
+import C063 from '../assets/cards/063.png'
+import CM063 from '../assets/mini-cards/063.png'
+import C064 from '../assets/cards/064.png'
+import CM064 from '../assets/mini-cards/064.png'
+import C065 from '../assets/cards/065.png'
+import CM065 from '../assets/mini-cards/065.png'
+import C066 from '../assets/cards/066.png'
+import CM066 from '../assets/mini-cards/066.png'
+import C067 from '../assets/cards/067.png'
+import CM067 from '../assets/mini-cards/067.png'
+import C068 from '../assets/cards/068.png'
+import CM068 from '../assets/mini-cards/068.png'
+import C069 from '../assets/cards/069.png'
+import CM069 from '../assets/mini-cards/069.png'
+import C070 from '../assets/cards/070.png'
+import CM070 from '../assets/mini-cards/070.png'
+import C071 from '../assets/cards/071.png'
+import CM071 from '../assets/mini-cards/071.png'
+import C072 from '../assets/cards/072.png'
+import CM072 from '../assets/mini-cards/072.png'
+import C073 from '../assets/cards/073.png'
+import CM073 from '../assets/mini-cards/073.png'
+import C074 from '../assets/cards/074.png'
+import CM074 from '../assets/mini-cards/074.png'
+import C075 from '../assets/cards/075.png'
+import CM075 from '../assets/mini-cards/075.png'
+import C076 from '../assets/cards/076.png'
+import CM076 from '../assets/mini-cards/076.png'
+import C077 from '../assets/cards/077.png'
+import CM077 from '../assets/mini-cards/077.png'
+import C078 from '../assets/cards/078.png'
+import CM078 from '../assets/mini-cards/078.png'
+import C079 from '../assets/cards/079.png'
+import CM079 from '../assets/mini-cards/079.png'
+import C080 from '../assets/cards/080.png'
+import CM080 from '../assets/mini-cards/080.png'
+import C081 from '../assets/cards/081.png'
+import CM081 from '../assets/mini-cards/081.png'
+import C082 from '../assets/cards/082.png'
+import CM082 from '../assets/mini-cards/082.png'
+import C083 from '../assets/cards/083.png'
+import CM083 from '../assets/mini-cards/083.png'
+import C084 from '../assets/cards/084.png'
+import CM084 from '../assets/mini-cards/084.png'
 
 export default {
   name: 'Main',
@@ -165,20 +211,342 @@ export default {
           title: '',
           deck: [],
           display: {
-            name: 'Eustass Kid',
-            image: C061,
-            imageM: CM061,
+            name: 'Monkey D. Luffy',
+            image: C084,
+            imageM: CM084,
             grade: 3,
             type: {
               race: 'Human',
               job: 'Fighter',
               special: 'Paramecia'
             },
-            text: '[Auto]: When this unit attack. Put top of your deck into drop zone. This unit get Power equal that unit send into drop zone by this effect.',
+            text: '[Act][1/Turn]: Call random "Commander SHP" from your deck. Shuffle your deck.',
             power: 2500,
-            code: '061'
+            code: '084'
           },
           cards: [
+            {
+              name: 'Monkey D. Luffy',
+              image: C084,
+              imageM: CM084,
+              grade: 3,
+              type: {
+                race: 'Human',
+                job: 'Fighter',
+                special: 'Paramecia'
+              },
+              text: '[Act][1/Turn]: Call random "Commander SHP" from your deck. Shuffle your deck.',
+              power: 2500,
+              code: '084'
+            },
+            {
+              name: 'Leo',
+              image: C083,
+              imageM: CM083,
+              grade: 2,
+              type: {
+                race: 'Tontatta',
+                job: 'Swordman',
+                special: 'Paramecia'
+              },
+              text: '[Cont]: Commander SHP. [Act][1/Turn]: Pay 500 life points. Rest random unit your opponent control.',
+              power: 1500,
+              code: '083'
+            },
+            {
+              name: 'Ideo',
+              image: C082,
+              imageM: CM082,
+              grade: 2,
+              type: {
+                race: 'Human',
+                job: 'Fighter',
+                special: ''
+              },
+              text: '[Cont]: Commander SHP. [Auto]: When this unit attack. All your grade 2 unit get Power + 500 until end this turn.',
+              power: 1500,
+              code: '082'
+            },
+            {
+              name: 'Don Sai',
+              image: C081,
+              imageM: CM081,
+              grade: 2,
+              type: {
+                race: 'Human',
+                job: 'Swordman',
+                special: ''
+              },
+              text: '[Cont]: Commander SHP. [Act][1/Turn]: Pay 500 life points. All your grade 2 unit get Power + 1000 until end this turn.',
+              power: 1500,
+              code: '081'
+            },
+            {
+              name: 'Bartolomeo',
+              image: C080,
+              imageM: CM080,
+              grade: 2,
+              type: {
+                race: 'Human',
+                job: 'Fighter',
+                special: 'Paramecia'
+              },
+              text: '[Cont]: Commander SHP. [Act][1/Turn]: Choose up to one your unit. That unit cannot be destroy until end this turn.',
+              power: 1500,
+              code: '080'
+            },
+            {
+              name: 'Cavendish',
+              image: C079,
+              imageM: CM079,
+              grade: 2,
+              type: {
+                race: 'Human',
+                job: 'Swordman',
+                special: ''
+              },
+              text: '[Cont]: Commander SHP. [Auto][1/Turn]: When this unit attack. Pay 500 life points. Stand this unit. (Still attack and can attact again)',
+              power: 1500,
+              code: '079'
+            },
+            {
+              name: 'Diamond Jozu',
+              image: C078,
+              imageM: CM078,
+              grade: 2,
+              type: {
+                race: 'Human',
+                job: 'Fighter',
+                special: 'Paramecia'
+              },
+              text: '[Cont]: If you control "Edward Newgate". This unit cannot be destroy.',
+              power: 1500,
+              code: '078'
+            },
+            {
+              name: 'Thatch',
+              image: C077,
+              imageM: CM077,
+              grade: 2,
+              type: {
+                race: 'Human',
+                job: 'Fighter',
+                special: ''
+              },
+              text: '[Auto]: When this unit send into drop zone. call "Edward Newgate" from your drop zone.',
+              power: 1500,
+              code: '077'
+            },
+            {
+              name: 'Blenheim',
+              image: C076,
+              imageM: CM076,
+              grade: 1,
+              type: {
+                race: 'Human',
+                job: 'Swordman',
+                special: ''
+              },
+              text: '[Auto]: When this unit attack. Pay 500 life points. All "Edward Newgate" unit your control get Power + 1000 until end this turn.',
+              power: 500,
+              code: '076'
+            },
+            {
+              name: 'Curiel',
+              image: C075,
+              imageM: CM075,
+              grade: 1,
+              type: {
+                race: 'Human',
+                job: 'Gunner',
+                special: ''
+              },
+              text: '[Act][1/Turn]: If you control "Edward Newgate" unit. Choose up to one your opponent unit, then destroy that unit.',
+              power: 500,
+              code: '075'
+            },
+            {
+              name: 'Kingdew',
+              image: C074,
+              imageM: CM074,
+              grade: 1,
+              type: {
+                race: 'Human',
+                job: 'Fighter',
+                special: ''
+              },
+              text: '[Act][1/Turn]: Choose up to one "Edward Newgate". That unit get Power + 1000 until end this turn.',
+              power: 500,
+              code: '074'
+            },
+            {
+              name: 'Haruta',
+              image: C073,
+              imageM: CM073,
+              grade: 1,
+              type: {
+                race: 'Human',
+                job: 'Swordman',
+                special: ''
+              },
+              text: '[Act][1/Turn]: Pay 500 life points. Add up to one "Edward Newgate" into your hand from your deck.',
+              power: 500,
+              code: '073'
+            },
+            {
+              name: 'Squard',
+              image: C072,
+              imageM: CM072,
+              grade: 1,
+              type: {
+                race: 'Human',
+                job: 'Swordman',
+                special: ''
+              },
+              text: '[Act][1/Turn]: Pay 500 life points. Put up to one "Edward Newgate" from drop zone into your hand.',
+              power: 500,
+              code: '072'
+            },
+            {
+              name: 'Bohemian',
+              image: C071,
+              imageM: CM071,
+              grade: 1,
+              type: {
+                race: 'Human',
+                job: 'Swordman',
+                special: ''
+              },
+              text: '[Auto]: When this unit attack. Pay 500 life points. Stand up to one "Edward Newgate" your control.',
+              power: 500,
+              code: '071'
+            },
+            {
+              name: 'Edward Newgate',
+              image: C070,
+              imageM: CM070,
+              grade: 3,
+              type: {
+                race: 'Human',
+                job: 'Swordman',
+                special: 'Paramecia'
+              },
+              text: '[Auto]: When this unit attack. Pay 500 life points. This unit get Power + 5000 until end this turn. At the end of turn, deal damage 500 to your life points.',
+              power: 2500,
+              code: '070'
+            },
+            {
+              name: 'Portgas D. Ace',
+              image: C069,
+              imageM: CM069,
+              grade: 3,
+              type: {
+                race: 'Human',
+                job: 'Fighter',
+                special: 'Logia'
+              },
+              text: '[Cont]: When your opponent card is send into drop zone. Deal damage 500 to your opponent. [Auto]: When this unit blocks. Destroy the unit blocked by this unit. ',
+              power: 2500,
+              code: '069'
+            },
+            {
+              name: 'Monkey D. Garp',
+              image: C068,
+              imageM: CM068,
+              grade: 3,
+              type: {
+                race: 'Human',
+                job: 'Fighter',
+                special: ''
+              },
+              text: '[Cont]: When your "Fighter" unit attack. This unit get Power + 1000. (Stuck)',
+              power: 2500,
+              code: '068'
+            },
+            {
+              name: 'Dracule Mihawk',
+              image: C067,
+              imageM: CM067,
+              grade: 3,
+              type: {
+                race: 'Human',
+                job: 'Swordman',
+                special: ''
+              },
+              text: '[Auto]: When this unit attack. Pay 500 life points, destroy all opponent unit with power less than this power. (Effect send into opponent drop zone cannot be actived)',
+              power: 2500,
+              code: '067'
+            },
+            {
+              name: 'Marco',
+              image: C066,
+              imageM: CM066,
+              grade: 2,
+              type: {
+                race: 'Human',
+                job: 'Fighter',
+                special: 'Zoan'
+              },
+              text: '[Auto]: At the end of turn. Call this unit from your drop zone, then increase 2000 life points.',
+              power: 1500,
+              code: '066'
+            },
+            {
+              name: 'Kaido',
+              image: C065,
+              imageM: CM065,
+              grade: 3,
+              type: {
+                race: 'Human',
+                job: 'Fighter',
+                special: 'Zoan'
+              },
+              text: '[Cont]: For each "Zoan" unit your control, this unit get Power + 500.',
+              power: 2500,
+              code: '065'
+            },
+            {
+              name: 'Kaido',
+              image: C064,
+              imageM: CM064,
+              grade: 3,
+              type: {
+                race: 'Human',
+                job: 'Fighter',
+                special: 'Zoan'
+              },
+              text: '[Cont]: All "Zoan" unit your control get Power + 500.',
+              power: 2500,
+              code: '064'
+            },
+            {
+              name: 'Oars Jr',
+              image: C063,
+              imageM: CM063,
+              grade: 2,
+              type: {
+                race: 'Giant',
+                job: 'Fighter',
+                special: ''
+              },
+              text: '',
+              power: 2000,
+              code: '063'
+            },
+            {
+              name: 'Fujitora',
+              image: C062,
+              imageM: CM062,
+              grade: 3,
+              type: {
+                race: 'Human',
+                job: 'Swordman',
+                special: 'Paramecia'
+              },
+              text: '[Cont]: When your opponent card is send into drop zone. Deal damage 500 to your opponent.',
+              power: 2500,
+              code: '062'
+            },
             {
               name: 'Eustass Kid',
               image: C061,
@@ -371,7 +739,7 @@ export default {
                 job: 'Fighter',
                 special: 'Paramecia'
               },
-              text: '[Auto]: When this unit block. If you control "Monkey D. Luffy", this unit get Power + 3500 until end this turn.',
+              text: '[Cont]: Commander SHP. [Auto]: When this unit block. If you control "Monkey D. Luffy", this unit get Power + 3500 until end this turn.',
               power: 1500,
               code: '048'
             },

@@ -1,6 +1,7 @@
 <template>
   <div class="col-3 p-0 h-100vh p-0">
-    <div class="row m-0 h-100vh w-100 d-flex justify-content-center align-content-center">
+    <img :src="data.imageM" class="d-flex d-xl-none h-70vh w-auto"/>
+    <div class="d-none d-xl-flex row m-0 h-100vh w-100 justify-content-center align-content-center">
       <div class="col-12 p-2 h-70vh">
         <div class="h-100 w-100 m-0 p-1 border border-2 rounded shadow-box-3 bg-card-normal">
           <div class="p-1 d-flex justify-content-between border border-2 rounded bg-white">

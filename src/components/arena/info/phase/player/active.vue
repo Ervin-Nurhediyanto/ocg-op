@@ -1,7 +1,7 @@
 <template>
   <span
     v-if="turn === 'Player' && player.phase === phases[i - 1]"
-    class="w-100 text-center font-14px bg-danger"
+    class="w-100 text-center font-12px bg-danger"
   >
     <b>{{ phases[i - 1] }}</b>
   </span>

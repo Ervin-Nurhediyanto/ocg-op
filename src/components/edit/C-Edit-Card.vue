@@ -1,34 +1,34 @@
 <template>
   <div>
     <div class="row h-5vh m-0 p-1">
-      <div class="col">
-        <button class="btn btn-primary m-0 w-100 font-weight-bold font-12px" @click.prevent="sortName">
-          Sort By Name
+      <div class="col-2 col-xl">
+        <button class="d-flex justify-content-center btn btn-primary m-0 w-100 font-weight-bold font-12px" @click.prevent="sortName">
+          Name
         </button>
       </div>
-      <div class="col">
-        <button class="btn btn-primary m-0 w-100 font-weight-bold font-12px" @click.prevent="sortGrade">
-          Sort By Grade
+      <div class="col-2 col-xl">
+        <button class="d-flex justify-content-center btn btn-primary m-0 w-100 font-weight-bold font-12px" @click.prevent="sortGrade">
+          Grade
         </button>
       </div>
-      <div class="col">
-        <button class="btn btn-primary m-0 w-100 font-weight-bold font-12px" @click.prevent="sortPower">
-          Sort By Power
+      <div class="col-2 col-xl">
+        <button class="d-flex justify-content-center btn btn-primary m-0 w-100 font-weight-bold font-12px" @click.prevent="sortPower">
+          Power
         </button>
       </div>
-      <div class="col">
-        <button class="btn btn-primary m-0 w-100 font-weight-bold font-12px" @click.prevent="sortRace">
-          Sort By Race
+      <div class="col-2 col-xl">
+        <button class="d-flex justify-content-center btn btn-primary m-0 w-100 font-weight-bold font-12px" @click.prevent="sortRace">
+          Race
         </button>
       </div>
-      <div class="col">
-        <button class="btn btn-primary m-0 w-100 font-weight-bold font-12px" @click.prevent="sortJob">
-          Sort By Job
+      <div class="col-2 col-xl">
+        <button class="d-flex justify-content-center btn btn-primary m-0 w-100 font-weight-bold font-12px" @click.prevent="sortJob">
+          Job
         </button>
       </div>
-      <div class="col">
-        <button class="btn btn-primary m-0 w-100 font-weight-bold font-12px" @click.prevent="sortSpecial">
-          Sort By Special
+      <div class="col-2 col-xl">
+        <button class="d-flex justify-content-center btn btn-primary m-0 w-100 font-weight-bold font-12px" @click.prevent="sortSpecial">
+          Special
         </button>
       </div>
     </div>

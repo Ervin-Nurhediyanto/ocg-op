@@ -20,7 +20,10 @@
         </div>
         <div class="row d-flex justify-content-center align-content-center h-5vh m-0">
           <div v-for="i in player.field.length" :key="i" class="col-2 h-5vh d-flex justify-content-center align-content-center">
-            <div class="text-white shadow-text-2"><b>{{ player.field[i - 1].totalPow }}</b></div>
+            <!-- <div class="text-white shadow-text-2"><b>{{ player.field[i - 1].totalPow }}</b></div> -->
+            <div v-if="player.field[i - 1].totalPow === player.field[i - 1].card.power" class="text-white shadow-text-2"><b>{{ player.field[i - 1].totalPow }}</b></div>
+            <div v-if="player.field[i - 1].totalPow < player.field[i - 1].card.power" class="text-danger shadow-text-2"><b>{{ player.field[i - 1].totalPow }}</b></div>
+            <div v-if="player.field[i - 1].totalPow > player.field[i - 1].card.power" class="text-info shadow-text-2"><b>{{ player.field[i - 1].totalPow }}</b></div>
           </div>
         </div>
       </div>
