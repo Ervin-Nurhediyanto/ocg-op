@@ -63,8 +63,11 @@ export default {
         this.buildOpDeck02()
       }
       this.$router.replace({
-        name: 'Arena'
+        name: 'PvE'
       })
+      // this.$router.replace({
+      //   name: 'Arena'
+      // })
     },
     buildOpDeck01 () {
       const cards = this.data.edit.cards

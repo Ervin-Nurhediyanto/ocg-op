@@ -16,7 +16,7 @@
 <script>
 export default {
   name: 'Arena Opponent Hand',
-  props: ['info', 'turn', 'phases', 'player', 'opponent'],
+  props: ['info', 'turn', 'phases', 'player', 'opponent', 'effect'],
   methods: {
     mouseover (data) {
       this.$emit('onDisplay', data)
@@ -28,16 +28,20 @@ export default {
         const unit = this.opponent.hand[index]
         const phase = this.opponent.phase
         if (phase === 'MP1' || phase === 'MP2') {
-          this.$swal.fire({
-            title: `Call ${unit.name} ?`,
-            showCancelButton: true,
-            confirmButtonText: 'YES',
-            cancelButtonText: 'NO'
-          }).then((result) => {
-            if (result.isConfirmed) {
-              this.callUnit(unit, index)
-            }
-          })
+          if (this.effect.opponent.active === true && this.effect.opponent.target.who === 'SELF') {
+            this.$emit('unit', { who: 'Opponent', index: index, from: 'HAND', todo: this.effect.opponent.todo, RES: this.effect.opponent.RES })
+          } else {
+            this.$swal.fire({
+              title: `Call ${unit.name} ?`,
+              showCancelButton: true,
+              confirmButtonText: 'YES',
+              cancelButtonText: 'NO'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                this.callUnit(unit, index)
+              }
+            })
+          }
         }
       }
     },
@@ -67,7 +71,6 @@ export default {
       const BF = this.opponent.field
       if (BF.length < 6) {
         this.$emit('HAND', { who: 'Opponent', index: index, todo: 'HAND TO FIELD' }) // Call From Hand
-        // this.$emit('CFH', { who: 'Opponent', index: index }) // Call From Hand
         this.$emit('EFCONT', { who: 'Opponent', event: 'COUNT UNIT ON FIELD' })
       } else {
         Toast('error', 'Field Penuh')
@@ -139,7 +142,6 @@ export default {
           DZ.push(UT)
           BF.splice(IT, 1)
           this.$emit('HAND', { who: 'Opponent', index: index, todo: 'HAND TO FIELD' }) // Call From Hand
-          // this.$emit('CFH', { who: 'Opponent', index: index }) // Call From Hand
           this.$emit('EFCONT', { who: 'Opponent', event: 'COUNT UNIT ON FIELD' })
           this.UDE('Opponent')
         }
@@ -198,7 +200,6 @@ export default {
               DZ.push(UT2)
               BF.splice(IT2, 1)
               this.$emit('HAND', { who: 'Opponent', index: index, todo: 'HAND TO FIELD' }) // Call From Hand
-              // this.$emit('CFH', { who: 'Opponent', index: index }) // Call From Hand
               this.$emit('EFCONT', { who: 'Opponent', event: 'COUNT UNIT ON FIELD' })
               this.UDE('Opponent')
             }

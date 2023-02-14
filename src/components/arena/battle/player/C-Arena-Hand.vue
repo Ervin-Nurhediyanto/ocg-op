@@ -70,8 +70,7 @@ export default {
       }
       const BF = this.player.field
       if (BF.length < 6) {
-        this.$emit('HAND', { who: 'Player', index: index, todo: 'HAND TO FIELD' }) // Call From Hand
-        // this.$emit('CFH', { who: 'Player', index: index }) // Call From Hand
+        this.$emit('HAND', { who: 'Player', index: index, todo: 'HAND TO FIELD' })
         this.$emit('EFCONT', { who: 'Player', event: 'COUNT UNIT ON FIELD' })
       } else {
         Toast('error', 'Field Penuh')
@@ -143,7 +142,6 @@ export default {
           DZ.push(UT)
           BF.splice(IT, 1)
           this.$emit('HAND', { who: 'Player', index: index, todo: 'HAND TO FIELD' }) // Call From Hand
-          // this.$emit('CFH', { who: 'Player', index: index }) // Call From Hand
           this.$emit('EFCONT', { who: 'Player', event: 'COUNT UNIT ON FIELD' })
           this.UDE('Player')
         }
@@ -202,7 +200,6 @@ export default {
               DZ.push(UT2)
               BF.splice(IT2, 1)
               this.$emit('HAND', { who: 'Player', index: index, todo: 'HAND TO FIELD' }) // Call From Hand
-              // this.$emit('CFH', { who: 'Player', index: index }) // Call From Hand
               this.$emit('EFCONT', { who: 'Player', event: 'COUNT UNIT ON FIELD' })
               this.UDE('Player')
             }

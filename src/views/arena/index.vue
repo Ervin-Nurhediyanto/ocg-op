@@ -1135,6 +1135,13 @@ export default {
         data.todo = 'UNIT TO STAND'
         this.FIELD(data)
       }
+      if (data.RESEFF === 'OTHER UNIT TO STAND') {
+        this.FIELD({
+          who: data.who,
+          index: data.otherIndex,
+          todo: 'UNIT TO STAND'
+        })
+      }
       if (data.RESEFF === 'DESTROY THE WEAK') {
         if (data.who === 'Player') {
           data.BFOP = this.opponent.field
@@ -1290,6 +1297,7 @@ export default {
         if (BF[i].card.code === '043') { this.EF043({ who: data.who, index: i }) }
         if (BF[i].card.code === '064') { this.EF064({ who: data.who, index: i }) }
         if (BF[i].card.code === '065') { this.EF065({ who: data.who, index: i }) }
+        if (BF[i].card.code === '085') { this.EF085({ who: data.who, index: i }) }
       }
       for (let i = 0; i < BFOP.length; i++) {
         if (BFOP[i].card.code === '019') { this.EF019({ who: op, index: i }) }
@@ -1297,7 +1305,7 @@ export default {
         if (BFOP[i].card.code === '035') { this.EF035({ who: op, index: i }) }
         if (BFOP[i].card.code === '043') { this.EF043({ who: op, index: i }) }
         if (BFOP[i].card.code === '064') { this.EF064({ who: op, index: i }) }
-        if (BFOP[i].card.code === '065') { this.EF065({ who: op, index: i }) }
+        if (BFOP[i].card.code === '085') { this.EF085({ who: op, index: i }) }
       }
     },
     EFSTD (data) { // SEND TO DROP
@@ -1390,6 +1398,7 @@ export default {
       if (data.code === '081') { this.EF081({ who: data.who, index: data.index }) }
       if (data.code === '083') { this.EF083({ who: data.who, index: data.index }) }
       if (data.code === '084') { this.EF084({ who: data.who, index: data.index }) }
+      if (data.code === '086') { this.EF086({ who: data.who, index: data.index }) }
     },
     EFAUTO (data) { // EFFECT AUTO
       if (data.stat === 'EFATK') { this.EFATK(data) }
@@ -2589,7 +2598,7 @@ export default {
       }
     },
     EF057 (data) { // Basil Hawkins
-      this.DMG({ who: data.who, deal: 500 })
+      this.DMG({ who: data.who, deal: 1000 })
       const cards = []
       if (data.who === 'Player') { data.deck = this.player.deck.deck }
       if (data.who === 'Opponent') { data.deck = this.opponent.deck.deck }
@@ -2734,11 +2743,11 @@ export default {
           units.push({ unit: data.BF[i], index: i })
         }
       }
-      if (units.length > 0) { data.index = units[0].index }
+      if (units.length > 0) { data.otherIndex = units[0].index }
       data.pay = 500
       data.gain = 5000
       data.COST = 'PAY LIFE POINTS'
-      data.RESEFF = 'UNIT TO STAND'
+      data.RESEFF = 'OTHER UNIT TO STAND'
       this.optionalEFATK(data)
     },
     EF072 (data) { // Squard
@@ -2974,11 +2983,36 @@ export default {
         this.DECK({ who: data.who, index: cards[index].index, todo: 'DECK TO FIELD' })
       }
       this.EFOPT(data)
-    }
+    },
+    EF085 (data) { // Denjiro
+      let count = 0
+      if (data.who === 'Player') { data.BF = this.player.field }
+      if (data.who === 'Opponent') { data.BF = this.opponent.field }
+      data.BF.map((unit) => { if (unit.card.name.search('Kozuki') >= 0) { count += 1 } })
+      data.gain = 500 * count
+      this.GCP(data)
+    },
+    EF086 (data) { // Baby 5
+      alert('Baby 5 effect')
+      if (data.who === 'Player') { data.BF = this.player.field }
+      if (data.who === 'Opponent') { data.BF = this.opponent.field }
+      data.unit = data.BF[data.index]
+      if (data.unit.OPT === false) {
+        let copy = 0
+        data.BF.map((unit) => { if (unit.card.name.search('Don Sai') >= 0) { copy += 1 } })
+        if (copy > 0) {
+          data.unit.card.grade = 2
+          data.gain = 1500
+          this.GAP(data)
+        }
+      }
+      this.EFOPT(data)
+    },
+    EF087 (data) {}
   },
   created () {
     this.parseDP()
-    this.DECK({ who: 'Player', todo: 'shuffle' })
+    // this.DECK({ who: 'Player', todo: 'shuffle' })
     this.DECK({ who: 'Opponent', todo: 'shuffle' })
     for (let i = 0; i < 5; i++) {
       this.DECK({ who: 'Player', todo: 'draw' })

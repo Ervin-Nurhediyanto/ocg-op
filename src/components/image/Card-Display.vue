@@ -20,7 +20,10 @@
           </div>
           <div class="m-0 font-12px">{{ data.text }}</div>
         </div>
-        <div class="h-5vh mt-1 p-1 border border-2 rounded shadow-box-inset-1"><b>Power : {{ data.power }}</b></div>
+        <div class="d-flex justify-content-between h-5vh mt-1 p-1 border border-2 rounded shadow-box-inset-1">
+          <b>Power : {{ data.power }} </b>
+          <span class="pt-3 font-10px">C.{{ data.code }}</span>
+        </div>
       </div>
     </div>
     <div class="h-20vh p-2 font-14px shadow-box-inset-10 bg-white">

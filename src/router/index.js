@@ -25,6 +25,11 @@ const routes = [
         component: () => import('../views/arena/index.vue')
       },
       {
+        path: '/pve',
+        name: 'PvE',
+        component: () => import('../views/arena/pve.vue')
+      },
+      {
         path: '/choose-opponent',
         name: 'Choose-Opponent',
         component: () => import('../views/arena/choose-opponent.vue')

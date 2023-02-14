@@ -126,7 +126,6 @@ export default {
           this.playerDecks.push(deck)
           this.add_decks(JSON.stringify(this.playerDecks))
           this.add_deckPlay(JSON.stringify(deck))
-          // this.add_deckOpponent(JSON.stringify(deck)) // Opponent Deck
           Toast('success', 'Deck Berhasil Disimpan')
         }
       }
@@ -138,7 +137,6 @@ export default {
       const title = this.playerDecks[index].title
       const deck = this.playerDecks[index].deck
       this.add_deckPlay(JSON.stringify({ title: title, deck: deck }))
-      // this.add_deckOpponent(JSON.stringify({ title: title, deck: deck })) // Opponent Deck
       this.$emit('loadDeck', {
         title: title,
         deck: deck

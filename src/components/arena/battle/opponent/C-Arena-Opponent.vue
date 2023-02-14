@@ -4,6 +4,7 @@
       <Hand
         v-on:onDisplay="onDisplay"
         v-on:HAND="HAND"
+        v-on:unit="unit"
         :effect='effect'
         :info='info'
         :turn='turn'
@@ -67,9 +68,6 @@ export default {
       this.$emit('unit', data)
     },
     // OLD CODE
-    // CFH (data) { // Call From Hand
-    //   this.$emit('CFH', data)
-    // },
     onATK (data) {
       this.$emit('onATK', data)
     },
