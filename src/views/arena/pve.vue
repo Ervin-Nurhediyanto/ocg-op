@@ -10,6 +10,7 @@
       :phases="phases"
       :player="player"
       :opponent="opponent"
+      :chats="chats"
     />
     <ArenaBattle
       v-on:onDisplay="onDisplay"
@@ -48,6 +49,8 @@ export default {
     return {
       phases: ['SP', 'DP', 'MP1', 'BP', 'MP2', 'EP'],
       turn: 'Player',
+      // chats: [{ who: 'Player', chat: 'log player' }, { who: 'Opponent', chat: 'log opponent' }],
+      chats: [],
       cTurn: 0,
       effect: {
         player: {
@@ -232,9 +235,6 @@ export default {
       if (data.deck.length === 0) {
         this.Toast('error', data.notif)
         this.rematch()
-        // this.$router.replace({
-        //   name: 'Home'
-        // })
       }
     },
     rematch () {
@@ -246,9 +246,6 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           this.$router.go(0)
-          // this.$router.replace({
-          //   name: 'Arena'
-          // })
         } else {
           this.$router.replace({
             name: 'Home'
@@ -258,58 +255,162 @@ export default {
     },
     OpponentTurn (data) {
       if (data.who === 'Opponent') {
-        console.log('Opponent Turn')
-        console.log(data)
+        this.chats.push({ who: data.who, chat: `${data.phase}` })
         if (data.phase === 'MP1') {
           this.OpponentMP1(data)
         }
+        if (data.phase === 'BP') {
+          this.OpponentBP(data)
+        }
+        if (data.phase === 'MP2') {
+          this.OpponentMP2(data)
+        }
       }
     },
+    OpponentBlock (data) {
+      const units = []
+      const BF = this.opponent.field
+      for (let i = 0; i < BF.length; i++) {
+        if (BF[i].position === 'Stand') {
+          units.push({ unit: BF[i], index: i })
+        }
+      }
+      if (units.length > 0) {
+        setTimeout(() => {
+          this.onDEF({
+            who: 'Opponent',
+            index: units[0].index
+          })
+        }, 1000)
+      }
+    },
+    OpponentBP (data) {
+      data.BF = this.opponent.field
+      this.opponentATKunit(data)
+    },
     OpponentMP1 (data) {
-      console.log(this.opponent)
       data.BF = this.opponent.field
       data.hand = this.opponent.hand
+      data.index = 0
       this.opponentCallG1(data)
-      setTimeout(() => this.opponentCallG2(data), 2000)
+    },
+    OpponentMP2 (data) {
+      data.BF = this.opponent.field
+      data.hand = this.opponent.hand
+      data.index = 0
+      if (data.hand.length > 0) {
+        this.opponentCallG1(data)
+      } else {
+        setTimeout(() => this.changePhase({ who: data.who, phase: 'EP' }), 500)
+      }
     },
     opponentCallG1 (data) {
       if (data.BF.length < 6) {
-        let nCall = 0
-        for (let i = 0; i < data.hand.length; i++) {
-          data.unit = this.opponent.hand[i - nCall]
-          data.index = [i - nCall]
-          if (data.hand[i - nCall].grade === 1) {
-            // alert(`Your opponent call ${data.unit.name}`)
-            this.handToField(data)
-            nCall += 1
+        if (data.index < data.hand.length) {
+          if (data.hand[data.index].grade === 1) {
+            setTimeout(() => {
+              data.unit = data.hand[data.index]
+              this.chats.push({ who: 'Opponent', chat: `call ${data.unit.name}` })
+              this.handToField(data)
+              this.opponentCallG1(data)
+            }, 1000)
+          } else {
+            if (data.index < data.hand.length - 1) {
+              data.index += 1
+              this.opponentCallG1(data)
+            } else {
+              this.opponentCallG3(data)
+            }
           }
+        } else {
+          this.opponentCallG3(data)
+        }
+      } else {
+        this.opponentCallG3(data)
+      }
+    },
+    opponentATKunit (data) {
+      const unitATK = []
+      if (data.BF.length > 0) {
+        for (let i = 0; i < data.BF.length; i++) {
+          if (data.BF[i].position === 'Stand') {
+            unitATK.push({ unit: data.BF[i], index: i })
+          }
+        }
+        if (unitATK.length > 0) {
+          setTimeout(() => {
+            this.chats.push({ who: 'Opponent', chat: `${unitATK[0].unit.card.name} attack` })
+            this.onATK({ who: data.who, index: unitATK[0].index })
+          }, 1000)
+        } else {
+          setTimeout(() => this.changePhase({ who: data.who, phase: 'MP2' }), 500)
         }
       }
     },
     opponentCallG2 (data) {
-      console.log('Call Grade 2')
-      console.log(data)
-      const G1 = [] // On Field
-      for (let i = 0; i < data.BF.length; i++) {
-        if (data.BF[i].card.grade === 1) {
-          G1.push({ unit: data.BF[i], index: i })
+      console.log('Call G2')
+      const unitG1 = []
+      const unitG2 = []
+      if (data.BF.length > 0) {
+        for (let i = 0; i < data.BF.length; i++) {
+          if (data.BF[i].card.grade === 1) {
+            unitG1.push({ unit: data.BF[i], index: i })
+          }
+        }
+        for (let i = 0; i < data.hand.length; i++) {
+          if (data.hand[i].grade === 2) {
+            unitG2.push({ card: data.hand[i], index: i })
+          }
+        }
+        if (unitG1.length > 0 && unitG2.length > 0) {
+          setTimeout(() => {
+            this.chats.push({ who: 'Opponent', chat: `tribute ${unitG1[0].unit.card.name}` })
+            this.fieldToDrop({ who: data.who, index: unitG1[0].index, BF: data.BF })
+            this.chats.push({ who: 'Opponent', chat: `call ${unitG2[0].card.name}` })
+            this.handToField({ who: data.who, index: unitG2[0].index, hand: data.hand })
+            this.opponentCallG2(data)
+          }, 1000)
+        } else {
+          if (this.cTurn === 0) {
+            setTimeout(() => this.changePhase({ who: data.who, phase: 'EP' }), 500)
+          } else {
+            if (this.opponent.phase === 'MP1') {
+              setTimeout(() => this.changePhase({ who: data.who, phase: 'BP' }), 500)
+            }
+            if (this.opponent.phase === 'MP2') {
+              setTimeout(() => this.changePhase({ who: data.who, phase: 'EP' }), 500)
+            }
+          }
         }
       }
-      const G2 = [] // On Hand
-      for (let i = 0; i < data.hand.length; i++) {
-        if (data.hand[i].grade === 2) {
-          G2.push({ card: data.hand[i], index: i })
+    },
+    opponentCallG3 (data) {
+      const unitG1 = []
+      const unitG3 = []
+      if (data.BF.length > 0) {
+        for (let i = 0; i < data.BF.length; i++) {
+          if (data.BF[i].card.grade === 1) {
+            unitG1.push({ unit: data.BF[i], index: i })
+          }
         }
-      }
-      let nCall = 0
-      for (let i = 0; i < G2.length; i++) {
-        if (G2.length <= G1.length) {
-          // alert(`your opponent tribute ${G1[i - nCall].unit.card.name}`)
-          this.fieldToDrop({ who: data.who, index: G1[i - nCall].index, BF: data.BF })
-          // alert(`Your opponent call ${G2[i - nCall].card.name}`)
-          data.index = G2[i - nCall].index
-          this.handToField(data)
-          nCall += 1
+        for (let i = 0; i < data.hand.length; i++) {
+          if (data.hand[i].grade === 3) {
+            unitG3.push({ card: data.hand[i], index: i })
+          }
+        }
+        if (unitG1.length > 1 && unitG3.length > 0) {
+          setTimeout(() => {
+            for (let j = 0; j < 2; j++) {
+              this.chats.push({ who: 'Opponent', chat: `tribute ${unitG1[0].unit.card.name}` })
+              this.fieldToDrop({ who: data.who, index: unitG1[0].index, BF: data.BF })
+            }
+            this.chats.push({ who: 'Opponent', chat: `call ${unitG3[0].card.name}` })
+            this.handToField({ who: data.who, index: unitG3[0].index, hand: data.hand })
+            this.opponentCallG3(data)
+          }, 1000)
+        } else {
+          console.log('Cannot call G3')
+          this.opponentCallG2(data)
         }
       }
     },
@@ -338,10 +439,10 @@ export default {
         this.EP(data)
         if (data.who === 'Player') {
           this.turn = 'Opponent'
-          setTimeout(() => this.handleChangePhase({ who: 'Opponent', phase: 'SP' }), 500)
+          setTimeout(() => this.changePhase({ who: 'Opponent', phase: 'SP' }), 500)
         } else {
           this.turn = 'Player'
-          setTimeout(() => this.handleChangePhase({ who: 'Player', phase: 'SP' }), 500)
+          setTimeout(() => this.changePhase({ who: 'Player', phase: 'SP' }), 500)
         }
         this.cTurn += 1
       }
@@ -429,7 +530,7 @@ export default {
             if (data.who === 'Opponent') { this.player.isBlock = true }
             alert('Choose an unit to block')
           } else {
-            alert('DAMAGE GAN')
+            // alert('DAMAGE GAN')
             if (data.who === 'Player') {
               this.DMG({ who: 'Opponent', deal: this.player.atk })
               this.player.atk = 0
@@ -440,7 +541,7 @@ export default {
           }
         })
       } else {
-        alert('DAMAGE GAN')
+        // alert('DAMAGE GAN')
         if (data.who === 'Player') {
           this.DMG({ who: 'Opponent', deal: this.player.atk })
           this.player.atk = 0
@@ -480,21 +581,23 @@ export default {
         DEF = this.opponent.def
         OP = 'Player'
       }
-      if (ATK > DEF) {
-        this.FIELD({ who: data.who, index: data.index.def, todo: 'FIELD TO DROP' })
-      } else if (ATK < DEF) {
-        this.FIELD({ who: OP, index: data.index.atk, todo: 'FIELD TO DROP' })
-      } else if (ATK === DEF) {
-        this.FIELD({ who: data.who, index: data.index.def, todo: 'FIELD TO DROP' })
-        this.FIELD({ who: OP, index: data.index.atk, todo: 'FIELD TO DROP' })
-      }
-      if (data.who === 'Player') {
-        this.player.def = 0
-        this.opponent.atk = 0
-      } else {
-        this.opponent.def = 0
-        this.player.atk = 0
-      }
+      setTimeout(() => {
+        if (ATK > DEF) {
+          this.FIELD({ who: data.who, index: data.index.def, todo: 'FIELD TO DROP' })
+        } else if (ATK < DEF) {
+          this.FIELD({ who: OP, index: data.index.atk, todo: 'FIELD TO DROP' })
+        } else if (ATK === DEF) {
+          this.FIELD({ who: data.who, index: data.index.def, todo: 'FIELD TO DROP' })
+          this.FIELD({ who: OP, index: data.index.atk, todo: 'FIELD TO DROP' })
+        }
+        if (data.who === 'Player') {
+          this.player.def = 0
+          this.opponent.atk = 0
+        } else {
+          this.opponent.def = 0
+          this.player.atk = 0
+        }
+      }, 1000)
     },
     DECK (data) {
       if (data.who === 'Player') { data.deck = this.player.deck.deck }
@@ -941,10 +1044,14 @@ export default {
       this.EFAUTO({ who: data.who, code: unit.code, index: index, stat: 'EFDSBT' })
       this.EFCONT({ who: data.who, event: 'SEND TO DROP' })
       this.EFCONT({ who: data.who, event: 'COUNT UNIT ON FIELD' })
+      //
+      if (this.turn === 'Opponent' && this.opponent.phase === 'BP') {
+        this.opponentATKunit({ who: 'Opponent', BF: this.opponent.field })
+      }
     },
     fieldToDrop (data) {
-      console.log('FIELD TO DROP')
-      console.log(data)
+      // console.log('FIELD TO DROP')
+      // console.log(data)
       let isEdwar = false
       data.BF.map((unit) => {
         if (unit.card.name === 'Edward Newgate') {
@@ -1226,23 +1333,20 @@ export default {
       }
     },
     DMG (data) {
+      this.chats.push({ who: data.who, chat: `take damage ${data.deal} points` })
       if (data.who === 'Player') {
         this.player.life -= data.deal
         if (this.player.life <= 0) {
           alert('You Lose Duel')
           this.rematch()
-          // this.$router.replace({
-          //   name: 'Home'
-          // })
+        } else if (this.turn === 'Opponent' && this.opponent.phase === 'BP') {
+          this.opponentATKunit({ who: 'Opponent', BF: this.opponent.field })
         }
       } else {
         this.opponent.life -= data.deal
         if (this.opponent.life <= 0) {
           alert('You Win Duel')
           this.rematch()
-          // this.$router.replace({
-          //   name: 'Home'
-          // })
         }
       }
     },
@@ -1473,38 +1577,43 @@ export default {
     },
     EFATK (data) {
       this.EFATKstack(data)
-      if (data.code === '001') {
-        this.EF001(data)
-      } else if (data.code === '002') {
-        this.EF002(data)
-      } else if (data.code === '021') {
-        this.EF021(data)
-      } else if (data.code === '028') {
-        this.EF028(data)
-      } else if (data.code === '044') {
-        this.EF044AUTO(data)
-      } else if (data.code === '050') {
-        this.EF050AUTO(data)
-      } else if (data.code === '053') {
-        this.EF053(data)
-      } else if (data.code === '060') {
-        this.EF060(data)
-      } else if (data.code === '061') {
-        this.EF061(data)
-      } else if (data.code === '067') {
-        this.EF067(data)
-      } else if (data.code === '070') {
-        this.EF070(data)
-      } else if (data.code === '071') {
-        this.EF071(data)
-      } else if (data.code === '076') {
-        this.EF076(data)
-      } else if (data.code === '079') {
-        this.EF079(data)
-      } else if (data.code === '082') {
-        this.EF082(data)
-      } else {
+      // if (data.code === '001') {
+      //   this.EF001(data)
+      // } else if (data.code === '002') {
+      //   this.EF002(data)
+      // } else if (data.code === '021') {
+      //   this.EF021(data)
+      // } else if (data.code === '028') {
+      //   this.EF028(data)
+      // } else if (data.code === '044') {
+      //   this.EF044AUTO(data)
+      // } else if (data.code === '050') {
+      //   this.EF050AUTO(data)
+      // } else if (data.code === '053') {
+      //   this.EF053(data)
+      // } else if (data.code === '060') {
+      //   this.EF060(data)
+      // } else if (data.code === '061') {
+      //   this.EF061(data)
+      // } else if (data.code === '067') {
+      //   this.EF067(data)
+      // } else if (data.code === '070') {
+      //   this.EF070(data)
+      // } else if (data.code === '071') {
+      //   this.EF071(data)
+      // } else if (data.code === '076') {
+      //   this.EF076(data)
+      // } else if (data.code === '079') {
+      //   this.EF079(data)
+      // } else if (data.code === '082') {
+      //   this.EF082(data)
+      // } else {
+      //   this.confirmBlock(data)
+      // }
+      if (data.who === 'Opponent') {
         this.confirmBlock(data)
+      } else {
+        this.OpponentBlock(data)
       }
     },
     EFATKstack (data) {
@@ -1617,126 +1726,126 @@ export default {
     },
     // UNIT EFFECT CODE
     EF001 (data) { // Monkey D. Luffy
-      data.gain = 1000
-      this.GAP(data)
-      if (data.who === 'Player') {
-        if (this.player.phase === 'BP') {
-          this.player.atk = data.unit.totalPow
-        }
-      }
-      if (data.who === 'Opponent') {
-        if (this.opponent.phase === 'BP') {
-          this.opponent.atk = data.unit.totalPow
-        }
-      }
-      if (data.stat === 'EFATK') { this.confirmBlock(data) }
+      // data.gain = 1000
+      // this.GAP(data)
+      // if (data.who === 'Player') {
+      //   if (this.player.phase === 'BP') {
+      //     this.player.atk = data.unit.totalPow
+      //   }
+      // }
+      // if (data.who === 'Opponent') {
+      //   if (this.opponent.phase === 'BP') {
+      //     this.opponent.atk = data.unit.totalPow
+      //   }
+      // }
+      // if (data.stat === 'EFATK') { this.confirmBlock(data) }
     },
     EF002 (data) { // Roronoa Zoro
-      data.gain = 1000
-      this.GAP(data)
-      data.COST = 'PAY LIFE POINTS'
-      data.pay = 500
-      data.RESEFF = 'GET AUTO POWER'
-      this.optionalEFATK(data)
+      // data.gain = 1000
+      // this.GAP(data)
+      // data.COST = 'PAY LIFE POINTS'
+      // data.pay = 500
+      // data.RESEFF = 'GET AUTO POWER'
+      // this.optionalEFATK(data)
     },
     EF003 (data) { // Vinsmoke Sanji
       data.gain = 2000
       this.GAP(data)
     },
     EF004 (data) { // Nami
-      this.DECK({ who: data.who, todo: 'draw' })
+      // this.DECK({ who: data.who, todo: 'draw' })
     },
     EF005 (data) { // Usopp
-      this.$swal.fire({
-        title: 'Aktifkan Effek Usopp?',
-        showCancelButton: true,
-        confirmButtonText: 'YES',
-        cancelButtonText: 'NO'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          data.todo = 'search'
-          data.filter = true
-          data.filterGrade = 'EQUAL 1'
-          data.RESEFF = 'ADD TO HAND'
-          this.DECK(data)
-        }
-      })
+      // this.$swal.fire({
+      //   title: 'Aktifkan Effek Usopp?',
+      //   showCancelButton: true,
+      //   confirmButtonText: 'YES',
+      //   cancelButtonText: 'NO'
+      // }).then((result) => {
+      //   if (result.isConfirmed) {
+      //     data.todo = 'search'
+      //     data.filter = true
+      //     data.filterGrade = 'EQUAL 1'
+      //     data.RESEFF = 'ADD TO HAND'
+      //     this.DECK(data)
+      //   }
+      // })
     },
     EF006 (data) { // Chopper
       this.HEAL({ who: data.who, heal: 2000 })
     },
     EF007 (data) { // Nico Robin
-      for (let i = 0; i < 2; i++) {
-        this.DECK({ who: data.who, todo: 'draw' })
-      }
-      const cards = []
-      if (data.who === 'Player') { data.hand = this.player.hand }
-      if (data.who === 'Opponent') { data.hand = this.opponent.hand }
-      for (let i = 0; i < data.hand.length; i++) {
-        cards.push({ card: data.hand[i], index: i })
-      }
-      if (cards.length > 0) {
-        const index = Math.floor(Math.random() * cards.length)
-        const unit = cards[index]
-        data.todo = 'HAND TO DECK'
-        data.index = unit.index
-        this.HAND(data)
-      } else {
-        alert('Target tidak ditemukan')
-      }
+      // for (let i = 0; i < 2; i++) {
+      //   this.DECK({ who: data.who, todo: 'draw' })
+      // }
+      // const cards = []
+      // if (data.who === 'Player') { data.hand = this.player.hand }
+      // if (data.who === 'Opponent') { data.hand = this.opponent.hand }
+      // for (let i = 0; i < data.hand.length; i++) {
+      //   cards.push({ card: data.hand[i], index: i })
+      // }
+      // if (cards.length > 0) {
+      //   const index = Math.floor(Math.random() * cards.length)
+      //   const unit = cards[index]
+      //   data.todo = 'HAND TO DECK'
+      //   data.index = unit.index
+      //   this.HAND(data)
+      // } else {
+      //   alert('Target tidak ditemukan')
+      // }
     },
     EF008 (data) { // Franky
-      alert('Franky effect, choose opponent unit')
-      const effect = {
-        active: true,
-        todo: 'FIELD TO DROP',
-        target: {
-          who: 'OTHER',
-          isTarget: true,
-          grade: 'EQUAL 1'
-        }
-      }
-      if (data.who === 'Player') {
-        this.effect.player = effect
-      } else {
-        this.effect.opponent = effect
-      }
+      // alert('Franky effect, choose opponent unit')
+      // const effect = {
+      //   active: true,
+      //   todo: 'FIELD TO DROP',
+      //   target: {
+      //     who: 'OTHER',
+      //     isTarget: true,
+      //     grade: 'EQUAL 1'
+      //   }
+      // }
+      // if (data.who === 'Player') {
+      //   this.effect.player = effect
+      // } else {
+      //   this.effect.opponent = effect
+      // }
     },
     EF009 (data) { // Brook
-      const cards = []
-      if (data.who === 'Player') { data.deck = this.player.deck.deck }
-      if (data.who === 'Opponent') { data.deck = this.opponent.deck.deck }
-      for (let i = 0; i < data.deck.length; i++) {
-        if (data.deck[i].name === 'Brook') {
-          cards.push({ card: data.deck[i], index: i })
-        }
-      }
-      if (cards.length > 0) {
-        const index = Math.floor(Math.random() * cards.length)
-        const unit = cards[index]
-        data.todo = 'DECK TO FIELD'
-        data.index = unit.index
-        this.DECK(data)
-      } else {
-        alert('Target tidak ditemukan')
-      }
+      // const cards = []
+      // if (data.who === 'Player') { data.deck = this.player.deck.deck }
+      // if (data.who === 'Opponent') { data.deck = this.opponent.deck.deck }
+      // for (let i = 0; i < data.deck.length; i++) {
+      //   if (data.deck[i].name === 'Brook') {
+      //     cards.push({ card: data.deck[i], index: i })
+      //   }
+      // }
+      // if (cards.length > 0) {
+      //   const index = Math.floor(Math.random() * cards.length)
+      //   const unit = cards[index]
+      //   data.todo = 'DECK TO FIELD'
+      //   data.index = unit.index
+      //   this.DECK(data)
+      // } else {
+      //   alert('Target tidak ditemukan')
+      // }
     },
     EF010 (data) { // Jinbei
-      alert('Jinbei effect, choose opponent unit')
-      const effect = {
-        active: true,
-        todo: 'FIELD TO HAND',
-        target: {
-          who: 'OTHER',
-          isTarget: true,
-          grade: '2 OR LESS'
-        }
-      }
-      if (data.who === 'Player') {
-        this.effect.player = effect
-      } else {
-        this.effect.opponent = effect
-      }
+      // alert('Jinbei effect, choose opponent unit')
+      // const effect = {
+      //   active: true,
+      //   todo: 'FIELD TO HAND',
+      //   target: {
+      //     who: 'OTHER',
+      //     isTarget: true,
+      //     grade: '2 OR LESS'
+      //   }
+      // }
+      // if (data.who === 'Player') {
+      //   this.effect.player = effect
+      // } else {
+      //   this.effect.opponent = effect
+      // }
     },
     EF011 (data) { // Brook
       this.DROP({ who: data.who, index: data.index, todo: 'DROP TO BIND' })

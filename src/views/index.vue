@@ -501,6 +501,72 @@ import C242 from '../assets/cards/242.png'
 import CM242 from '../assets/mini-cards/242.png'
 import C243 from '../assets/cards/243.png'
 import CM243 from '../assets/mini-cards/243.png'
+import C244 from '../assets/cards/244.png'
+import CM244 from '../assets/mini-cards/244.png'
+import C245 from '../assets/cards/245.png'
+import CM245 from '../assets/mini-cards/245.png'
+import C246 from '../assets/cards/246.png'
+import CM246 from '../assets/mini-cards/246.png'
+import C247 from '../assets/cards/247.png'
+import CM247 from '../assets/mini-cards/247.png'
+import C248 from '../assets/cards/248.png'
+import CM248 from '../assets/mini-cards/248.png'
+import C249 from '../assets/cards/249.png'
+import CM249 from '../assets/mini-cards/249.png'
+import C250 from '../assets/cards/250.png'
+import CM250 from '../assets/mini-cards/250.png'
+import C251 from '../assets/cards/251.png'
+import CM251 from '../assets/mini-cards/251.png'
+import C252 from '../assets/cards/252.png'
+import CM252 from '../assets/mini-cards/252.png'
+import C253 from '../assets/cards/253.png'
+import CM253 from '../assets/mini-cards/253.png'
+import C254 from '../assets/cards/254.png'
+import CM254 from '../assets/mini-cards/254.png'
+import C255 from '../assets/cards/255.png'
+import CM255 from '../assets/mini-cards/255.png'
+import C256 from '../assets/cards/256.png'
+import CM256 from '../assets/mini-cards/256.png'
+import C257 from '../assets/cards/257.png'
+import CM257 from '../assets/mini-cards/257.png'
+import C258 from '../assets/cards/258.png'
+import CM258 from '../assets/mini-cards/258.png'
+import C259 from '../assets/cards/259.png'
+import CM259 from '../assets/mini-cards/259.png'
+import C260 from '../assets/cards/260.png'
+import CM260 from '../assets/mini-cards/260.png'
+import C261 from '../assets/cards/261.png'
+import CM261 from '../assets/mini-cards/261.png'
+import C262 from '../assets/cards/262.png'
+import CM262 from '../assets/mini-cards/262.png'
+import C263 from '../assets/cards/263.png'
+import CM263 from '../assets/mini-cards/263.png'
+import C264 from '../assets/cards/264.png'
+import CM264 from '../assets/mini-cards/264.png'
+import C265 from '../assets/cards/265.png'
+import CM265 from '../assets/mini-cards/265.png'
+import C266 from '../assets/cards/266.png'
+import CM266 from '../assets/mini-cards/266.png'
+import C267 from '../assets/cards/267.png'
+import CM267 from '../assets/mini-cards/267.png'
+import C268 from '../assets/cards/268.png'
+import CM268 from '../assets/mini-cards/268.png'
+import C269 from '../assets/cards/269.png'
+import CM269 from '../assets/mini-cards/269.png'
+import C270 from '../assets/cards/270.png'
+import CM270 from '../assets/mini-cards/270.png'
+import C271 from '../assets/cards/271.png'
+import CM271 from '../assets/mini-cards/271.png'
+import C272 from '../assets/cards/272.png'
+import CM272 from '../assets/mini-cards/272.png'
+import C273 from '../assets/cards/273.png'
+import CM273 from '../assets/mini-cards/273.png'
+import C274 from '../assets/cards/274.png'
+import CM274 from '../assets/mini-cards/274.png'
+import C275 from '../assets/cards/275.png'
+import CM275 from '../assets/mini-cards/275.png'
+// import C276 from '../assets/cards/276.png'
+// import CM276 from '../assets/mini-cards/276.png'
 
 export default {
   name: 'Main',
@@ -511,20 +577,468 @@ export default {
           title: '',
           deck: [],
           display: {
-            name: 'Monkey D. Luffy',
-            image: C243,
-            imageM: CM243,
-            grade: 3,
+            name: 'Hatchan',
+            // image: C276,
+            // imageM: CM276,
+            grade: 1,
             type: {
-              race: 'Human',
+              race: 'Fishman',
               job: 'Fighter',
-              special: 'Paramecia'
+              special: ''
             },
-            text: '[Auto]: At the end your turn. Put this unit to bottom deck. [Auto]: When this unit attack. This unit get Power + 1000 for each unit your control until end this turn.',
-            power: 2500,
-            code: '243'
+            text: '[Auto]: When this unit is placed on battlefield. If you control three or more "Fishman" unit, draw two cards.',
+            power: 500,
+            code: '276'
           },
           cards: [
+            {
+              name: 'Hatchan',
+              image: C275,
+              imageM: CM275,
+              grade: 1,
+              type: {
+                race: 'Fishman',
+                job: 'Fighter',
+                special: ''
+              },
+              text: '[Auto]: When this unit is placed on battlefield. If you control three or more "Fishman" unit, draw two cards.',
+              power: 500,
+              code: '275'
+            },
+            {
+              name: 'Duval',
+              image: C274,
+              imageM: CM274,
+              grade: 1,
+              type: {
+                race: 'Human',
+                job: 'Swordman',
+                special: ''
+              },
+              text: '[Act][1/Turn]: Pay 500 life points. Add up to one "Vinsmoke Sanji" in its card name from deck into your hand. Shuffle your deck.',
+              power: 500,
+              code: '274'
+            },
+            {
+              name: 'Pappug',
+              image: C273,
+              imageM: CM273,
+              grade: 1,
+              type: {
+                race: 'Fishman',
+                job: '',
+                special: ''
+              },
+              text: '[Auto]: When this unit is placed on battlefield. Call up to one "Keimi" in its card name from your deck. Shuffle your deck.',
+              power: 0,
+              code: '273'
+            },
+            {
+              name: 'Keimi',
+              image: C272,
+              imageM: CM272,
+              grade: 1,
+              type: {
+                race: 'Fishman',
+                job: '',
+                special: ''
+              },
+              text: '[Auto]: When this unit is placed on battlefield. Call one Grade 1 from your hand. If you do, put this unit to bottom of your deck and draw a card.',
+              power: 0,
+              code: '272'
+            },
+            {
+              name: 'Brook',
+              image: C271,
+              imageM: CM271,
+              grade: 1,
+              type: {
+                race: 'Human',
+                job: 'Swordman',
+                special: 'Paramecia'
+              },
+              text: '[Act][1/Turn]: Pay 500 life points. Put three cards from the top of your deck into the drop zone.',
+              power: 500,
+              code: '271'
+            },
+            {
+              name: 'Gekko Moriah',
+              image: C270,
+              imageM: CM270,
+              grade: 3,
+              type: {
+                race: 'Undead',
+                job: 'Spellcaster',
+                special: 'Paramecia'
+              },
+              text: '[Auto]: When this unit attack. Pay 1000 life points and put a card from the top of your deck into the drop zone. Send one unit your control to drop zone and call up to one Grade 3 or 2 unit from drop zone.',
+              power: 2500,
+              code: '270'
+            },
+            {
+              name: 'Oars',
+              image: C269,
+              imageM: CM269,
+              grade: 3,
+              type: {
+                race: 'Undead',
+                job: 'Fighter',
+                special: ''
+              },
+              text: '[Auto]: When this unit block. Put a card from the top of your deck into the drop zone. If opponent unit is destroyed by the battle, your opponent take 2000 damage.',
+              power: 2500,
+              code: '269'
+            },
+            {
+              name: 'Monkey D. Luffy',
+              image: C268,
+              imageM: CM268,
+              grade: 3,
+              type: {
+                race: 'Undead',
+                job: 'Swordman',
+                special: 'Paramecia'
+              },
+              text: '[Auto]: When this unit is placed on battlefield. Pay 500 life points, then this unit get Power + 500 for each card in your opponent drop zone until end of turn. [Auto]: At the end of turn. Send this unit to drop zone.',
+              power: 2500,
+              code: '268'
+            },
+            {
+              name: 'Bartholomew Kuma',
+              image: C267,
+              imageM: CM267,
+              grade: 3,
+              type: {
+                race: 'Cyborg',
+                job: 'Fighter',
+                special: 'Paramecia'
+              },
+              text: '[Auto]: When this unit attack. Each player put all unit they control into bottom of player deck, then each player increase they life points equal total power units put into bottom deck by this effect.',
+              power: 2500,
+              code: '267'
+            },
+            {
+              name: 'Tony Tony Chopper',
+              image: C266,
+              imageM: CM266,
+              grade: 2,
+              type: {
+                race: 'Beast',
+                job: 'Fighter',
+                special: 'Zoan'
+              },
+              text: '[Auto]: At the end of this turn. Put this unit into the bottom of your deck. Call up to one random Grade 1 "Tony Tony Chopper" in its card name from your deck. Shuffle your deck. [Auto]: When your life points increase. This unit get Power + 1000 until end of turn.',
+              power: 1500,
+              code: '266'
+            },
+            {
+              name: 'Tony Tony Chopper',
+              image: C265,
+              imageM: CM265,
+              grade: 1,
+              type: {
+                race: 'Beast',
+                job: 'Fighter',
+                special: 'Zoan'
+              },
+              text: '[Auto]: When this unit is placed on battlefield. Put a card from the top of your deck into the drop zone. For each Grade unit that put into drop zone by this effect, increase 1500 life points.',
+              power: 500,
+              code: '265'
+            },
+            {
+              name: 'Usopp',
+              image: C264,
+              imageM: CM264,
+              grade: 1,
+              type: {
+                race: 'Human',
+                job: 'Fighter',
+                special: ''
+              },
+              text: '[Auto]: When this unit is placed on battlefield. Put a card from the top of your deck into the drop zone. Destroy all opponent units with Power 500 or less.',
+              power: 500,
+              code: '264'
+            },
+            {
+              name: 'Oars',
+              image: C263,
+              imageM: CM263,
+              grade: 3,
+              type: {
+                race: 'Undead',
+                job: 'Fighter',
+                special: ''
+              },
+              text: '[Cont]: For each "Undead" unit your control, this unit get Power + 500.',
+              power: 2500,
+              code: '263'
+            },
+            {
+              name: 'Gekko Moriah',
+              image: C262,
+              imageM: CM262,
+              grade: 3,
+              type: {
+                race: 'Undead',
+                job: 'Spellcaster',
+                special: 'Paramecia'
+              },
+              text: '[Cont]: All "Undead" units you control get Power + 500.',
+              power: 2500,
+              code: '262'
+            },
+            {
+              name: 'Brook',
+              image: C261,
+              imageM: CM261,
+              grade: 1,
+              type: {
+                race: 'Undead',
+                job: 'Swordman',
+                special: 'Paramecia'
+              },
+              text: '[Auto]: When this unit is sent to the drop zone. Put a card from the top of your deck into the drop zone. Select up to three cards from your bind zone and place them at the bottom of your deck.',
+              power: 500,
+              code: '261'
+            },
+            {
+              name: 'Franky',
+              image: C260,
+              imageM: CM260,
+              grade: 1,
+              type: {
+                race: 'Cyborg',
+                job: 'Gunner',
+                special: ''
+              },
+              text: '[Auto]: When this unit is placed on battlefield. Put a card from top of your deck to drop zone. Choose up to one Grade 2 your opponent unit and destroy that unit.',
+              power: 500,
+              code: '260'
+            },
+            {
+              name: 'Jigoro',
+              image: C259,
+              imageM: CM259,
+              grade: 1,
+              type: {
+                race: 'Undead',
+                job: 'Swordman',
+                special: ''
+              },
+              text: '[Act][1/Turn]: Pay 500 life points and put a card from top of your deck to drop zone. This unit get Power + 2000 until end of turn.',
+              power: 500,
+              code: '259'
+            },
+            {
+              name: 'Kumashi',
+              image: C258,
+              imageM: CM258,
+              grade: 1,
+              type: {
+                race: 'Undead',
+                job: '',
+                special: ''
+              },
+              text: '[Auto]: When this unit is placed on battlefield. Put a card from top of your deck to drop zone. Put up to one "Perona" in its card name from deck into your hand. Shuffle your deck.',
+              power: 500,
+              code: '258'
+            },
+            {
+              name: 'Perona',
+              image: C257,
+              imageM: CM257,
+              grade: 1,
+              type: {
+                race: 'Human',
+                job: 'Spellcaster',
+                special: 'Paramecia'
+              },
+              text: '[Auto]: When this unit is placed on battlefield. Put a card from top of your deck to drop zone. Put up to one "Undead" from deck into your hand. Shuffle your deck.',
+              power: 500,
+              code: '257'
+            },
+            {
+              name: 'Lola',
+              image: C256,
+              imageM: CM256,
+              grade: 1,
+              type: {
+                race: 'Undead',
+                job: 'Swordman',
+                special: ''
+              },
+              text: '[Act][1/Turn]: Pay 500 life points and put a card from top of your deck to drop zone. Put up to one "Absalom" in its card name from deck into your hand. Shuffle your deck.',
+              power: 500,
+              code: '256'
+            },
+            {
+              name: 'Tararan',
+              image: C255,
+              imageM: CM255,
+              grade: 1,
+              type: {
+                race: 'Undead',
+                job: '',
+                special: ''
+              },
+              text: '[Auto]: When this unit block. Put a card from top of your deck to drop zone. Rest a random unit your opponent control.',
+              power: 500,
+              code: '255'
+            },
+            {
+              name: 'Inuppe',
+              image: C254,
+              imageM: CM254,
+              grade: 1,
+              type: {
+                race: 'Undead',
+                job: 'Fighter',
+                special: ''
+              },
+              text: '[Auto]: When this unit block. Put a card from top of your deck to drop zone. This unit get Power + 500 for each "Undead" in your drop zone until end this turn.',
+              power: 500,
+              code: '254'
+            },
+            {
+              name: 'Risky Brothers',
+              image: C253,
+              imageM: CM253,
+              grade: 1,
+              type: {
+                race: 'Undead',
+                job: '',
+                special: ''
+              },
+              text: '[Auto]: When this unit is placed on battlefield. Put two cards from top of your deck into drop zone.',
+              power: 500,
+              code: '253'
+            },
+            {
+              name: 'Absalom',
+              image: C252,
+              imageM: CM252,
+              grade: 2,
+              type: {
+                race: 'Undead',
+                job: 'Gunner',
+                special: 'Paramecia'
+              },
+              text: '[Auto]: When this unit attack. Put top of your deck into drop zone. Destroy Grade 2 or less random unit your opponent control.',
+              power: 1500,
+              code: '252'
+            },
+            {
+              name: 'Shimotsuki Ryuma',
+              image: C251,
+              imageM: CM251,
+              grade: 2,
+              type: {
+                race: 'Undead',
+                job: 'Swordman',
+                special: ''
+              },
+              text: '[Act][1/Turn]: Pay 500 life points and put top of your deck into drop zone. This unit get Power + 500 for each "Undead" in your drop zone.',
+              power: 1500,
+              code: '251'
+            },
+            {
+              name: 'Dr Hogback',
+              image: C250,
+              imageM: CM250,
+              grade: 1,
+              type: {
+                race: 'Human',
+                job: '',
+                special: ''
+              },
+              text: '[Auto]: When this unit is placed on battlefield. Pay 1000 life points and put top of your deck into drop zone. Call up to one Grade 2 or less unit from your drop zone.',
+              power: 500,
+              code: '250'
+            },
+            {
+              name: 'Victoria Cindry',
+              image: C249,
+              imageM: CM249,
+              grade: 1,
+              type: {
+                race: 'Undead',
+                job: 'Fighter',
+                special: ''
+              },
+              text: '[Auto]: When this unit is placed on battlefield. Put top of your deck into drop zone. draw a card.',
+              power: 500,
+              code: '249'
+            },
+            {
+              name: 'Cerberus',
+              image: C248,
+              imageM: CM248,
+              grade: 1,
+              type: {
+                race: 'Undead',
+                job: '',
+                special: ''
+              },
+              text: '[Auto]: When this unit is placed on battlefield. Put top of your deck into drop zone. your opponent take damage 500 points.',
+              power: 500,
+              code: '248'
+            },
+            {
+              name: 'Brook',
+              image: C247,
+              imageM: CM247,
+              grade: 1,
+              type: {
+                race: 'Undead',
+                job: 'Swordman',
+                special: 'Paramecia'
+              },
+              text: '[Auto]: When this unit is send into drop zone. Pay 500 life points and bind this. Call up to one "Brook" from your deck and that unit get Power + 500 for each card in your drop zone until end this turn.',
+              power: 500,
+              code: '247'
+            },
+            {
+              name: 'Monkey D. Garp',
+              image: C246,
+              imageM: CM246,
+              grade: 3,
+              type: {
+                race: 'Human',
+                job: 'Fighter',
+                special: ''
+              },
+              text: '[Cont]: When "Fighter" unit is placed on your battlefield. This unit get Power + 500 (Stack Effect).',
+              power: 2500,
+              code: '246'
+            },
+            {
+              name: 'Helmeppo',
+              image: C245,
+              imageM: CM245,
+              grade: 2,
+              type: {
+                race: 'Human',
+                job: 'Swordman',
+                special: ''
+              },
+              text: '[Auto]: When this unit attack. Pay 500 life points. Call up to one Grade 2 "Fighter" random unit from your deck. Shuffle your deck.',
+              power: 1500,
+              code: '245'
+            },
+            {
+              name: 'Coby',
+              image: C244,
+              imageM: CM244,
+              grade: 2,
+              type: {
+                race: 'Human',
+                job: 'Fighter',
+                special: ''
+              },
+              text: '[Auto]: When this unit block. This unit get Power + 500 for each "Fighter" unit your control until end this turn.',
+              power: 1500,
+              code: '244'
+            },
             {
               name: 'Monkey D. Luffy',
               image: C243,
@@ -3290,7 +3804,7 @@ export default {
               grade: 3,
               type: {
                 race: 'Cyborg',
-                job: 'fighter',
+                job: 'Fighter',
                 special: 'Paramecia'
               },
               text: '[Act][1/Turn]: Choose up to one your opponent unit, and put that unit into bottom your opponent deck.',
@@ -3466,7 +3980,7 @@ export default {
               code: '034'
             },
             {
-              name: 'Gecko Moria',
+              name: 'Gekko Moriah',
               image: C033,
               imageM: CM033,
               grade: 3,
@@ -3475,7 +3989,7 @@ export default {
                 job: 'Spellcaster',
                 special: 'Paramecia'
               },
-              text: '[Act][1/Turn]: Pay 1000 life points, send one other unit your control into drop zone. Call up to one unit from drop zone.',
+              text: '[Act][1/Turn]: Pay 1000 life points, send one unit your control to drop zone. Call up to one unit from drop zone.',
               power: 2500,
               code: '033'
             },

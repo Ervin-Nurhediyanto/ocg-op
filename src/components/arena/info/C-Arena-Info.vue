@@ -34,16 +34,18 @@
         v-on:FTD="FTD"
         v-on:DRTF="DRTF"
         v-on:DRTH="DRTH"
-        v-on:ACT017="ACT017"
-        v-on:ACT022="ACT022"
-        v-on:ACT023="ACT023"
-        v-on:ACT024="ACT024"
-        v-on:ACT026="ACT026"
-        v-on:ACT033="ACT033"
-        v-on:ACT045="ACT045"
       />
-      <!-- Chat Player -->
-      <div v-else class="col-10 h-80vh px-2 text-white shadow-text-1"></div>
+      <div v-else class="col-10 h-80vh px-2 text-white shadow-text-1 overflow scrollbar-none bg-dark">
+        <div v-for="i in chats.length" :key="i" class="font-12px">
+          <div class="text-warning shadow-text-2">
+            <b v-if="chats[chats.length - (i)].who === 'Opponent'" class="text-warning">{{ chats[chats.length - (i)].who }} : </b>
+            <b v-if="chats[chats.length - (i)].who === 'Player'" class="text-info">{{ chats[chats.length - (i)].who }} : </b>
+            <span class="text-white">{{ chats[chats.length - (i)].chat }}</span>
+          </div>
+          <!-- <div>{{ chats[i - 1].chat }}</div> -->
+          <!-- <div>{{ chats[chats.length - (i)].chat }}</div> -->
+        </div>
+      </div>
       <div class="col-2">
         <Phase
           v-on:changePhase="changePhase"
@@ -77,7 +79,7 @@ import Open from './open/C-Arena-Open.vue'
 
 export default {
   name: 'Arena Info',
-  props: ['info', 'turn', 'phases', 'player', 'opponent'],
+  props: ['info', 'turn', 'phases', 'player', 'opponent', 'chats'],
   data () {
     return {}
   },
@@ -125,27 +127,6 @@ export default {
     },
     DRTH (data) {
       this.$emit('DRTH', data)
-    },
-    ACT017 (data) {
-      this.$emit('ACT017', data)
-    },
-    ACT022 (data) {
-      this.$emit('ACT022', data)
-    },
-    ACT023 (data) {
-      this.$emit('ACT023', data)
-    },
-    ACT024 (data) {
-      this.$emit('ACT024', data)
-    },
-    ACT026 (data) {
-      this.$emit('ACT026', data)
-    },
-    ACT033 (data) {
-      this.$emit('ACT033', data)
-    },
-    ACT045 (data) {
-      this.$emit('ACT045', data)
     }
   }
 }
