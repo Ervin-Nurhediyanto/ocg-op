@@ -1,17 +1,17 @@
 <template>
   <div class="row h-100vh d-flex align-content-center m-0 p-0 bg-op">
     <div class="col-4 d-flex justify-content-center cursor-pointer bg-sleeve-001" @click.prevent="goToEditDeck">
-      <div class="row h-90vh w-100px d-flex align-content-center">
+      <div class="row h-100vh w-100px d-flex align-content-center">
         <div class="d-flex justify-content-center text-white rounded bg-danger"><b>Edit Deck</b></div>
       </div>
     </div>
     <div class="col-4 d-flex justify-content-center cursor-pointer bg-sleeve-001" @click.prevent="goToArena">
-      <div class="row h-90vh w-100px d-flex align-content-center">
+      <div class="row h-100vh w-100px d-flex align-content-center">
         <div class="d-flex justify-content-center text-white rounded bg-danger"><b>Arena</b></div>
       </div>
     </div>
     <div class="col-4 d-flex justify-content-center cursor-pointer bg-sleeve-001" @click.prevent="goToProfil">
-      <div class="row h-90vh w-100px d-flex align-content-center">
+      <div class="row h-100vh w-100px d-flex align-content-center">
         <div class="d-flex justify-content-center text-white rounded bg-danger"><b>Profil</b></div>
       </div>
     </div>

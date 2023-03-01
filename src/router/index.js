@@ -20,6 +20,11 @@ const routes = [
         component: () => import('../views/edit/index.vue')
       },
       {
+        path: '/new-arena',
+        name: 'New-Arena',
+        component: () => import('../views/arena/new-arena/index.vue')
+      },
+      {
         path: '/arena',
         name: 'Arena',
         component: () => import('../views/arena/index.vue')

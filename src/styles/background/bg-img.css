@@ -5,6 +5,13 @@
   background-repeat: no-repeat;
   background-size: cover;
 }
+.bg-op-2 {
+  background-image: url('../../assets/background/bg-ocg-2.jpg');
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
 .bg-sleeve-001 {
   background-image: url('../../assets/sleeves/S001.png');
   background-size: cover;
@@ -19,5 +26,13 @@
 }
 .bg-sleeve-004 {
   background-image: url('../../assets/sleeves/S004.png');
+  background-size: cover;
+}
+.bg-circle {
+  background-image: url('../../assets/circle.png');
+  background-size: cover;
+}
+.bg-circle-2 {
+  background-image: url('../../assets/circle-2.png');
   background-size: cover;
 }

@@ -1,7 +1,9 @@
 .cursor-pointer {
   cursor: pointer;
 }
-
+.cursor-default {
+  cursor: default;
+}
 .scrollbar-none::-webkit-scrollbar {
   display: none;
 }

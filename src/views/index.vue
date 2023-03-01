@@ -3933,7 +3933,7 @@ export default {
                 job: 'Fighter',
                 special: 'Paramecia'
               },
-              text: '[Act][1/Turn]: Discard up to one random card from your opponent hand, and this unit get Power + 1000 until end this turn.',
+              text: '[Auto]: When this unit attack. this unit get Power + 1000 until end of turn. [Act][1/Turn]: Discard up to one random card from your opponent hand.',
               power: 2500,
               code: '037'
             },
@@ -3947,7 +3947,7 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Auto]: When this card send into your drop zone. Put this unit into your hand.',
+              text: '[Auto]: When this unit attack. This unit get Power + 1000, until end of turn',
               power: 500,
               code: '036'
             },
@@ -3961,7 +3961,7 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Cont]: All "Fishman" unit your control get Power + 500.',
+              text: '[Auto]: At the beginning of your battle phase. All "Fishman" unit your control get Power + 500 until end of turn.',
               power: 2500,
               code: '035'
             },
@@ -3975,7 +3975,7 @@ export default {
                 job: 'Swordman',
                 special: 'Paramecia'
               },
-              text: '[Auto]: When this unit is placed on battlefield from your drop zone. Pay 500 life points, then this unit get Power + 500 for each card in your drop zone until end this turn.',
+              text: '[Auto]: At the end of turn. Send this unit to drop zone. [Auto]: When this unit is placed on battlefield. Pay 500 life points. This unit get Power + 500 for each cards in your drop zone until end of turn.',
               power: 2500,
               code: '034'
             },
@@ -3989,7 +3989,7 @@ export default {
                 job: 'Spellcaster',
                 special: 'Paramecia'
               },
-              text: '[Act][1/Turn]: Pay 1000 life points, send one unit your control to drop zone. Call up to one unit from drop zone.',
+              text: '[Act][1/Turn]: Pay 1000 life points and pay 1 mana. Call up to one "Undead" random unit from drop zone to open circle.',
               power: 2500,
               code: '033'
             },
@@ -4003,7 +4003,7 @@ export default {
                 job: 'Fighter',
                 special: 'Paramecia'
               },
-              text: '[Auto]: When this unit destroyed by battle. Put this unit into your hand.',
+              text: '[Auto]: When this unit is send into drop zone from your field. Call up to one "Buggy" from your deck. Shuffle your deck.',
               power: 500,
               code: '032'
             },
@@ -4017,7 +4017,7 @@ export default {
                 job: 'Spellcaster',
                 special: 'Logia'
               },
-              text: '[Cont]: All your opponent unit get Power - 500 for each your Grade 2 or less unit on the Field. [Act][1/Turn]: Put top of your deck into drop zone. This unit get Power + 1000 until end this turn.',
+              text: '[Auto]: When this unit is placed on battlefield. Pay 1 mana. All your opponent unit get Power - 500 until end of turn. [Act][1/Turn]: Pay 2 mana. All your opponent unit get Power - 500 until end of turn',
               power: 2500,
               code: '031'
             },
@@ -4031,7 +4031,7 @@ export default {
                 job: 'Swordman',
                 special: 'Zoan'
               },
-              text: '[Auto]: When this unit is placed on battlefield. Add up to one "Swordman" card from your deck into your hand, then shuffle your deck.',
+              text: '[Auto]: When this unit is placed on battlefield. Add up to one Grade 2 or less random "Swordman" card from deck into your hand. Shuffle your deck.',
               power: 0,
               code: '030'
             },
@@ -4045,7 +4045,7 @@ export default {
                 job: '',
                 special: 'Paramecia'
               },
-              text: '[Auto]: When this unit is placed on battlefield. Add up to one "Beast" or "Zoan" card from your deck into your hand, then shuffle your deck.',
+              text: '[Auto]: When this unit is placed on battlefield. Add up to one Grade 2 or less random "Beast" card from deck into your hand. Shuffle your deck.',
               power: 0,
               code: '029'
             },
@@ -4059,7 +4059,7 @@ export default {
                 job: 'Swordman',
                 special: 'Logia'
               },
-              text: '[Act][1/Turn]: Pay 500 life points. Choose up to one Grade 2 or less opponent control, then Rest that unit. [Auto]: When this unit attack. Pay 500 life points. Choose up to one Grade 2 or less opponent control, then Rest that unit.',
+              text: '[Auto]: When this unit is placed on battlefield. Pay 1 mana, choose up to one your opponent unit and rest that unit. [Act][1/Turn]: Pay 500 life points. Choose up to one grade 2 or less your opponent unit and rest that unit.',
               power: 1500,
               code: '028'
             },
@@ -4073,7 +4073,7 @@ export default {
                 job: '',
                 special: ''
               },
-              text: '[Auto]: When this unit send into drop zone. Put this unit into bottom of your deck, then choose up to two "Vinsmoke" in its card name from your drop zone, and put that card into your hand.',
+              text: '[Auto]: When this card is discarded. Put up to two "Vinsmoke" other "Vinsmoke Sora" from drop zone into your hand. [Act][1/Turn]: Discard a random "Vinsmoke" card from your hand. Put this unit to your hand, then call up to one "Vinsmoke" other "Vinsmoke Judge" from your deck. Shuffle your deck.',
               power: 0,
               code: '027'
             },
@@ -4087,7 +4087,7 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Act][1/Turn]: Discard a card with "Vinsmoke" in its card name from your hand. Call up to one "Vinsmoke" in its card name other "Vinsmoke Judge" from your deck. Shuffle your deck',
+              text: '[Auto]: When this card is discarded. Bind this card and put all "Vinsmoke" from your drop zone into bottom of your deck. [Act][1/Turn]: Discard a random "Vinsmoke" card from your hand. Call up to one "Vinsmoke" other "Vinsmoke Judge" from your deck to open circle. Shuffle your deck.',
               power: 2500,
               code: '026'
             },
@@ -4101,7 +4101,7 @@ export default {
                 job: 'Fighter',
                 special: 'Paramecia'
               },
-              text: '[Auto]: When this unit send into drop zone. Put this unit into bottom of your deck, then all "Vinsmoke" unit your control get Power + 1000, until end this turn.',
+              text: '[Auto]: When this card is discarded. Draw a cards. [Act][1/Turn]: Discard a random "Vinsmoke" card from your hand. Draw a cards.',
               power: 500,
               code: '025'
             },
@@ -4115,7 +4115,7 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Act][1/Turn]: Discard a card with "Vinsmoke" in its card name from your hand. Choose up to one Grade 1 your opponent unit, and destroy that unit.',
+              text: '[Auto]: When this card is discarded. Destroy a random unit your opponent control. [Act][1/Turn]: Discard a random "Vinsmoke" card from your hand. Choose up to one your opponent unit, and destroy that unit.',
               power: 500,
               code: '024'
             },
@@ -4129,7 +4129,7 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Act][1/Turn]: Discard a card with "Vinsmoke" in its card name from your hand. Choose up to one Grade 1 your opponent unit, and bind that unit.',
+              text: '[Auto]: When this card is discarded. Bind a random unit your opponent control. [Act][1/Turn]: Discard a random "Vinsmoke" card from your hand. Choose up to one your opponent unit, and bind that unit.',
               power: 500,
               code: '023'
             },
@@ -4143,7 +4143,7 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Act][1/Turn]: Discard a card with "Vinsmoke" in its card name from your hand. This unit get Power + 3000 until end this turn.',
+              text: '[Auto]: When this card is discarded. Put up to one "Vinsmoke" from deck into your hand. Shuffle your deck. [Act][1/Turn]: Discard a random "Vinsmoke" card from your hand. This unit get Power + 3000, until end of turn.',
               power: 1500,
               code: '022'
             },
@@ -4157,7 +4157,7 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Auto]: When this unit attack. If you control another "Vinsmoke", this unit get Power + 1500 until end this turn.',
+              text: '[Auto]: When this card is discarded. All "Vinsmoke" unit your control get Power + 1000, until end of turn. [Act][1/Turn]: Discard a random "Vinsmoke" card from your hand. This unit get Power + 2000, until end of turn.',
               power: 500,
               code: '021'
             },
@@ -4199,7 +4199,7 @@ export default {
                 job: 'Swordman',
                 special: ''
               },
-              text: '[Auto]: When this unit block. This unit get Power + 2000, until end this turn. If your life points is grether than 500, pay 500 life points and this unit get Power + 1000, until end this turn.',
+              text: '[Auto]: When this unit block. This unit get Power + 2000, until end of turn. [Auto]: When this unit block. Pay 500 life points and this unit get Power + 1500, until end of turn.',
               power: 1500,
               code: '018'
             },
@@ -4213,7 +4213,7 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Act][1/Turn]: Discard a card from your hand. This unit get Power + 2000.',
+              text: '[Auto]: When this unit attack. This unit get Power + 1000, until end of turn. [Act][1/Turn]: Discard a random card from your hand. This unit get Power + 1500, until end of turn.',
               power: 1500,
               code: '017'
             },
@@ -4241,7 +4241,7 @@ export default {
                 job: 'Gunner',
                 special: ''
               },
-              text: '[Auto]: When this unit is placed on battlefield. Call up to one Grade 1 other "Usopp" in its card name from your deck, then shuffle your deck.',
+              text: '[Auto]: When this unit is placed on battlefield. Call up to one Grade 1 other "Usopp" in its card name from your deck to an open circle, then shuffle your deck.',
               power: 500,
               code: '015'
             },
@@ -4255,7 +4255,7 @@ export default {
                 job: 'Fighter',
                 special: 'Zoan'
               },
-              text: '[Cont]: When you gain life points. Increase 2000 life points .',
+              text: '[Auto]: When you gain life points. Increase 2000 life points .',
               power: 500,
               code: '014'
             },
@@ -4269,7 +4269,7 @@ export default {
                 job: 'Fighter',
                 special: 'Paramecia'
               },
-              text: '[Cont]: When you draw a card. This unit get Power + 500 (Stack Effect).',
+              text: '[Cont]: This unit get Power + 500 for each rest of your mana.',
               power: 500,
               code: '013'
             },
@@ -4283,7 +4283,7 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Cont]: When your opponent card is send into drop zone. This unit get Power + 500 (Stack Effect).',
+              text: '[Cont]: This unit get Power + 500 for each your opponent open circle.',
               power: 500,
               code: '012'
             },
@@ -4297,7 +4297,7 @@ export default {
                 job: 'Swordman',
                 special: 'Paramecia'
               },
-              text: '[Auto]: When this unit is send into drop zone. Bind this card, then call up to one "Brook" in its card name from your drop zone.',
+              text: '[Auto]: When this unit is send into drop zone from your field. Bind this card, then call up to one "Brook" in its card name from your drop zone.',
               power: 500,
               code: '011'
             },
@@ -4325,7 +4325,7 @@ export default {
                 job: 'Swordman',
                 special: 'Paramecia'
               },
-              text: '[Auto]: When this unit is send into drop zone. Call up to one "Brook" in its card name from your deck, then shuffle your deck.',
+              text: '[Auto]: When this unit is send into drop zone from your field. Call up to one "Brook" in its card name from your deck, then shuffle your deck.',
               power: 500,
               code: '009'
             },
@@ -4353,7 +4353,7 @@ export default {
                 job: 'Fighter',
                 special: 'Paramecia'
               },
-              text: '[Auto]: When this unit is placed on battlefield. Draw two cards, then put a card from your hand into bottom deck.',
+              text: '[Auto]: When this unit is placed on battlefield. Increase your max mana by 1.',
               power: 500,
               code: '007'
             },
@@ -4381,7 +4381,7 @@ export default {
                 job: 'Gunner',
                 special: ''
               },
-              text: '[Auto]: When this unit is placed on battlefield. Add up to one Grade 1 from your deck into your hand, then shuffle your deck.',
+              text: '[Auto]: When this unit is placed on battlefield. Add up to one random Grade 1 card from your deck into your hand, then shuffle your deck.',
               power: 500,
               code: '005'
             },
@@ -4409,7 +4409,7 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Auto]: When this unit block. This unit get Power + 2000, until end this turn.',
+              text: '[Auto]: When this unit block. This unit get Power + 2000, until of this turn. [Act][1/Turn]: Discard a random card from your hand. This unit get Power + 1500, until end of turn.',
               power: 1500,
               code: '003'
             },
@@ -4423,7 +4423,7 @@ export default {
                 job: 'Swordman',
                 special: ''
               },
-              text: '[Auto]: When this unit attack. This unit get Power + 1000, until end this turn. You can pay 500 life points, then this unit get Power + 1000, until end this turn.',
+              text: '[Auto]: When this unit attack. This unit get Power + 1000, until end of turn. [ACT][1/Turn]: Pay 500 life points. This unit get Power + 1500, until end of turn',
               power: 1500,
               code: '002'
             },
@@ -4437,7 +4437,7 @@ export default {
                 job: 'Fighter',
                 special: 'Paramecia'
               },
-              text: '[Auto]: When this unit attack or block. This unit get Power + 1000, until end this turn.',
+              text: '[Auto]: When this unit attack. This unit get Power + 1000, until end of turn. [Auto]: When this unit block. This unit get Power + 2000, until end of turn.',
               power: 2500,
               code: '001'
             }

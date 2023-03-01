@@ -63,8 +63,11 @@ export default {
         this.buildOpDeck02()
       }
       this.$router.replace({
-        name: 'PvE'
+        name: 'New-Arena'
       })
+      // this.$router.replace({
+      //   name: 'PvE'
+      // })
       // this.$router.replace({
       //   name: 'Arena'
       // })
