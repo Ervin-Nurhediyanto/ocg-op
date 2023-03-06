@@ -157,7 +157,7 @@ export default {
           this.$emit('destroy', { who: 'opponent', location: location })
         }
       }
-      if (this.data.opponent.todo === 'bind unit G1') {
+      if (this.data.opponent.todo === 'destroy unit G2 or less') {
         let unit = {}
         if (location === 'unit F1') { unit = this.data.opponent.field.front.unitF1 }
         if (location === 'unit F2') { unit = this.data.opponent.field.front.unitF2 }
@@ -165,8 +165,8 @@ export default {
         if (location === 'unit B1') { unit = this.data.opponent.field.back.unitB1 }
         if (location === 'unit B2') { unit = this.data.opponent.field.back.unitB2 }
         if (location === 'unit B3') { unit = this.data.opponent.field.back.unitB3 }
-        if (unit.card.grade === 1) {
-          this.$emit('bind', { who: 'opponent', location: location })
+        if (unit.card.grade <= 2) {
+          this.$emit('destroy', { who: 'opponent', location: location })
         }
       }
       if (this.data.opponent.todo === 'destroy unit') {
@@ -179,6 +179,30 @@ export default {
         if (location === 'unit B3') { unit = this.data.opponent.field.back.unitB3 }
         if (unit.isUnit) {
           this.$emit('destroy', { who: 'opponent', location: location })
+        }
+      }
+      if (this.data.opponent.todo === 'bind unit G1') {
+        let unit = {}
+        if (location === 'unit F1') { unit = this.data.opponent.field.front.unitF1 }
+        if (location === 'unit F2') { unit = this.data.opponent.field.front.unitF2 }
+        if (location === 'unit F3') { unit = this.data.opponent.field.front.unitF3 }
+        if (location === 'unit B1') { unit = this.data.opponent.field.back.unitB1 }
+        if (location === 'unit B2') { unit = this.data.opponent.field.back.unitB2 }
+        if (location === 'unit B3') { unit = this.data.opponent.field.back.unitB3 }
+        if (unit.card.grade === 1) {
+          this.$emit('bind', { who: 'opponent', location: location })
+        }
+      }
+      if (this.data.opponent.todo === 'bind unit G2 or less') {
+        let unit = {}
+        if (location === 'unit F1') { unit = this.data.opponent.field.front.unitF1 }
+        if (location === 'unit F2') { unit = this.data.opponent.field.front.unitF2 }
+        if (location === 'unit F3') { unit = this.data.opponent.field.front.unitF3 }
+        if (location === 'unit B1') { unit = this.data.opponent.field.back.unitB1 }
+        if (location === 'unit B2') { unit = this.data.opponent.field.back.unitB2 }
+        if (location === 'unit B3') { unit = this.data.opponent.field.back.unitB3 }
+        if (unit.card.grade <= 2) {
+          this.$emit('bind', { who: 'opponent', location: location })
         }
       }
       if (this.data.opponent.todo === 'bind unit') {
@@ -205,6 +229,18 @@ export default {
           this.$emit('FIELD_TO_HAND', { who: 'opponent', location: location })
         }
       }
+      if (this.data.opponent.todo === 'put into hand unit G1') {
+        let unit = {}
+        if (location === 'unit F1') { unit = this.data.opponent.field.front.unitF1 }
+        if (location === 'unit F2') { unit = this.data.opponent.field.front.unitF2 }
+        if (location === 'unit F3') { unit = this.data.opponent.field.front.unitF3 }
+        if (location === 'unit B1') { unit = this.data.opponent.field.back.unitB1 }
+        if (location === 'unit B2') { unit = this.data.opponent.field.back.unitB2 }
+        if (location === 'unit B3') { unit = this.data.opponent.field.back.unitB3 }
+        if (unit.card.grade === 1) {
+          this.$emit('FIELD_TO_HAND', { who: 'opponent', location: location })
+        }
+      }
       if (this.data.opponent.todo === 'rest unit') {
         let unit = {}
         if (location === 'unit F1') { unit = this.data.opponent.field.front.unitF1 }
@@ -227,6 +263,30 @@ export default {
         if (location === 'unit B3') { unit = this.data.opponent.field.back.unitB3 }
         if (unit.card.grade <= 2) {
           this.$emit('rest', { who: 'opponent', location: location })
+        }
+      }
+      if (this.data.opponent.todo === 'change position') {
+        let unit = {}
+        if (location === 'unit F1') { unit = this.data.opponent.field.front.unitF1 }
+        if (location === 'unit F2') { unit = this.data.opponent.field.front.unitF2 }
+        if (location === 'unit F3') { unit = this.data.opponent.field.front.unitF3 }
+        if (location === 'unit B1') { unit = this.data.opponent.field.back.unitB1 }
+        if (location === 'unit B2') { unit = this.data.opponent.field.back.unitB2 }
+        if (location === 'unit B3') { unit = this.data.opponent.field.back.unitB3 }
+        if (unit.isUnit) {
+          this.$emit('move', { who: 'opponent', location: location })
+        }
+      }
+      if (this.data.opponent.todo === 'unit to deck') {
+        let unit = {}
+        if (location === 'unit F1') { unit = this.data.opponent.field.front.unitF1 }
+        if (location === 'unit F2') { unit = this.data.opponent.field.front.unitF2 }
+        if (location === 'unit F3') { unit = this.data.opponent.field.front.unitF3 }
+        if (location === 'unit B1') { unit = this.data.opponent.field.back.unitB1 }
+        if (location === 'unit B2') { unit = this.data.opponent.field.back.unitB2 }
+        if (location === 'unit B3') { unit = this.data.opponent.field.back.unitB3 }
+        if (unit.isUnit) {
+          this.$emit('FIELD_TO_DECK', { who: 'opponent', location: location })
         }
       }
     },

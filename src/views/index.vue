@@ -3462,7 +3462,7 @@ export default {
               code: '071'
             },
             {
-              name: 'Edward Newgate',
+              name: 'Edward Newgate "Shirohige"',
               image: C070,
               imageM: CM070,
               grade: 3,
@@ -3471,7 +3471,8 @@ export default {
                 job: 'Swordman',
                 special: 'Paramecia'
               },
-              text: '[Auto]: When this unit attack. Pay 500 life points. This unit get Power + 5000 until end this turn. At the end of turn, deal damage 500 to your life points.',
+              text: '[Auto]: When this unit attack. This unit get Power + 1000 until end of turn. [Auto]: When this unit attack. Pay 500 life points, pay 1 mana, and discard a random card from your hand. This unit get Power + 4500 until end of turn.',
+              // text: '[Auto]: When this unit attack. Pay 500 life points. This unit get Power + 5000 until end this turn. At the end of turn, deal damage 500 to your life points.',
               power: 2500,
               code: '070'
             },
@@ -3485,7 +3486,7 @@ export default {
                 job: 'Fighter',
                 special: 'Logia'
               },
-              text: '[Cont]: When your opponent card is send into drop zone. Deal damage 500 to your opponent. [Auto]: When this unit blocks. Destroy the unit blocked by this unit.',
+              text: '[Auto]: When your unit is destroy. Call this unit from your hand. [Auto]: When this unit is placed on battlefield. Pay 1 mana. Destroy random unit your opponent control. [Auto]: When this unit block. Destroy up to one random unit your opponent control.',
               power: 2500,
               code: '069'
             },
@@ -3499,7 +3500,7 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Cont]: When your "Fighter" unit attack. This unit get Power + 1000. (Stuck)',
+              text: '[Cont]: For each "Fighter" unit your control, this unit get Power + 500.',
               power: 2500,
               code: '068'
             },
@@ -3513,7 +3514,7 @@ export default {
                 job: 'Swordman',
                 special: ''
               },
-              text: '[Auto]: When this unit attack. Pay 500 life points, destroy all opponent unit with power less than this power. (Effect send into opponent drop zone cannot be actived)',
+              text: '[Auto]: When you take damage. Call this unit from your hand. Destroy all opposing units with power equal to or less than the damage you take.',
               power: 2500,
               code: '067'
             },
@@ -3527,7 +3528,7 @@ export default {
                 job: 'Fighter',
                 special: 'Zoan'
               },
-              text: '[Auto]: At the end of turn. Call this unit from your drop zone, then increase 2000 life points.',
+              text: '[Auto]: When this unit is placed on battlefield. Increase 2000 life points. [Auto] At the end of turn. If this card is in your drop zone. Pay 1 mana and discard a random card from your hand. Call this unit to open circle.',
               power: 1500,
               code: '066'
             },
@@ -3555,7 +3556,7 @@ export default {
                 job: 'Fighter',
                 special: 'Zoan'
               },
-              text: '[Cont]: All "Zoan" unit your control get Power + 500.',
+              text: '[Auto]: At the beginning of your battle phase. All "Zoan" unit your control get Power + 500 until end of turn.',
               power: 2500,
               code: '064'
             },
@@ -3583,7 +3584,7 @@ export default {
                 job: 'Swordman',
                 special: 'Paramecia'
               },
-              text: '[Cont]: When your opponent card is send into drop zone. Deal damage 500 to your opponent.',
+              text: '[Act][1/Turn]: Pay 500 life points and 1 mana. Destroy random unit your opponent control and this unit get Power equal that unit destroy by this effect until end of turn.',
               power: 2500,
               code: '062'
             },
@@ -3597,7 +3598,7 @@ export default {
                 job: 'Fighter',
                 special: 'Paramecia'
               },
-              text: '[Auto]: When this unit attack. Put top of your deck into drop zone. This unit get Power equal that unit send into drop zone by this effect.',
+              text: '[Auto]: When this unit attack. your opponent call a random unit from opponent hand to open circle. this unit get Power equal that unit call by this effect until end of turn. Otherwise, this unit get Power + 3000 until end of turn.',
               power: 2500,
               code: '061'
             },
@@ -3611,7 +3612,7 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Auto]: When this unit attack. This unit get Power + 500 for each "Fighter" unit your control until end this turn.',
+              text: '[Auto]: When this unit attack. This unit get Power + 1000, until end of turn. [Auto]: When this unit block. This unit get Power + 2000, until end of turn.',
               power: 1500,
               code: '060'
             },
@@ -3625,7 +3626,7 @@ export default {
                 job: 'Fighter',
                 special: 'Paramecia'
               },
-              text: '[Cont]: During opponent Stanby Phase. Rest unit your opponent control cannot be Stand.',
+              text: '[Auto]: At the beginning of opponent battle phase. Pay 1 mana. Rest random unit your opponent control.',
               power: 2500,
               code: '059'
             },
@@ -3639,7 +3640,7 @@ export default {
                 job: 'Fighter',
                 special: 'Zoan'
               },
-              text: '[Cont]: At the end of your turn. This unit get Power + 1000. (Stack)',
+              text: '[Auto]: At the end of your turn. Put this unit into bottom of your deck. Call up to one Grade 2 "Jack" from your deck. Shuffle your deck. [Auto]: When this unit attack. Pay 1 mana. Put up to one Grade 2 or less random unit your opponent control into your opponent hand.',
               power: 2500,
               code: '058'
             },
@@ -3653,7 +3654,7 @@ export default {
                 job: 'Spellcaster',
                 special: 'Paramecia'
               },
-              text: '[Auto]: When this unit is send into drop zone. Pay 1000 life points, then call a random unit from your deck.',
+              text: '[Auto]: When this unit is send into drop zone. Pay 1000 life points and pay 1 mana. Call up to one random unit from your deck to open circle.',
               power: 1500,
               code: '057'
             },
@@ -3667,7 +3668,7 @@ export default {
                 job: 'Swordman',
                 special: 'Paramecia'
               },
-              text: '[Auto]: When this unit is send into drop zone. Pay 500 life points, then call a random unit from your drop zone.',
+              text: '[Auto]: When this unit is send into drop zone. Pay 1000 life points and pay 1 mana. Call up to one random unit from drop zone to open circle.',
               power: 500,
               code: '056'
             },
@@ -3695,7 +3696,7 @@ export default {
                 job: '',
                 special: ''
               },
-              text: '[Act][1/Turn]: Rest this unit. Choose up to one your opponent Grade 1 and Rest that unit.',
+              text: '[Act][1/Turn]: Rest this unit. Rest up to one Grade 1 random your opponent unit.',
               power: 0,
               code: '054'
             },
@@ -3723,7 +3724,7 @@ export default {
                 job: 'Gunner',
                 special: 'Sulong'
               },
-              text: '[Auto]: At the end your phase. Put this unit into bottom your deck. Call up to one random Grade 2 "Nekomamushi" in its card name from your deck. Shuffle your deck. [Act][1/Turn]: Search your deck. Choose up to one "Beast" unit other "Nekomamushi" and put that into your hand. Shuffle your deck.',
+              text: '[Auto]: At the end of your turn. Put this unit into bottom of your deck. Call up to one Grade 2 "Nekomamushi" from your deck. Shuffle your deck. [Auto]: When this unit attack. Pay 1 mana. Destroy Grade 2 or less random unit your opponent control.',
               power: 2500,
               code: '052'
             },
@@ -3737,7 +3738,7 @@ export default {
                 job: 'Swordman',
                 special: ''
               },
-              text: '[Act]: Put this unit into bottom your deck. Call up to one Grade 3 "Nekomamushi" in its card name from your deck. Shuffle your deck.',
+              text: '[Auto]: When this unit block. Pay 500 life points. This unit get Power + 500 for each "Beast" your control, until of turn. [Act]: Put this unit into bottom of your deck. Call up to one Grade 3 "Nekomamushi" from your deck. Shuffle your deck.',
               power: 1500,
               code: '051'
             },
@@ -3751,7 +3752,7 @@ export default {
                 job: 'Swordman',
                 special: 'Sulong'
               },
-              text: '[Auto]: At the end your phase. Put this unit into bottom your deck. Call up to one random Grade 2 "Inuarashi" in its card name from your deck. Shuffle your deck. [Auto]: When this unit attack. Pay 500 life points, this unit get Power + 500 for each "Beast" unit your control until end this turn.',
+              text: '[Auto]: At the end of your turn. Put this unit into bottom of your deck. Call up to one Grade 2 "Inuarashi" from your deck. Shuffle your deck. [Auto]: When this unit attack. Pay 500 life points. This unit get Power + 500 for each "Beast" your control, until of turn.',
               power: 2500,
               code: '050'
             },
@@ -3765,7 +3766,7 @@ export default {
                 job: 'Swordman',
                 special: ''
               },
-              text: '[Act]: Put this unit into bottom your deck. Call up to one Grade 3 "Inuarashi" in its card name from your deck. Shuffle your deck.',
+              text: '[Auto]: When this unit block. Pay 500 life points. This unit get Power + 500 for each "Beast" your control, until of turn. [Act]: Put this unit into bottom of your deck. Call up to one Grade 3 "Inuarashi" from your deck. Shuffle your deck.',
               power: 1500,
               code: '049'
             },
@@ -3779,7 +3780,7 @@ export default {
                 job: 'Fighter',
                 special: 'Paramecia'
               },
-              text: '[Cont]: Commander SHP. [Auto]: When this unit block. If you control "Monkey D. Luffy", this unit get Power + 3500 until end this turn.',
+              text: '[Cont]: Commander SHP. [Cont]: For each "Commander SHP" and "Monkey D. Luffy" your control, this unit get Power + 500.',
               power: 1500,
               code: '048'
             },
@@ -3793,7 +3794,7 @@ export default {
                 job: 'Swordman',
                 special: 'Paramecia'
               },
-              text: '[Auto]: When this unit block. This unit get Power + 2000, until end this turn. If your life points is grether than 500, pay 500 life points and this unit get Power + 500 for each opponent unit until end this turn.',
+              text: '[Auto]: When this unit block. This unit get Power + 2000, until end of turn. [Auto]: When this unit block. Pay 500 life points and this unit get Power + 1500, until end of turn.',
               power: 1500,
               code: '047'
             },
@@ -3807,7 +3808,7 @@ export default {
                 job: 'Fighter',
                 special: 'Paramecia'
               },
-              text: '[Act][1/Turn]: Choose up to one your opponent unit, and put that unit into bottom your opponent deck.',
+              text: '[Act][1/Turn]: Pay 3 mana. Put up to one your opponent unit into bottom of deck.',
               power: 2500,
               code: '046'
             },
@@ -3821,7 +3822,7 @@ export default {
                 job: 'Swordman',
                 special: 'Paramecia'
               },
-              text: '[Act][1/Turn]: Pay 500 life points. Choose up to one other unit your control. Send that unit to your drop zone, then opponent deal damage equal power that unit send by this effect.',
+              text: '[Act][1/Turn]: Pay 500 life points. Change the position of one column of your opponent units',
               power: 2500,
               code: '045'
             },
@@ -3835,7 +3836,7 @@ export default {
                 job: 'Spellcaster',
                 special: 'Logia'
               },
-              text: '[Cont]: When this unit become Stand, this unit get Power + 500 (Stack Effect). [Auto][1/Turn]: When this unit attack. Stand this unit (Still attack and can attact again).',
+              text: '[Auto]: When this unit is placed on battlefield. Pay 1 mana. Destroy random unit your opponent control. [Auto]: When this unit is send to drop zone from your field. Call up to one "Kizaru" from your deck. Shuffle your deck.',
               power: 2500,
               code: '044'
             },
@@ -3849,7 +3850,7 @@ export default {
                 job: 'Spellcaster',
                 special: 'Logia'
               },
-              text: '[Cont]: this unit get Power + 500 for each your opponent Rest unit. [Act][1/Turn]: Choose up to one opponent unit, then Rest that unit.',
+              text: '[Auto]: When this unit is placed on battlefield. Pay 1 mana. Rest up to one your opponent unit. [Act][1/Turn]: Pay 2 mana. Rest up to one your opponent unit.',
               power: 2500,
               code: '043'
             },
@@ -3863,7 +3864,7 @@ export default {
                 job: 'Spellcaster',
                 special: 'Logia'
               },
-              text: '[Cont]: When your opponent card is send into drop zone. This unit get Power + 500 (Stack Effect). [Act][1/Turn] : Choose up to one your opponent unit, and destroy that unit.',
+              text: '[Auto]: When this unit is placed on battlefield. Pay 1 mana. Destroy random unit your opponent control. [Act][1/Turn]: Pay 3 mana. Destroy up to one your opponent unit.',
               power: 2500,
               code: '042'
             },
@@ -3891,7 +3892,7 @@ export default {
                 job: 'Swordman',
                 special: 'Zoan'
               },
-              text: '[Act]: Put this unit into bottom your deck. Call up to one Grade 3 "Jack" in its card name from your deck. Shuffle your deck.',
+              text: '[Auto]: When this unit block. Pay 500 life points. Put Grade 2 or less random unit your opponent control into opponent hand. [Act]: Put this unit into bottom of your deck. Call up to one Grade 3 "Jack" from your deck. Shuffle your deck.',
               power: 1500,
               code: '040'
             },
@@ -3905,8 +3906,8 @@ export default {
                 job: 'Fighter',
                 special: 'Zoan'
               },
-              text: '[Auto]: At the end your phase. Put this unit into bottom your deck. Call up to one Grade 2 or less "Tony Tony Chopper" in its card name from your deck. Shuffle your deck.',
-              power: 4000,
+              text: '[Auto]: At the end of your turn. Put this unit into bottom of your deck. Call up to one Grade 2 "Tony Tony Chopper" from your deck. Shuffle your deck.',
+              power: 4500,
               code: '039'
             },
             {
@@ -3919,7 +3920,7 @@ export default {
                 job: 'Fighter',
                 special: 'Zoan'
               },
-              text: '[Act]: Put this unit into bottom your deck. Call up to one Grade 3 "Tony Tony Chopper" in its card name from your deck. Shuffle your deck.',
+              text: '[Auto]: When this unit block. This unit get Power + 2000, until of turn. [Act]: Put this unit into bottom of your deck. Call up to one Grade 3 "Tony Tony Chopper" from your deck. Shuffle your deck.',
               power: 1500,
               code: '038'
             },
@@ -3933,7 +3934,7 @@ export default {
                 job: 'Fighter',
                 special: 'Paramecia'
               },
-              text: '[Auto]: When this unit attack. this unit get Power + 1000 until end of turn. [Act][1/Turn]: Discard up to one random card from your opponent hand.',
+              text: '[Auto]: When your opponent discard a card. this unit get Power + 1000 until end of turn. [Act][1/Turn]: Discard up to one random card from your opponent hand.',
               power: 2500,
               code: '037'
             },
@@ -4073,7 +4074,7 @@ export default {
                 job: '',
                 special: ''
               },
-              text: '[Auto]: When this card is discarded. Put up to two "Vinsmoke" other "Vinsmoke Sora" from drop zone into your hand. [Act][1/Turn]: Discard a random "Vinsmoke" card from your hand. Put this unit to your hand, then call up to one "Vinsmoke" other "Vinsmoke Judge" from your deck. Shuffle your deck.',
+              text: '[Auto]: When this card is discarded. Put up to two "Vinsmoke" other "Vinsmoke Sora" from drop zone into your hand. [Act][1/Turn]: Discard a random "Vinsmoke" card from your hand. Put up to two "Vinsmoke" other "Vinsmoke Sora" from drop zone into your hand.',
               power: 0,
               code: '027'
             },
@@ -4087,7 +4088,7 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Auto]: When this card is discarded. Bind this card and put all "Vinsmoke" from your drop zone into bottom of your deck. [Act][1/Turn]: Discard a random "Vinsmoke" card from your hand. Call up to one "Vinsmoke" other "Vinsmoke Judge" from your deck to open circle. Shuffle your deck.',
+              text: '[Auto]: When this card is discarded. Call up to one Grade 2 or less "Vinsmoke" from your deck to open circle. Shuffle your deck. [Act][1/Turn]: Discard a random "Vinsmoke" card from your hand. Call up to one Grade 2 or less "Vinsmoke" from your deck to open circle. Shuffle your deck.',
               power: 2500,
               code: '026'
             },
@@ -4101,7 +4102,7 @@ export default {
                 job: 'Fighter',
                 special: 'Paramecia'
               },
-              text: '[Auto]: When this card is discarded. Draw a cards. [Act][1/Turn]: Discard a random "Vinsmoke" card from your hand. Draw a cards.',
+              text: '[Auto]: When this card is discarded. Draw two cards. [Act][1/Turn]: Discard a random "Vinsmoke" card from your hand. Draw two cards.',
               power: 500,
               code: '025'
             },
@@ -4115,7 +4116,7 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Auto]: When this card is discarded. Destroy a random unit your opponent control. [Act][1/Turn]: Discard a random "Vinsmoke" card from your hand. Choose up to one your opponent unit, and destroy that unit.',
+              text: '[Auto]: When this card is discarded. Destroy up to one Grade 2 or less random unit your opponent control. [Act][1/Turn]: Discard a random "Vinsmoke" card from your hand. Choose up to one Grade 2 or less your opponent unit, and destroy that unit.',
               power: 500,
               code: '024'
             },
@@ -4129,7 +4130,7 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Auto]: When this card is discarded. Bind a random unit your opponent control. [Act][1/Turn]: Discard a random "Vinsmoke" card from your hand. Choose up to one your opponent unit, and bind that unit.',
+              text: '[Auto]: When this card is discarded. Bind up to one Grade 2 or less random unit your opponent control. [Act][1/Turn]: Discard a random "Vinsmoke" card from your hand. Choose up to one Grade 2 or less your opponent unit, and bind that unit.',
               power: 500,
               code: '023'
             },
@@ -4143,7 +4144,7 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Auto]: When this card is discarded. Put up to one "Vinsmoke" from deck into your hand. Shuffle your deck. [Act][1/Turn]: Discard a random "Vinsmoke" card from your hand. This unit get Power + 3000, until end of turn.',
+              text: '[Auto]: When you discard a card. This unit get Power + 1000 until end of turn. [Act][1/Turn]: Discard a random "Vinsmoke" card from your hand. This unit get Power + 2000, until end of turn.',
               power: 1500,
               code: '022'
             },
@@ -4283,7 +4284,7 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Cont]: This unit get Power + 500 for each your opponent open circle.',
+              text: '[Cont]: This unit get Power + 500 for each your opponent open circle. [Auto]: When this unit attack. Destroy random unit your control.',
               power: 500,
               code: '012'
             },

@@ -19,7 +19,9 @@
       v-on:destroy="destroy"
       v-on:bind="bind"
       v-on:rest="rest"
+      v-on:move="move"
       v-on:FIELD_TO_HAND="FIELD_TO_HAND"
+      v-on:FIELD_TO_DECK="FIELD_TO_DECK"
     />
     <div class="col-2 h-40vh">
       <div class="row">
@@ -89,8 +91,14 @@ export default {
     rest (data) {
       this.$emit('rest', data)
     },
+    move (data) {
+      this.$emit('move', data)
+    },
     FIELD_TO_HAND (data) {
       this.$emit('FIELD_TO_HAND', data)
+    },
+    FIELD_TO_DECK (data) {
+      this.$emit('FIELD_TO_DECK', data)
     }
   }
 }

@@ -17,7 +17,9 @@
       v-on:destroy="destroy"
       v-on:bind="bind"
       v-on:rest="rest"
+      v-on:move="move"
       v-on:FIELD_TO_HAND="FIELD_TO_HAND"
+      v-on:FIELD_TO_DECK="FIELD_TO_DECK"
     />
     <DISPLAY
       :data="data"
@@ -264,8 +266,8 @@ export default {
       this.data.display = data
     },
     FIRST () {
-      // const user = ['player', 'opponent']
-      const user = ['player', 'player']
+      const user = ['player', 'opponent']
+      // const user = ['player', 'player']
       const index = Math.floor(Math.random() * user.length)
       alert(`${user[index]} First Turn`)
       this.data.turn = user[index]
@@ -320,6 +322,7 @@ export default {
     },
     BP (data) {
       this.EFF_AUTO({ who: data.who, condition: 'AUTO ON BP' })
+      this.EFF_AUTO({ who: data.who, condition: 'AUTO ON BP OP' })
     },
     EP (data) {
       // PLAYER
@@ -365,6 +368,7 @@ export default {
       this.data.opponent.field.back.unitB2.onePerTurn = false
       this.data.opponent.field.back.unitB3.onePerTurn = false
       this.EFF_AUTO({ who: data.who, condition: 'AUTO ON END TURN' })
+      this.EFF_AUTO({ who: data.who, condition: 'AUTO ON END DROP' })
     },
     addMana (data) {
       if (data.who === 'player') {
@@ -697,7 +701,18 @@ export default {
         data.unit.card.code === '027' ||
         data.unit.card.code === '028' ||
         data.unit.card.code === '031' ||
-        data.unit.card.code === '033'
+        data.unit.card.code === '033' ||
+        data.unit.card.code === '037' ||
+        data.unit.card.code === '038' ||
+        data.unit.card.code === '040' ||
+        data.unit.card.code === '042' ||
+        data.unit.card.code === '043' ||
+        data.unit.card.code === '045' ||
+        data.unit.card.code === '046' ||
+        data.unit.card.code === '049' ||
+        data.unit.card.code === '051' ||
+        data.unit.card.code === '054' ||
+        data.unit.card.code === '062'
       ) {
         data.option.act = 'ACT'
       }
@@ -718,54 +733,43 @@ export default {
     },
     move (data) {
       if (data.who === 'player') {
-        if (data.location === 'unit F1') {
-          this.data.player.field.front.unitF1 = data.back.unitB1
-          this.data.player.field.back.unitB1 = data.unit
-        }
-        if (data.location === 'unit F2') {
-          this.data.player.field.front.unitF2 = data.back.unitB2
-          this.data.player.field.back.unitB2 = data.unit
-        }
-        if (data.location === 'unit F3') {
-          this.data.player.field.front.unitF3 = data.back.unitB3
-          this.data.player.field.back.unitB3 = data.unit
-        }
-        if (data.location === 'unit B1') {
-          this.data.player.field.back.unitB1 = data.front.unitF1
-          this.data.player.field.front.unitF1 = data.unit
-        }
-        if (data.location === 'unit B2') {
-          this.data.player.field.back.unitB2 = data.front.unitF2
-          this.data.player.field.front.unitF2 = data.unit
-        }
-        if (data.location === 'unit B3') {
-          this.data.player.field.back.unitB3 = data.front.unitF3
-          this.data.player.field.front.unitF3 = data.unit
-        }
+        data.field = this.data.player.field
       } else {
-        if (data.location === 'unit F1') {
-          this.data.opponent.field.front.unitF1 = data.back.unitB1
-          this.data.opponent.field.back.unitB1 = data.unit
+        data.field = this.data.opponent.field
+      }
+      data.front = data.field.front
+      data.back = data.field.back
+      data.unitF1 = data.front.unitF1
+      data.unitF2 = data.front.unitF2
+      data.unitF3 = data.front.unitF3
+      data.unitB1 = data.back.unitB1
+      data.unitB2 = data.back.unitB2
+      data.unitB3 = data.back.unitB3
+      if (data.location === 'unit F1' || data.location === 'unit B1') {
+        if (data.who === 'player') {
+          this.data.player.field.front.unitF1 = data.unitB1
+          this.data.player.field.back.unitB1 = data.unitF1
+        } else {
+          this.data.opponent.field.front.unitF1 = data.unitB1
+          this.data.opponent.field.back.unitB1 = data.unitF1
         }
-        if (data.location === 'unit F2') {
-          this.data.opponent.field.front.unitF2 = data.back.unitB2
-          this.data.opponent.field.back.unitB2 = data.unit
+      }
+      if (data.location === 'unit F2' || data.location === 'unit B2') {
+        if (data.who === 'player') {
+          this.data.player.field.front.unitF2 = data.unitB2
+          this.data.player.field.back.unitB2 = data.unitF2
+        } else {
+          this.data.opponent.field.front.unitF2 = data.unitB2
+          this.data.opponent.field.back.unitB2 = data.unitF2
         }
-        if (data.location === 'unit F3') {
-          this.data.opponent.field.front.unitF3 = data.back.unitB3
-          this.data.opponent.field.back.unitB3 = data.unit
-        }
-        if (data.location === 'unit B1') {
-          this.data.opponent.field.back.unitB1 = data.front.unitF1
-          this.data.opponent.field.front.unitF1 = data.unit
-        }
-        if (data.location === 'unit B2') {
-          this.data.opponent.field.back.unitB2 = data.front.unitF2
-          this.data.opponent.field.front.unitF2 = data.unit
-        }
-        if (data.location === 'unit B3') {
-          this.data.opponent.field.back.unitB3 = data.front.unitF3
-          this.data.opponent.field.front.unitF3 = data.unit
+      }
+      if (data.location === 'unit F3' || data.location === 'unit B3') {
+        if (data.who === 'player') {
+          this.data.player.field.front.unitF3 = data.unitB3
+          this.data.player.field.back.unitB3 = data.unitF3
+        } else {
+          this.data.opponent.field.front.unitF3 = data.unitB3
+          this.data.opponent.field.back.unitB3 = data.unitF3
         }
       }
     },
@@ -940,6 +944,8 @@ export default {
           alert('YOU WIN')
         }
       }
+      data.condition = 'AUTO ON DAMEGE'
+      this.EFF_AUTO(data)
     },
     heal (data) {
       if (data.who === 'player') {
@@ -1027,6 +1033,82 @@ export default {
         }
       }
       this.EFF_CONT(data)
+    },
+    FIELD_TO_DECK (data) {
+      const unitEmpty = {
+        isUnit: false,
+        card: {},
+        position: 'Stand',
+        power: 0,
+        gain: {
+          auto: 0,
+          cont: 0
+        },
+        onePerTurn: false
+      }
+      if (data.who === 'player') {
+        data.field = this.data.player.field
+        data.deck = this.data.player.deck
+      } else {
+        data.field = this.data.opponent.field
+        data.deck = this.data.opponent.deck
+      }
+      data.front = data.field.front
+      data.back = data.field.back
+      data.unitF1 = data.front.unitF1
+      data.unitF2 = data.front.unitF2
+      data.unitF3 = data.front.unitF3
+      data.unitB1 = data.back.unitB1
+      data.unitB2 = data.back.unitB2
+      data.unitB3 = data.back.unitB3
+      if (data.location === 'unit F1') {
+        data.deck.push(data.unitF1.card)
+        if (data.who === 'player') {
+          this.data.player.field.front.unitF1 = unitEmpty
+        } else {
+          this.data.opponent.field.front.unitF1 = unitEmpty
+        }
+      }
+      if (data.location === 'unit F2') {
+        data.deck.push(data.unitF2.card)
+        if (data.who === 'player') {
+          this.data.player.field.front.unitF2 = unitEmpty
+        } else {
+          this.data.opponent.field.front.unitF2 = unitEmpty
+        }
+      }
+      if (data.location === 'unit F3') {
+        data.deck.push(data.unitF3.card)
+        if (data.who === 'player') {
+          this.data.player.field.front.unitF3 = unitEmpty
+        } else {
+          this.data.opponent.field.front.unitF3 = unitEmpty
+        }
+      }
+      if (data.location === 'unit B1') {
+        data.deck.push(data.unitB1.card)
+        if (data.who === 'player') {
+          this.data.player.field.back.unitB1 = unitEmpty
+        } else {
+          this.data.opponent.field.back.unitB1 = unitEmpty
+        }
+      }
+      if (data.location === 'unit B2') {
+        data.deck.push(data.unitB2.card)
+        if (data.who === 'player') {
+          this.data.player.field.back.unitB2 = unitEmpty
+        } else {
+          this.data.opponent.field.back.unitB2 = unitEmpty
+        }
+      }
+      if (data.location === 'unit B3') {
+        data.deck.push(data.unitB3.card)
+        if (data.who === 'player') {
+          this.data.player.field.back.unitB3 = unitEmpty
+        } else {
+          this.data.opponent.field.back.unitB3 = unitEmpty
+        }
+      }
     },
     destroy (data) {
       const unitEmpty = {
@@ -1186,6 +1268,8 @@ export default {
       this.EFF_CONT(data)
     },
     rest (data) {
+      console.log('REST')
+      console.log(data)
       if (data.who === 'player') {
         data.field = this.data.player.field
       } else {
@@ -1203,13 +1287,13 @@ export default {
         data.unit = data.front.unitF3
       }
       if (data.location === 'unit B1') {
-        data.unit = data.back.unitF1
+        data.unit = data.back.unitB1
       }
       if (data.location === 'unit B2') {
-        data.unit = data.back.unitF2
+        data.unit = data.back.unitB2
       }
       if (data.location === 'unit B3') {
-        data.unit = data.back.unitF3
+        data.unit = data.back.unitB3
       }
       data.unit.position = 'Rest'
       this.data.player.todo = ''
@@ -1225,6 +1309,8 @@ export default {
       }
       data.hand.splice(data.index, 1)
       this.EFF_AUTO({ who: data.who, condition: 'AUTO ON DISCARD' })
+      this.EFF_AUTO({ who: data.who, condition: 'AUTO ON U DISCARD' })
+      this.EFF_AUTO({ who: data.who, condition: 'AUTO ON OP DISCARD' })
     },
     openZone (data) {
       if (this.data.info.todo !== '') {
@@ -1270,6 +1356,27 @@ export default {
       const index = Math.floor(Math.random() * cards.length)
       if (data.todo === 'DECK TO HAND') {
         this.DECK_TO_HAND({ who: data.who, index: cards[index] })
+      }
+    },
+    SEARCH_DECK_FOR_GRADE_AND_NAME (data) {
+      if (data.who === 'player') {
+        data.deck = this.data.player.deck
+      } else {
+        data.deck = this.data.opponent.deck
+      }
+      const cards = []
+      for (let i = 0; i < data.deck.length; i++) {
+        if (data.deck[i].grade === data.grade && data.deck[i].name === data.name) {
+          cards.push(i)
+        }
+      }
+      if (cards.length > 0) {
+        const index = Math.floor(Math.random() * cards.length)
+        if (data.todo === 'CALL FROM DECK') {
+          data.card = data.deck[cards[index]]
+          data.index = cards[index]
+          this.callFromDeck(data)
+        }
       }
     },
     SEARCH_DECK_FOR_GRADE_AND_NOT_NAME (data) {
@@ -1338,6 +1445,27 @@ export default {
         }
       }
     },
+    SEARCH_DECK_FOR_NAME_GRADE_LESS (data) {
+      if (data.who === 'player') {
+        data.deck = this.data.player.deck
+      } else {
+        data.deck = this.data.opponent.deck
+      }
+      const cards = []
+      for (let i = 0; i < data.deck.length; i++) {
+        if (data.deck[i].name.search(data.name) >= 0 && data.deck[i].grade <= data.grade) {
+          cards.push(i)
+        }
+      }
+      if (cards.length > 0) {
+        const index = Math.floor(Math.random() * cards.length)
+        if (data.todo === 'CALL FROM DECK') {
+          data.card = data.deck[cards[index]]
+          data.index = cards[index]
+          this.callFromDeck(data)
+        }
+      }
+    },
     SEARCH_DECK_FOR_RACE_AND_GRADE_LESS (data) {
       if (data.who === 'player') {
         data.deck = this.data.player.deck
@@ -1380,9 +1508,11 @@ export default {
       if (data.who === 'player') {
         data.drop = this.data.player.drop
         data.deck = this.data.player.deck
+        data.hand = this.data.player.hand
       } else {
         data.drop = this.data.opponent.drop
         data.deck = this.data.opponent.deck
+        data.hand = this.data.opponent.hand
       }
       const cards = []
       for (let i = 0; i < data.drop.length; i++) {
@@ -1396,6 +1526,10 @@ export default {
           data.card = data.drop[cards[index]]
           data.index = cards[index]
           this.callFromDrop(data)
+        }
+        if (data.todo === 'DROP TO HAND') {
+          data.hand.push(data.drop[cards[index]])
+          data.drop.splice(cards[index], 1)
         }
         if (data.todo === 'ALL DROP TO DECK') {
           for (let i = 0; i < cards.length; i++) {
@@ -1452,6 +1586,27 @@ export default {
         }
       }
     },
+    SEARCH_DROP_FOR_CODE (data) {
+      if (data.who === 'player') {
+        data.drop = this.data.player.drop
+      } else {
+        data.drop = this.data.opponent.drop
+      }
+      const cards = []
+      for (let i = 0; i < data.drop.length; i++) {
+        if (data.drop[i].code.search(data.code) >= 0) {
+          cards.push(i)
+        }
+      }
+      if (cards.length > 0) {
+        const index = Math.floor(Math.random() * cards.length)
+        if (data.todo === 'CALL FROM DROP') {
+          data.card = data.drop[cards[index]]
+          data.index = cards[index]
+          this.callFromDrop(data)
+        }
+      }
+    },
     DECK_TO_HAND (data) {
       if (data.who === 'player') {
         data.hand = this.data.player.hand
@@ -1489,6 +1644,33 @@ export default {
       if (data.unitB1.isUnit && data.unitB1.card.type.race.search(data.race) >= 0) { data.locations.push({ location: 'unit B1' }) }
       if (data.unitB2.isUnit && data.unitB2.card.type.race.search(data.race) >= 0) { data.locations.push({ location: 'unit B2' }) }
       if (data.unitB3.isUnit && data.unitB3.card.type.race.search(data.race) >= 0) { data.locations.push({ location: 'unit B3' }) }
+      if (data.todo === 'GAIN AUTO POWER') {
+        data.locations.map((unit) => {
+          this.AUTO_POWER({ who: data.who, location: unit.location, gain: data.gain })
+        })
+      }
+    },
+    SELECT_ALL_YOUR_FIELD_BY_SPECIAL (data) {
+      if (data.who === 'player') {
+        data.field = this.data.player.field
+      } else {
+        data.field = this.data.opponent.field
+      }
+      data.front = data.field.front
+      data.back = data.field.back
+      data.unitF1 = data.front.unitF1
+      data.unitF2 = data.front.unitF2
+      data.unitF3 = data.front.unitF3
+      data.unitB1 = data.back.unitB1
+      data.unitB2 = data.back.unitB2
+      data.unitB3 = data.back.unitB3
+      data.locations = []
+      if (data.unitF1.isUnit && data.unitF1.card.type.special.search(data.special) >= 0) { data.locations.push({ location: 'unit F1' }) }
+      if (data.unitF2.isUnit && data.unitF2.card.type.special.search(data.special) >= 0) { data.locations.push({ location: 'unit F2' }) }
+      if (data.unitF3.isUnit && data.unitF3.card.type.special.search(data.special) >= 0) { data.locations.push({ location: 'unit F3' }) }
+      if (data.unitB1.isUnit && data.unitB1.card.type.special.search(data.special) >= 0) { data.locations.push({ location: 'unit B1' }) }
+      if (data.unitB2.isUnit && data.unitB2.card.type.special.search(data.special) >= 0) { data.locations.push({ location: 'unit B2' }) }
+      if (data.unitB3.isUnit && data.unitB3.card.type.special.search(data.special) >= 0) { data.locations.push({ location: 'unit B3' }) }
       if (data.todo === 'GAIN AUTO POWER') {
         data.locations.map((unit) => {
           this.AUTO_POWER({ who: data.who, location: unit.location, gain: data.gain })
@@ -1627,20 +1809,39 @@ export default {
       if (data.condition === 'AUTO ON FIELD') { this.AUTO_ON_FIELD(data) }
       if (data.condition === 'AUTO ON SEND TO DROP') { this.AUTO_ON_SEND_TO_DROP(data) }
       if (data.condition === 'AUTO ON HEAL') { this.AUTO_ON_HEAL(data) }
+      if (data.condition === 'AUTO ON DAMEGE') { this.AUTO_ON_DAMAGE(data) }
       if (data.condition === 'AUTO ON DISCARD') { this.AUTO_ON_DISCARD(data) }
+      if (data.condition === 'AUTO ON OP DISCARD') { this.AUTO_ON_OP_DISCARD(data) }
+      if (data.condition === 'AUTO ON U DISCARD') { this.AUTO_ON_U_DISCARD(data) }
       if (data.condition === 'AUTO ON END TURN') { this.AUTO_ON_END_TURN(data) }
+      if (data.condition === 'AUTO ON END DROP') { this.AUTO_ON_END_DROP(data) }
       if (data.condition === 'AUTO ON BP') { this.AUTO_ON_BP(data) }
-      // this.EFF_AUTO({ who: data.who, location: data.location, unit: data.unit, condition: 'AUTO ON BP' })
+      if (data.condition === 'AUTO ON BP OP') { this.AUTO_ON_BP_OP(data) }
+      // this.EFF_AUTO({ who: data.who, location: data.location, unit: data.unit, condition: 'AUTO ON OP DISCARD' })
     },
     AUTO_ON_ATK (data) {
       if (data.unitATK.card.code === '001') {
         this.EFF001_ATK(data)
       } else if (data.unitATK.card.code === '002') {
         this.EFF002_ATK(data)
+      } else if (data.unitATK.card.code === '012') {
+        this.EFF012_ATK(data)
       } else if (data.unitATK.card.code === '017') {
         this.EFF017_ATK(data)
       } else if (data.unitATK.card.code === '036') {
         this.EFF036(data)
+      } else if (data.unitATK.card.code === '050') {
+        this.EFF050_ATK(data)
+      } else if (data.unitATK.card.code === '052') {
+        this.EFF052_ATK(data)
+      } else if (data.unitATK.card.code === '053') {
+        this.EFF053(data)
+      } else if (data.unitATK.card.code === '058') {
+        this.EFF058_ATK(data)
+      } else if (data.unitATK.card.code === '060') {
+        this.EFF060_ATK(data)
+      } else if (data.unitATK.card.code === '061') {
+        this.EFF061(data)
       } else {
         setTimeout(() => this.unitBlock(data), 1000)
       }
@@ -1652,6 +1853,20 @@ export default {
         this.EFF003_DEF(data)
       } else if (data.unitDEF.card.code === '018') {
         this.EFF018(data)
+      } else if (data.unitDEF.card.code === '038') {
+        this.EFF038_DEF(data)
+      } else if (data.unitDEF.card.code === '040') {
+        this.EFF040_DEF(data)
+      } else if (data.unitDEF.card.code === '047') {
+        this.EFF047(data)
+      } else if (data.unitDEF.card.code === '049') {
+        this.EFF049_DEF(data)
+      } else if (data.unitDEF.card.code === '051') {
+        this.EFF051_DEF(data)
+      } else if (data.unitDEF.card.code === '060') {
+        this.EFF060_DEF(data)
+      } else if (data.unitDEF.card.code === '069') {
+        this.EFF069_DEF(data)
       } else {
         setTimeout(() => this.resultBattle(data), 1000)
       }
@@ -1671,11 +1886,51 @@ export default {
       if (data.unit.card.code === '030') { this.EFF030(data) }
       if (data.unit.card.code === '031') { this.EFF031_AUTO(data) }
       if (data.unit.card.code === '034') { this.EFF034_AUTO(data) }
+      if (data.unit.card.code === '041') { this.EFF041(data) }
+      if (data.unit.card.code === '042') { this.EFF042_AUTO(data) }
+      if (data.unit.card.code === '043') { this.EFF043_AUTO(data) }
+      if (data.unit.card.code === '044') { this.EFF044_AUTO(data) }
+      if (data.unit.card.code === '055') { this.EFF055(data) }
+      if (data.unit.card.code === '066') { this.EFF066(data) }
+      if (data.unit.card.code === '069') { this.EFF069_AUTO(data) }
     },
     AUTO_ON_SEND_TO_DROP (data) {
       if (data.unit.card.code === '009') { this.EFF009(data) }
       if (data.unit.card.code === '011') { this.EFF011(data) }
       if (data.unit.card.code === '032') { this.EFF032(data) }
+      if (data.unit.card.code === '044') { this.EFF044_DROP(data) }
+      if (data.unit.card.code === '056') { this.EFF056(data) }
+      if (data.unit.card.code === '057') { this.EFF057(data) }
+      this.AUTO_UNIT_DESTROY_ON_HAND(data)
+    },
+    AUTO_UNIT_DESTROY_ON_HAND (data) {
+      if (data.who === 'player') {
+        data.hand = this.data.player.hand
+      } else {
+        data.hand = this.data.opponent.hand
+      }
+      for (let i = 0; i < data.hand.length; i++) {
+        if (data.hand[i].code === '069') {
+          data.index = i
+          this.EFF069_HAND(data)
+        }
+      }
+    },
+    AUTO_ON_DAMAGE (data) {
+      this.AUTO_ON_DAMAGE_FROM_HAND(data)
+    },
+    AUTO_ON_DAMAGE_FROM_HAND (data) {
+      if (data.who === 'player') {
+        data.hand = this.data.player.hand
+      } else {
+        data.hand = this.data.opponent.hand
+      }
+      for (let i = 0; i < data.hand.length; i++) {
+        if (data.hand[i].code === '067') {
+          data.index = i
+          this.EFF067(data)
+        }
+      }
     },
     AUTO_ON_HEAL (data) {
       if (data.who === 'player') {
@@ -1703,8 +1958,6 @@ export default {
       })
     },
     AUTO_ON_DISCARD (data) {
-      console.log('ON DISCARD')
-      console.log(data)
       if (data.who === 'player') {
         data.drop = this.data.player.drop
       } else {
@@ -1712,12 +1965,63 @@ export default {
       }
       const index = data.drop.length - 1
       if (data.drop[index].code === '021') { this.EFF021_AUTO(data) }
-      if (data.drop[index].code === '022') { this.EFF022_AUTO(data) }
       if (data.drop[index].code === '023') { this.EFF023_AUTO(data) }
       if (data.drop[index].code === '024') { this.EFF024_AUTO(data) }
       if (data.drop[index].code === '025') { this.EFF025_AUTO(data) }
       if (data.drop[index].code === '026') { this.EFF026_AUTO(data) }
       if (data.drop[index].code === '027') { this.EFF027_AUTO(data) }
+    },
+    AUTO_ON_U_DISCARD (data) {
+      if (data.who === 'player') {
+        data.field = this.data.player.field
+      } else {
+        data.field = this.data.opponent.field
+      }
+      data.front = data.field.front
+      data.back = data.field.back
+      data.unitF1 = data.front.unitF1
+      data.unitF2 = data.front.unitF2
+      data.unitF3 = data.front.unitF3
+      data.unitB1 = data.back.unitB1
+      data.unitB2 = data.back.unitB2
+      data.unitB3 = data.back.unitB3
+      data.code = []
+      if (data.unitF1.isUnit) { data.code.push({ code: data.unitF1.card.code, location: 'unit F1' }) }
+      if (data.unitF2.isUnit) { data.code.push({ code: data.unitF2.card.code, location: 'unit F2' }) }
+      if (data.unitF3.isUnit) { data.code.push({ code: data.unitF3.card.code, location: 'unit F3' }) }
+      if (data.unitB1.isUnit) { data.code.push({ code: data.unitB1.card.code, location: 'unit B1' }) }
+      if (data.unitB2.isUnit) { data.code.push({ code: data.unitB2.card.code, location: 'unit B2' }) }
+      if (data.unitB3.isUnit) { data.code.push({ code: data.unitB3.card.code, location: 'unit B3' }) }
+      data.code.map((unit) => {
+        if (unit.code === '022') { this.EFF022_AUTO({ who: data.who, location: unit.location }) }
+      })
+    },
+    AUTO_ON_OP_DISCARD (data) {
+      if (data.who === 'player') {
+        data.target = 'opponent'
+        data.field = this.data.opponent.field
+      } else {
+        data.target = 'player'
+        data.field = this.data.player.field
+      }
+      data.front = data.field.front
+      data.back = data.field.back
+      data.unitF1 = data.front.unitF1
+      data.unitF2 = data.front.unitF2
+      data.unitF3 = data.front.unitF3
+      data.unitB1 = data.back.unitB1
+      data.unitB2 = data.back.unitB2
+      data.unitB3 = data.back.unitB3
+      data.code = []
+      if (data.unitF1.isUnit) { data.code.push({ code: data.unitF1.card.code, location: 'unit F1' }) }
+      if (data.unitF2.isUnit) { data.code.push({ code: data.unitF2.card.code, location: 'unit F2' }) }
+      if (data.unitF3.isUnit) { data.code.push({ code: data.unitF3.card.code, location: 'unit F3' }) }
+      if (data.unitB1.isUnit) { data.code.push({ code: data.unitB1.card.code, location: 'unit B1' }) }
+      if (data.unitB2.isUnit) { data.code.push({ code: data.unitB2.card.code, location: 'unit B2' }) }
+      if (data.unitB3.isUnit) { data.code.push({ code: data.unitB3.card.code, location: 'unit B3' }) }
+      data.code.map((unit) => {
+        if (unit.code === '037') { this.EFF037_AUTO({ who: data.target, location: unit.location }) }
+      })
     },
     AUTO_ON_BP (data) {
       if (data.who === 'player') {
@@ -1742,6 +2046,34 @@ export default {
       if (data.unitB3.isUnit) { data.code.push({ code: data.unitB3.card.code, location: 'unit B3' }) }
       data.code.map((unit) => {
         if (unit.code === '035') { this.EFF035({ who: data.who, location: unit.location }) }
+        if (unit.code === '064') { this.EFF064({ who: data.who, location: unit.location }) }
+      })
+    },
+    AUTO_ON_BP_OP (data) {
+      if (data.who === 'player') {
+        data.target = 'opponent'
+        data.field = this.data.opponent.field
+      } else {
+        data.target = 'player'
+        data.field = this.data.player.field
+      }
+      data.front = data.field.front
+      data.back = data.field.back
+      data.unitF1 = data.front.unitF1
+      data.unitF2 = data.front.unitF2
+      data.unitF3 = data.front.unitF3
+      data.unitB1 = data.back.unitB1
+      data.unitB2 = data.back.unitB2
+      data.unitB3 = data.back.unitB3
+      data.code = []
+      if (data.unitF1.isUnit) { data.code.push({ code: data.unitF1.card.code, location: 'unit F1' }) }
+      if (data.unitF2.isUnit) { data.code.push({ code: data.unitF2.card.code, location: 'unit F2' }) }
+      if (data.unitF3.isUnit) { data.code.push({ code: data.unitF3.card.code, location: 'unit F3' }) }
+      if (data.unitB1.isUnit) { data.code.push({ code: data.unitB1.card.code, location: 'unit B1' }) }
+      if (data.unitB2.isUnit) { data.code.push({ code: data.unitB2.card.code, location: 'unit B2' }) }
+      if (data.unitB3.isUnit) { data.code.push({ code: data.unitB3.card.code, location: 'unit B3' }) }
+      data.code.map((unit) => {
+        if (unit.code === '059') { this.EFF059({ who: data.target, location: unit.location }) }
       })
     },
     AUTO_ON_END_TURN (data) {
@@ -1767,7 +2099,21 @@ export default {
       if (data.unitB3.isUnit) { data.code.push({ code: data.unitB3.card.code, location: 'unit B3' }) }
       data.code.map((unit) => {
         if (unit.code === '034') { this.EFF034_END({ who: data.who, location: unit.location }) }
+        if (unit.code === '039') { this.EFF039({ who: data.who, location: unit.location }) }
+        if (unit.code === '050') { this.EFF050_END({ who: data.who, location: unit.location }) }
+        if (unit.code === '052') { this.EFF052_END({ who: data.who, location: unit.location }) }
+        if (unit.code === '058') { this.EFF058_END({ who: data.who, location: unit.location }) }
       })
+    },
+    AUTO_ON_END_DROP (data) {
+      if (data.who === 'player') {
+        data.drop = this.data.player.drop
+      } else {
+        data.drop = this.data.opponent.drop
+      }
+      for (let i = 0; i < data.drop.length; i++) {
+        if (data.drop[i].code === '066') { this.EFF066_DROP(data) }
+      }
     },
     EFF_ACT (data) {
       if (data.unit.onePerTurn) {
@@ -1775,7 +2121,6 @@ export default {
       } else {
         if (data.unit.card.code === '002') { this.EFF002_ACT(data) }
         if (data.unit.card.code === '003') { this.EFF003_ACT(data) }
-        if (data.unit.card.code === '017') { this.EFF017_ACT(data) }
         if (data.unit.card.code === '017') { this.EFF017_ACT(data) }
         if (data.unit.card.code === '021') { this.EFF021_ACT(data) }
         if (data.unit.card.code === '022') { this.EFF022_ACT(data) }
@@ -1787,6 +2132,17 @@ export default {
         if (data.unit.card.code === '028') { this.EFF028_ACT(data) }
         if (data.unit.card.code === '031') { this.EFF031_ACT(data) }
         if (data.unit.card.code === '033') { this.EFF033(data) }
+        if (data.unit.card.code === '037') { this.EFF037_ACT(data) }
+        if (data.unit.card.code === '038') { this.EFF038_ACT(data) }
+        if (data.unit.card.code === '040') { this.EFF040_ACT(data) }
+        if (data.unit.card.code === '042') { this.EFF042_ACT(data) }
+        if (data.unit.card.code === '043') { this.EFF043_ACT(data) }
+        if (data.unit.card.code === '045') { this.EFF045(data) }
+        if (data.unit.card.code === '046') { this.EFF046(data) }
+        if (data.unit.card.code === '049') { this.EFF049_ACT(data) }
+        if (data.unit.card.code === '051') { this.EFF051_ACT(data) }
+        if (data.unit.card.code === '054') { this.EFF054(data) }
+        if (data.unit.card.code === '062') { this.EFF062(data) }
         data.unit.onePerTurn = true
       }
     },
@@ -1816,6 +2172,9 @@ export default {
         if (unit.code === '012') { this.EFF012({ who: 'player', location: unit.location }) }
         if (unit.code === '013') { this.EFF013({ who: 'player', location: unit.location }) }
         if (unit.code === '019') { this.EFF019({ who: 'player', location: unit.location }) }
+        if (unit.code === '048') { this.EFF048({ who: 'player', location: unit.location }) }
+        if (unit.code === '065') { this.EFF065({ who: 'player', location: unit.location }) }
+        if (unit.code === '068') { this.EFF068({ who: 'player', location: unit.location }) }
       })
     },
     CONT_OPPONENT (data) {
@@ -1840,6 +2199,9 @@ export default {
         if (unit.code === '012') { this.EFF012({ who: 'opponent', location: unit.location }) }
         if (unit.code === '013') { this.EFF013({ who: 'opponent', location: unit.location }) }
         if (unit.code === '019') { this.EFF019({ who: 'opponent', location: unit.location }) }
+        if (unit.code === '048') { this.EFF048({ who: 'opponent', location: unit.location }) }
+        if (unit.code === '065') { this.EFF065({ who: 'opponent', location: unit.location }) }
+        if (unit.code === '068') { this.EFF068({ who: 'opponent', location: unit.location }) }
       })
     },
     COST (data) {
@@ -1984,6 +2346,36 @@ export default {
       if (!unitB3.isUnit) { count += 1 }
       data.gain = 500 * count
       this.CONT_POWER(data)
+    },
+    EFF012_ATK (data) { // Franky
+      if (data.who === 'player') {
+        data.field = this.data.player.field
+      } else {
+        data.field = this.data.opponent.field
+      }
+      data.front = data.field.front
+      data.back = data.field.back
+      data.unitF1 = data.front.unitF1
+      data.unitF2 = data.front.unitF2
+      data.unitF3 = data.front.unitF3
+      data.unitB1 = data.back.unitB1
+      data.unitB2 = data.back.unitB2
+      data.unitB3 = data.back.unitB3
+      const units = []
+      if (data.unitF1.isUnit) { units.push({ location: 'unit F1' }) }
+      if (data.unitF2.isUnit) { units.push({ location: 'unit F2' }) }
+      if (data.unitF3.isUnit) { units.push({ location: 'unit F3' }) }
+      if (data.unitB1.isUnit) { units.push({ location: 'unit B1' }) }
+      if (data.unitB2.isUnit) { units.push({ location: 'unit B2' }) }
+      if (data.unitB3.isUnit) { units.push({ location: 'unit B3' }) }
+      if (units.length > 0) {
+        const index = Math.floor(Math.random() * units.length)
+        this.destroy({ who: data.who, location: units[index].location })
+        // console.log(data)
+        if (data.location !== units[index].location) {
+          setTimeout(() => this.unitBlock(data), 1000)
+        }
+      }
     },
     EFF013 (data) { // Nico Robin
       if (data.who === 'player') {
@@ -2182,11 +2574,8 @@ export default {
       }
     },
     EFF022_AUTO (data) { // Vinsmoke Sanji
-      for (let i = 0; i < 1; i++) {
-        data.name = 'Vinsmoke'
-        data.todo = 'DECK TO HAND'
-        this.SEARCH_DECK_FOR_NAME(data)
-      }
+      data.gain = 1000
+      this.AUTO_POWER(data)
     },
     EFF022_ACT (data) { // Vinsmoke Sanji
       if (data.who === 'player') {
@@ -2198,7 +2587,7 @@ export default {
         data.cost = 'discard'
         data.discard = 'Vinsmoke'
         this.COST(data)
-        data.gain = 3000
+        data.gain = 2000
         this.AUTO_POWER(data)
       } else {
         this.Toast('error', 'Tidak ada kartu untuk discard !!!')
@@ -2221,12 +2610,12 @@ export default {
       data.unitB2 = data.back.unitB2
       data.unitB3 = data.back.unitB3
       const units = []
-      if (data.unitF1.isUnit) { units.push({ location: 'unit F1' }) }
-      if (data.unitF2.isUnit) { units.push({ location: 'unit F2' }) }
-      if (data.unitF3.isUnit) { units.push({ location: 'unit F3' }) }
-      if (data.unitB1.isUnit) { units.push({ location: 'unit B1' }) }
-      if (data.unitB2.isUnit) { units.push({ location: 'unit B2' }) }
-      if (data.unitB3.isUnit) { units.push({ location: 'unit B3' }) }
+      if (data.unitF1.isUnit && data.unitF1.card.grade <= 2) { units.push({ location: 'unit F1' }) }
+      if (data.unitF2.isUnit && data.unitF2.card.grade <= 2) { units.push({ location: 'unit F2' }) }
+      if (data.unitF3.isUnit && data.unitF3.card.grade <= 2) { units.push({ location: 'unit F3' }) }
+      if (data.unitB1.isUnit && data.unitB1.card.grade <= 2) { units.push({ location: 'unit B1' }) }
+      if (data.unitB2.isUnit && data.unitB2.card.grade <= 2) { units.push({ location: 'unit B2' }) }
+      if (data.unitB3.isUnit && data.unitB3.card.grade <= 2) { units.push({ location: 'unit B3' }) }
       if (units.length > 0) {
         const index = Math.floor(Math.random() * units.length)
         this.bind({ who: data.target, location: units[index].location })
@@ -2242,8 +2631,9 @@ export default {
         data.cost = 'discard'
         data.discard = 'Vinsmoke'
         this.COST(data)
-        data.todo = 'bind unit'
-        this.SELECT_OP_FIELD(data)
+        data.todo = 'bind unit G2 or less'
+        data.grade = 2
+        this.SELECT_OP_FIELD_BY_GRADE_OR_LESS(data)
       } else {
         this.Toast('error', 'Tidak ada kartu untuk discard !!!')
       }
@@ -2265,12 +2655,12 @@ export default {
       data.unitB2 = data.back.unitB2
       data.unitB3 = data.back.unitB3
       const units = []
-      if (data.unitF1.isUnit) { units.push({ location: 'unit F1' }) }
-      if (data.unitF2.isUnit) { units.push({ location: 'unit F2' }) }
-      if (data.unitF3.isUnit) { units.push({ location: 'unit F3' }) }
-      if (data.unitB1.isUnit) { units.push({ location: 'unit B1' }) }
-      if (data.unitB2.isUnit) { units.push({ location: 'unit B2' }) }
-      if (data.unitB3.isUnit) { units.push({ location: 'unit B3' }) }
+      if (data.unitF1.isUnit && data.unitF1.card.grade <= 2) { units.push({ location: 'unit F1' }) }
+      if (data.unitF2.isUnit && data.unitF2.card.grade <= 2) { units.push({ location: 'unit F2' }) }
+      if (data.unitF3.isUnit && data.unitF3.card.grade <= 2) { units.push({ location: 'unit F3' }) }
+      if (data.unitB1.isUnit && data.unitB1.card.grade <= 2) { units.push({ location: 'unit B1' }) }
+      if (data.unitB2.isUnit && data.unitB2.card.grade <= 2) { units.push({ location: 'unit B2' }) }
+      if (data.unitB3.isUnit && data.unitB3.card.grade <= 2) { units.push({ location: 'unit B3' }) }
       if (units.length > 0) {
         const index = Math.floor(Math.random() * units.length)
         this.destroy({ who: data.target, location: units[index].location })
@@ -2286,14 +2676,15 @@ export default {
         data.cost = 'discard'
         data.discard = 'Vinsmoke'
         this.COST(data)
-        data.todo = 'destroy unit'
-        this.SELECT_OP_FIELD(data)
+        data.todo = 'destroy unit G2 or less'
+        data.grade = 2
+        this.SELECT_OP_FIELD_BY_GRADE_OR_LESS(data)
       } else {
         this.Toast('error', 'Tidak ada kartu untuk discard !!!')
       }
     },
     EFF025_AUTO (data) { // Vinsmoke Reiju
-      for (let i = 0; i < 1; i++) {
+      for (let i = 0; i < 2; i++) {
         this.draw({ who: data.who })
       }
     },
@@ -2307,28 +2698,40 @@ export default {
         data.cost = 'discard'
         data.discard = 'Vinsmoke'
         this.COST(data)
-        for (let i = 0; i < 1; i++) {
-          this.draw({ who: data.who })
-        }
+        this.EFF025_AUTO(data)
       } else {
         this.Toast('error', 'Tidak ada kartu untuk discard !!!')
       }
     },
     EFF026_AUTO (data) { // Vinsmoke Judge
-      setTimeout(() => {
-        data.cost = 'bind from drop'
-        this.COST(data)
-        if (data.who === 'player') {
-          data.drop = this.data.player.drop
-        } else {
-          data.drop = this.data.opponent.drop
-        }
-        if (data.drop.length > 0) {
-          data.name = 'Vinsmoke'
-          data.todo = 'ALL DROP TO DECK'
-          this.SEARCH_DROP_FOR_NAME(data)
-        }
-      }, 1000)
+      data.openLocation = []
+      if (data.who === 'player') {
+        data.field = this.data.player.field
+      } else {
+        data.field = this.data.opponent.field
+      }
+      data.front = data.field.front
+      data.back = data.field.back
+      data.unitF1 = data.front.unitF1
+      data.unitF2 = data.front.unitF2
+      data.unitF3 = data.front.unitF3
+      data.unitB1 = data.back.unitB1
+      data.unitB2 = data.back.unitB2
+      data.unitB3 = data.back.unitB3
+      if (!data.unitF1.isUnit) { data.openLocation.push('unit F1') }
+      if (!data.unitF2.isUnit) { data.openLocation.push('unit F2') }
+      if (!data.unitF3.isUnit) { data.openLocation.push('unit F3') }
+      if (!data.unitB1.isUnit) { data.openLocation.push('unit B1') }
+      if (!data.unitB2.isUnit) { data.openLocation.push('unit B2') }
+      if (!data.unitB3.isUnit) { data.openLocation.push('unit B3') }
+      if (data.openLocation.length > 0) {
+        const index = Math.floor(Math.random() * data.openLocation.length)
+        data.name = 'Vinsmoke'
+        data.grade = 2
+        data.location = data.openLocation[index]
+        data.todo = 'CALL FROM DECK'
+        this.SEARCH_DECK_FOR_NAME_GRADE_LESS(data)
+      }
     },
     EFF026_ACT (data) { // Vinsmoke Judge
       if (data.who === 'player') {
@@ -2340,34 +2743,7 @@ export default {
         data.cost = 'discard'
         data.discard = 'Vinsmoke'
         this.COST(data)
-        data.openLocation = []
-        if (data.who === 'player') {
-          data.field = this.data.player.field
-        } else {
-          data.field = this.data.opponent.field
-        }
-        data.front = data.field.front
-        data.back = data.field.back
-        data.unitF1 = data.front.unitF1
-        data.unitF2 = data.front.unitF2
-        data.unitF3 = data.front.unitF3
-        data.unitB1 = data.back.unitB1
-        data.unitB2 = data.back.unitB2
-        data.unitB3 = data.back.unitB3
-        if (!data.unitF1.isUnit) { data.openLocation.push('unit F1') }
-        if (!data.unitF2.isUnit) { data.openLocation.push('unit F2') }
-        if (!data.unitF3.isUnit) { data.openLocation.push('unit F3') }
-        if (!data.unitB1.isUnit) { data.openLocation.push('unit B1') }
-        if (!data.unitB2.isUnit) { data.openLocation.push('unit B2') }
-        if (!data.unitB3.isUnit) { data.openLocation.push('unit B3') }
-        if (data.openLocation.length > 0) {
-          const index = Math.floor(Math.random() * data.openLocation.length)
-          data.name = 'Vinsmoke'
-          data.notName = 'Vinsmoke Judge'
-          data.location = data.openLocation[index]
-          data.todo = 'CALL FROM DECK'
-          this.SEARCH_DECK_FOR_NAME_AND_NOT_NAME(data)
-        }
+        this.EFF026_AUTO(data)
       } else {
         this.Toast('error', 'Tidak ada kartu untuk discard !!!')
       }
@@ -2391,11 +2767,7 @@ export default {
         data.discard = 'Vinsmoke'
         data.notName = 'Vinsmoke Sora'
         this.COST(data)
-        this.FIELD_TO_HAND(data)
-        data.name = 'Vinsmoke'
-        data.notName = 'Vinsmoke Judge'
-        data.todo = 'CALL FROM DECK'
-        this.SEARCH_DECK_FOR_NAME_AND_NOT_NAME(data)
+        this.EFF027_AUTO(data)
       } else {
         this.Toast('error', 'Tidak ada kartu untuk discard !!!')
       }
@@ -2558,6 +2930,1170 @@ export default {
       data.gain = 1000
       this.AUTO_POWER(data)
       setTimeout(() => this.unitBlock(data), 1000)
+    },
+    EFF037_AUTO (data) { // Donquixote Doflamingo
+      data.gain = 1000
+      this.AUTO_POWER(data)
+    },
+    EFF037_ACT (data) { // Donquixote Doflamingo
+      if (data.who === 'player') {
+        data.target = 'opponent'
+        data.hand = this.data.opponent.hand
+      } else {
+        data.target = 'player'
+        data.hand = this.data.player.hand
+      }
+      if (data.hand.length > 0) {
+        const index = Math.floor(Math.random() * data.hand.length)
+        this.discard({ who: data.target, index: index })
+      } else {
+        this.Toast('error', 'Tidak ada kartu untuk discard !!!')
+      }
+    },
+    EFF038_DEF (data) { // Tony Tony Chopper
+      data.unit = data.unitDEF
+      data.gain = 2000
+      this.AUTO_POWER(data)
+      setTimeout(() => this.resultBattle(data), 1000)
+    },
+    EFF038_ACT (data) { // Tony Tony Chopper
+      this.FIELD_TO_DECK(data)
+      data.grade = 3
+      data.name = 'Tony Tony Chopper'
+      data.todo = 'CALL FROM DECK'
+      this.SEARCH_DECK_FOR_GRADE_AND_NAME(data)
+    },
+    EFF039 (data) { // Tony Tony Chopper
+      this.FIELD_TO_DECK(data)
+      data.grade = 2
+      data.name = 'Tony Tony Chopper'
+      data.todo = 'CALL FROM DECK'
+      this.SEARCH_DECK_FOR_GRADE_AND_NAME(data)
+    },
+    EFF040_DEF (data) { // Jack
+      data.cost = 'pay life'
+      data.pay = 500
+      this.COST(data)
+      let unitATK = {}
+      if (data.who === 'player') {
+        data.target = 'opponent'
+        data.field = this.data.opponent.field
+        unitATK = this.data.opponent.unitATK
+      } else {
+        data.target = 'player'
+        data.field = this.data.player.field
+        unitATK = this.data.player.unitATK
+      }
+      data.front = data.field.front
+      data.back = data.field.back
+      data.unitF1 = data.front.unitF1
+      data.unitF2 = data.front.unitF2
+      data.unitF3 = data.front.unitF3
+      data.unitB1 = data.back.unitB1
+      data.unitB2 = data.back.unitB2
+      data.unitB3 = data.back.unitB3
+      const units = []
+      if (data.unitF1.isUnit && data.unitF1.card.grade <= 2) { units.push({ location: 'unit F1' }) }
+      if (data.unitF2.isUnit && data.unitF2.card.grade <= 2) { units.push({ location: 'unit F2' }) }
+      if (data.unitF3.isUnit && data.unitF3.card.grade <= 2) { units.push({ location: 'unit F3' }) }
+      if (data.unitB1.isUnit && data.unitB1.card.grade <= 2) { units.push({ location: 'unit B1' }) }
+      if (data.unitB2.isUnit && data.unitB2.card.grade <= 2) { units.push({ location: 'unit B2' }) }
+      if (data.unitB3.isUnit && data.unitB3.card.grade <= 2) { units.push({ location: 'unit B3' }) }
+      if (units.length > 0) {
+        const index = Math.floor(Math.random() * units.length)
+        this.FIELD_TO_HAND({ who: data.target, location: units[index].location })
+        if (unitATK.location !== units[index].location) {
+          setTimeout(() => this.resultBattle(data), 1000)
+        }
+      }
+    },
+    EFF040_ACT (data) { // Jack
+      this.FIELD_TO_DECK(data)
+      data.grade = 3
+      data.name = 'Jack'
+      data.todo = 'CALL FROM DECK'
+      this.SEARCH_DECK_FOR_GRADE_AND_NAME(data)
+    },
+    EFF041 (data) { // Aladdin
+      data.todo = 'put into hand unit G1'
+      data.grade = 1
+      this.SELECT_OP_FIELD_BY_GRADE(data)
+    },
+    EFF042_AUTO (data) { // Akainu
+      if (data.who === 'player') {
+        data.mana = this.data.player.mana.use
+        data.target = 'opponent'
+        data.field = this.data.opponent.field
+      } else {
+        data.mana = this.data.opponent.mana.use
+        data.target = 'player'
+        data.field = this.data.player.field
+      }
+      if (data.mana > 0) {
+        if (data.who === 'player') {
+          this.data.player.mana.use -= 1
+        } else {
+          this.data.opponent.mana.use -= 1
+        }
+        data.front = data.field.front
+        data.back = data.field.back
+        data.unitF1 = data.front.unitF1
+        data.unitF2 = data.front.unitF2
+        data.unitF3 = data.front.unitF3
+        data.unitB1 = data.back.unitB1
+        data.unitB2 = data.back.unitB2
+        data.unitB3 = data.back.unitB3
+        const units = []
+        if (data.unitF1.isUnit) { units.push({ location: 'unit F1' }) }
+        if (data.unitF2.isUnit) { units.push({ location: 'unit F2' }) }
+        if (data.unitF3.isUnit) { units.push({ location: 'unit F3' }) }
+        if (data.unitB1.isUnit) { units.push({ location: 'unit B1' }) }
+        if (data.unitB2.isUnit) { units.push({ location: 'unit B2' }) }
+        if (data.unitB3.isUnit) { units.push({ location: 'unit B3' }) }
+        if (units.length > 0) {
+          const index = Math.floor(Math.random() * units.length)
+          this.destroy({ who: data.target, location: units[index].location })
+        }
+      } else {
+        this.Toast('error', 'Mana tidak cukup !!!')
+      }
+    },
+    EFF042_ACT (data) { // Akainu
+      if (data.who === 'player') {
+        data.mana = this.data.player.mana.use
+      } else {
+        data.mana = this.data.opponent.mana.use
+      }
+      if (data.mana > 2) {
+        if (data.who === 'player') {
+          this.data.player.mana.use -= 3
+        } else {
+          this.data.opponent.mana.use -= 3
+        }
+        data.todo = 'destroy unit'
+        this.SELECT_OP_FIELD(data)
+      } else {
+        this.Toast('error', 'Mana tidak cukup !!!')
+      }
+    },
+    EFF043_AUTO (data) { // Aokiji
+      if (data.who === 'player') {
+        data.mana = this.data.player.mana.use
+      } else {
+        data.mana = this.data.opponent.mana.use
+      }
+      if (data.mana > 0) {
+        if (data.who === 'player') {
+          this.data.player.mana.use -= 1
+        } else {
+          this.data.opponent.mana.use -= 1
+        }
+        data.todo = 'rest unit'
+        this.SELECT_OP_FIELD(data)
+      } else {
+        this.Toast('error', 'Mana tidak cukup !!!')
+      }
+    },
+    EFF043_ACT (data) { // Aokiji
+      if (data.who === 'player') {
+        data.mana = this.data.player.mana.use
+      } else {
+        data.mana = this.data.opponent.mana.use
+      }
+      if (data.mana > 2) {
+        if (data.who === 'player') {
+          this.data.player.mana.use -= 2
+        } else {
+          this.data.opponent.mana.use -= 2
+        }
+        data.todo = 'rest unit'
+        this.SELECT_OP_FIELD(data)
+      } else {
+        this.Toast('error', 'Mana tidak cukup !!!')
+      }
+    },
+    EFF044_AUTO (data) { // Kizaru
+      if (data.who === 'player') {
+        data.mana = this.data.player.mana.use
+        data.target = 'opponent'
+        data.field = this.data.opponent.field
+      } else {
+        data.mana = this.data.opponent.mana.use
+        data.target = 'player'
+        data.field = this.data.player.field
+      }
+      if (data.mana > 0) {
+        if (data.who === 'player') {
+          this.data.player.mana.use -= 1
+        } else {
+          this.data.opponent.mana.use -= 1
+        }
+        data.front = data.field.front
+        data.back = data.field.back
+        data.unitF1 = data.front.unitF1
+        data.unitF2 = data.front.unitF2
+        data.unitF3 = data.front.unitF3
+        data.unitB1 = data.back.unitB1
+        data.unitB2 = data.back.unitB2
+        data.unitB3 = data.back.unitB3
+        const units = []
+        if (data.unitF1.isUnit) { units.push({ location: 'unit F1' }) }
+        if (data.unitF2.isUnit) { units.push({ location: 'unit F2' }) }
+        if (data.unitF3.isUnit) { units.push({ location: 'unit F3' }) }
+        if (data.unitB1.isUnit) { units.push({ location: 'unit B1' }) }
+        if (data.unitB2.isUnit) { units.push({ location: 'unit B2' }) }
+        if (data.unitB3.isUnit) { units.push({ location: 'unit B3' }) }
+        if (units.length > 0) {
+          const index = Math.floor(Math.random() * units.length)
+          this.destroy({ who: data.target, location: units[index].location })
+        }
+      } else {
+        this.Toast('error', 'Mana tidak cukup !!!')
+      }
+    },
+    EFF044_DROP (data) { // Kizaru
+      data.name = 'Kizaru'
+      data.todo = 'CALL FROM DECK'
+      this.SEARCH_DECK_FOR_NAME(data)
+    },
+    EFF045 (data) { // Trafalgal D. Water Law
+      data.cost = 'pay life'
+      data.pay = 500
+      this.COST(data)
+      data.todo = 'change position'
+      this.SELECT_OP_FIELD(data)
+    },
+    EFF046 (data) { // Bartholomew Kuma
+      if (data.who === 'player') {
+        data.mana = this.data.player.mana.use
+      } else {
+        data.mana = this.data.opponent.mana.use
+      }
+      if (data.mana > 2) {
+        if (data.who === 'player') {
+          this.data.player.mana.use -= 3
+        } else {
+          this.data.opponent.mana.use -= 3
+        }
+        data.todo = 'unit to deck'
+        this.SELECT_OP_FIELD(data)
+      } else {
+        this.Toast('error', 'Mana tidak cukup !!!')
+      }
+    },
+    EFF047 (data) { // Charlotte Cracker
+      data.unit = data.unitDEF
+      data.gain = 2000
+      this.AUTO_POWER(data)
+      this.$swal.fire({
+        title: 'Aktifkan Efek Charlotte Cracker ?',
+        showCancelButton: true,
+        confirmButtonText: 'YES',
+        cancelButtonText: 'NO'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          data.cost = 'pay life'
+          data.pay = 500
+          this.COST(data)
+          data.gain = 1500
+          this.AUTO_POWER(data)
+          setTimeout(() => this.resultBattle(data), 1000)
+        } else {
+          setTimeout(() => this.resultBattle(data), 1000)
+        }
+      })
+    },
+    EFF048 (data) { // Bartolomeo
+      let count = 0
+      let field = {}
+      if (data.who === 'player') {
+        field = this.data.player.field
+      } else {
+        field = this.data.opponent.field
+      }
+      const unitF1 = field.front.unitF1
+      const unitF2 = field.front.unitF2
+      const unitF3 = field.front.unitF3
+      const unitB1 = field.back.unitB1
+      const unitB2 = field.back.unitB2
+      const unitB3 = field.back.unitB3
+      if (unitF1.isUnit && (unitF1.card.text.search('Commander SHP') >= 0 || unitF1.card.name.search('Monkey D. Luffy') >= 0)) { count += 1 }
+      if (unitF2.isUnit && (unitF2.card.text.search('Commander SHP') >= 0 || unitF2.card.name.search('Monkey D. Luffy') >= 0)) { count += 1 }
+      if (unitF3.isUnit && (unitF3.card.text.search('Commander SHP') >= 0 || unitF3.card.name.search('Monkey D. Luffy') >= 0)) { count += 1 }
+      if (unitB1.isUnit && (unitB1.card.text.search('Commander SHP') >= 0 || unitB1.card.name.search('Monkey D. Luffy') >= 0)) { count += 1 }
+      if (unitB2.isUnit && (unitB2.card.text.search('Commander SHP') >= 0 || unitB2.card.name.search('Monkey D. Luffy') >= 0)) { count += 1 }
+      if (unitB3.isUnit && (unitB3.card.text.search('Commander SHP') >= 0 || unitB3.card.name.search('Monkey D. Luffy') >= 0)) { count += 1 }
+      data.gain = 500 * count
+      this.CONT_POWER(data)
+    },
+    EFF049_DEF (data) { // Inuarashi
+      data.unit = data.unitDEF
+      this.$swal.fire({
+        title: 'Aktifkan Efek Inuarashi ?',
+        showCancelButton: true,
+        confirmButtonText: 'YES',
+        cancelButtonText: 'NO'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          data.cost = 'pay life'
+          data.pay = 500
+          this.COST(data)
+          let count = 0
+          let field = {}
+          if (data.who === 'player') {
+            field = this.data.player.field
+          } else {
+            field = this.data.opponent.field
+          }
+          const unitF1 = field.front.unitF1
+          const unitF2 = field.front.unitF2
+          const unitF3 = field.front.unitF3
+          const unitB1 = field.back.unitB1
+          const unitB2 = field.back.unitB2
+          const unitB3 = field.back.unitB3
+          if (unitF1.isUnit && unitF1.card.type.race.search('Beast') >= 0) { count += 1 }
+          if (unitF2.isUnit && unitF2.card.type.race.search('Beast') >= 0) { count += 1 }
+          if (unitF3.isUnit && unitF3.card.type.race.search('Beast') >= 0) { count += 1 }
+          if (unitB1.isUnit && unitB1.card.type.race.search('Beast') >= 0) { count += 1 }
+          if (unitB2.isUnit && unitB2.card.type.race.search('Beast') >= 0) { count += 1 }
+          if (unitB3.isUnit && unitB3.card.type.race.search('Beast') >= 0) { count += 1 }
+          data.gain = 500 * count
+          this.AUTO_POWER(data)
+          setTimeout(() => this.resultBattle(data), 1000)
+        } else {
+          setTimeout(() => this.resultBattle(data), 1000)
+        }
+      })
+    },
+    EFF049_ACT (data) { // Inuarashi
+      this.FIELD_TO_DECK(data)
+      data.grade = 3
+      data.name = 'Inuarashi'
+      data.todo = 'CALL FROM DECK'
+      this.SEARCH_DECK_FOR_GRADE_AND_NAME(data)
+    },
+    EFF050_END (data) { // Inuarashi
+      this.FIELD_TO_DECK(data)
+      data.grade = 2
+      data.name = 'Inuarashi'
+      data.todo = 'CALL FROM DECK'
+      this.SEARCH_DECK_FOR_GRADE_AND_NAME(data)
+    },
+    EFF050_ATK (data) { // Inuarashi
+      data.unit = data.unitATK
+      this.$swal.fire({
+        title: 'Aktifkan Efek Inuarashi ?',
+        showCancelButton: true,
+        confirmButtonText: 'YES',
+        cancelButtonText: 'NO'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          data.cost = 'pay life'
+          data.pay = 500
+          this.COST(data)
+          let count = 0
+          let field = {}
+          if (data.who === 'player') {
+            field = this.data.player.field
+          } else {
+            field = this.data.opponent.field
+          }
+          const unitF1 = field.front.unitF1
+          const unitF2 = field.front.unitF2
+          const unitF3 = field.front.unitF3
+          const unitB1 = field.back.unitB1
+          const unitB2 = field.back.unitB2
+          const unitB3 = field.back.unitB3
+          if (unitF1.isUnit && unitF1.card.type.race.search('Beast') >= 0) { count += 1 }
+          if (unitF2.isUnit && unitF2.card.type.race.search('Beast') >= 0) { count += 1 }
+          if (unitF3.isUnit && unitF3.card.type.race.search('Beast') >= 0) { count += 1 }
+          if (unitB1.isUnit && unitB1.card.type.race.search('Beast') >= 0) { count += 1 }
+          if (unitB2.isUnit && unitB2.card.type.race.search('Beast') >= 0) { count += 1 }
+          if (unitB3.isUnit && unitB3.card.type.race.search('Beast') >= 0) { count += 1 }
+          data.gain = 500 * count
+          this.AUTO_POWER(data)
+          setTimeout(() => this.unitBlock(data), 1000)
+        } else {
+          setTimeout(() => this.unitBlock(data), 1000)
+        }
+      })
+    },
+    EFF051_DEF (data) { // Nekomamushi
+      data.unit = data.unitDEF
+      this.$swal.fire({
+        title: 'Aktifkan Efek Inuarashi ?',
+        showCancelButton: true,
+        confirmButtonText: 'YES',
+        cancelButtonText: 'NO'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          data.cost = 'pay life'
+          data.pay = 500
+          this.COST(data)
+          let count = 0
+          let field = {}
+          if (data.who === 'player') {
+            field = this.data.player.field
+          } else {
+            field = this.data.opponent.field
+          }
+          const unitF1 = field.front.unitF1
+          const unitF2 = field.front.unitF2
+          const unitF3 = field.front.unitF3
+          const unitB1 = field.back.unitB1
+          const unitB2 = field.back.unitB2
+          const unitB3 = field.back.unitB3
+          if (unitF1.isUnit && unitF1.card.type.race.search('Beast') >= 0) { count += 1 }
+          if (unitF2.isUnit && unitF2.card.type.race.search('Beast') >= 0) { count += 1 }
+          if (unitF3.isUnit && unitF3.card.type.race.search('Beast') >= 0) { count += 1 }
+          if (unitB1.isUnit && unitB1.card.type.race.search('Beast') >= 0) { count += 1 }
+          if (unitB2.isUnit && unitB2.card.type.race.search('Beast') >= 0) { count += 1 }
+          if (unitB3.isUnit && unitB3.card.type.race.search('Beast') >= 0) { count += 1 }
+          data.gain = 500 * count
+          this.AUTO_POWER(data)
+          setTimeout(() => this.resultBattle(data), 1000)
+        } else {
+          setTimeout(() => this.resultBattle(data), 1000)
+        }
+      })
+    },
+    EFF051_ACT (data) { // Nekomamushi
+      this.FIELD_TO_DECK(data)
+      data.grade = 3
+      data.name = 'Nekomamushi'
+      data.todo = 'CALL FROM DECK'
+      this.SEARCH_DECK_FOR_GRADE_AND_NAME(data)
+    },
+    EFF052_END (data) { // Nekomamushi
+      this.FIELD_TO_DECK(data)
+      data.grade = 2
+      data.name = 'Nekomamushi'
+      data.todo = 'CALL FROM DECK'
+      this.SEARCH_DECK_FOR_GRADE_AND_NAME(data)
+    },
+    EFF052_ATK (data) { // Nekomamushi
+      data.unit = data.unitATK
+      if (data.who === 'player') {
+        data.mana = this.data.player.mana.use
+        data.target = 'opponent'
+        data.field = this.data.opponent.field
+      } else {
+        data.mana = this.data.opponent.mana.use
+        data.target = 'player'
+        data.field = this.data.player.field
+      }
+      if (data.mana > 0) {
+        this.$swal.fire({
+          title: 'Aktifkan Efek Nekomamushi ?',
+          showCancelButton: true,
+          confirmButtonText: 'YES',
+          cancelButtonText: 'NO'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            if (data.who === 'player') {
+              this.data.player.mana.use -= 1
+            } else {
+              this.data.opponent.mana.use -= 1
+            }
+            data.front = data.field.front
+            data.back = data.field.back
+            data.unitF1 = data.front.unitF1
+            data.unitF2 = data.front.unitF2
+            data.unitF3 = data.front.unitF3
+            data.unitB1 = data.back.unitB1
+            data.unitB2 = data.back.unitB2
+            data.unitB3 = data.back.unitB3
+            const units = []
+            if (data.unitF1.isUnit && data.unitF1.card.grade <= 2) { units.push({ location: 'unit F1' }) }
+            if (data.unitF2.isUnit && data.unitF2.card.grade <= 2) { units.push({ location: 'unit F2' }) }
+            if (data.unitF3.isUnit && data.unitF3.card.grade <= 2) { units.push({ location: 'unit F3' }) }
+            if (data.unitB1.isUnit && data.unitB1.card.grade <= 2) { units.push({ location: 'unit B1' }) }
+            if (data.unitB2.isUnit && data.unitB2.card.grade <= 2) { units.push({ location: 'unit B2' }) }
+            if (data.unitB3.isUnit && data.unitB3.card.grade <= 2) { units.push({ location: 'unit B3' }) }
+            if (units.length > 0) {
+              const index = Math.floor(Math.random() * units.length)
+              this.destroy({ who: data.target, location: units[index].location })
+            }
+            setTimeout(() => this.unitBlock(data), 1000)
+          } else {
+            setTimeout(() => this.unitBlock(data), 1000)
+          }
+        })
+      } else {
+        setTimeout(() => this.unitBlock(data), 1000)
+      }
+    },
+    EFF053 (data) { // Uta
+      let count = 0
+      let field = {}
+      let fieldOP = {}
+      if (data.who === 'player') {
+        field = this.data.player.field
+        fieldOP = this.data.opponent.field
+      } else {
+        field = this.data.opponent.field
+        fieldOP = this.data.player.field
+      }
+      const unitF1 = field.front.unitF1
+      const unitF2 = field.front.unitF2
+      const unitF3 = field.front.unitF3
+      const unitB1 = field.back.unitB1
+      const unitB2 = field.back.unitB2
+      const unitB3 = field.back.unitB3
+      if (unitF1.isUnit && unitF1.position === 'Rest') { count += 1 }
+      if (unitF2.isUnit && unitF2.position === 'Rest') { count += 1 }
+      if (unitF3.isUnit && unitF3.position === 'Rest') { count += 1 }
+      if (unitB1.isUnit && unitB1.position === 'Rest') { count += 1 }
+      if (unitB2.isUnit && unitB2.position === 'Rest') { count += 1 }
+      if (unitB3.isUnit && unitB3.position === 'Rest') { count += 1 }
+      const unitF1OP = fieldOP.front.unitF1
+      const unitF2OP = fieldOP.front.unitF2
+      const unitF3OP = fieldOP.front.unitF3
+      const unitB1OP = fieldOP.back.unitB1
+      const unitB2OP = fieldOP.back.unitB2
+      const unitB3OP = fieldOP.back.unitB3
+      if (unitF1OP.isUnit && unitF1OP.position === 'Rest') { count += 1 }
+      if (unitF2OP.isUnit && unitF2OP.position === 'Rest') { count += 1 }
+      if (unitF3OP.isUnit && unitF3OP.position === 'Rest') { count += 1 }
+      if (unitB1OP.isUnit && unitB1OP.position === 'Rest') { count += 1 }
+      if (unitB2OP.isUnit && unitB2OP.position === 'Rest') { count += 1 }
+      if (unitB3OP.isUnit && unitB3OP.position === 'Rest') { count += 1 }
+      this.$swal.fire({
+        title: 'Aktifkan Efek Uta ?',
+        showCancelButton: true,
+        confirmButtonText: 'YES',
+        cancelButtonText: 'NO'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          data.cost = 'pay life'
+          data.pay = 500
+          this.COST(data)
+          data.gain = 500 * count
+          this.AUTO_POWER(data)
+          setTimeout(() => this.unitBlock(data), 1000)
+        } else {
+          setTimeout(() => this.unitBlock(data), 1000)
+        }
+      })
+    },
+    EFF054 (data) { // Gordon
+      this.rest(data)
+      if (data.who === 'player') {
+        data.target = 'opponent'
+        data.field = this.data.opponent.field
+      } else {
+        data.target = 'player'
+        data.field = this.data.player.field
+      }
+      data.front = data.field.front
+      data.back = data.field.back
+      data.unitF1 = data.front.unitF1
+      data.unitF2 = data.front.unitF2
+      data.unitF3 = data.front.unitF3
+      data.unitB1 = data.back.unitB1
+      data.unitB2 = data.back.unitB2
+      data.unitB3 = data.back.unitB3
+      const units = []
+      if (data.unitF1.isUnit && data.unitF1.card.grade === 1 && data.unitF1.position === 'Stand') { units.push({ location: 'unit F1' }) }
+      if (data.unitF2.isUnit && data.unitF2.card.grade === 1 && data.unitF2.position === 'Stand') { units.push({ location: 'unit F2' }) }
+      if (data.unitF3.isUnit && data.unitF3.card.grade === 1 && data.unitF3.position === 'Stand') { units.push({ location: 'unit F3' }) }
+      if (data.unitB1.isUnit && data.unitB1.card.grade === 1 && data.unitB1.position === 'Stand') { units.push({ location: 'unit B1' }) }
+      if (data.unitB2.isUnit && data.unitB2.card.grade === 1 && data.unitB2.position === 'Stand') { units.push({ location: 'unit B2' }) }
+      if (data.unitB3.isUnit && data.unitB3.card.grade === 1 && data.unitB3.position === 'Stand') { units.push({ location: 'unit B3' }) }
+      if (units.length > 0) {
+        const index = Math.floor(Math.random() * units.length)
+        this.rest({ who: data.target, location: units[index].location })
+      }
+    },
+    EFF055 (data) { // Arlong
+      data.grade = 3
+      data.race = 'Fishman'
+      data.todo = 'DECK TO HAND'
+      this.SEARCH_DECK_FOR_RACE_AND_GRADE_LESS(data)
+    },
+    EFF056 (data) { // Brook
+      if (data.who === 'player') {
+        data.mana = this.data.player.mana.use
+      } else {
+        data.mana = this.data.opponent.mana.use
+      }
+      if (data.mana > 0) {
+        if (data.who === 'player') {
+          this.data.player.mana.use -= 1
+        } else {
+          this.data.opponent.mana.use -= 1
+        }
+        data.cost = 'pay life'
+        data.pay = 1000
+        this.COST(data)
+        data.openLocation = []
+        if (data.who === 'player') {
+          data.field = this.data.player.field
+        } else {
+          data.field = this.data.opponent.field
+        }
+        data.front = data.field.front
+        data.back = data.field.back
+        data.unitF1 = data.front.unitF1
+        data.unitF2 = data.front.unitF2
+        data.unitF3 = data.front.unitF3
+        data.unitB1 = data.back.unitB1
+        data.unitB2 = data.back.unitB2
+        data.unitB3 = data.back.unitB3
+        if (!data.unitF1.isUnit) { data.openLocation.push('unit F1') }
+        if (!data.unitF2.isUnit) { data.openLocation.push('unit F2') }
+        if (!data.unitF3.isUnit) { data.openLocation.push('unit F3') }
+        if (!data.unitB1.isUnit) { data.openLocation.push('unit B1') }
+        if (!data.unitB2.isUnit) { data.openLocation.push('unit B2') }
+        if (!data.unitB3.isUnit) { data.openLocation.push('unit B3') }
+        if (data.openLocation.length > 0) {
+          const index = Math.floor(Math.random() * data.openLocation.length)
+          data.location = data.openLocation[index]
+          data.race = ''
+          data.todo = 'CALL FROM DROP'
+          this.SEARCH_DROP_FOR_RACE(data)
+        }
+      }
+    },
+    EFF057 (data) { // Basil Hawkins
+      if (data.who === 'player') {
+        data.mana = this.data.player.mana.use
+      } else {
+        data.mana = this.data.opponent.mana.use
+      }
+      if (data.mana > 0) {
+        if (data.who === 'player') {
+          this.data.player.mana.use -= 1
+        } else {
+          this.data.opponent.mana.use -= 1
+        }
+        data.cost = 'pay life'
+        data.pay = 1000
+        this.COST(data)
+        data.openLocation = []
+        if (data.who === 'player') {
+          data.field = this.data.player.field
+        } else {
+          data.field = this.data.opponent.field
+        }
+        data.front = data.field.front
+        data.back = data.field.back
+        data.unitF1 = data.front.unitF1
+        data.unitF2 = data.front.unitF2
+        data.unitF3 = data.front.unitF3
+        data.unitB1 = data.back.unitB1
+        data.unitB2 = data.back.unitB2
+        data.unitB3 = data.back.unitB3
+        if (!data.unitF1.isUnit) { data.openLocation.push('unit F1') }
+        if (!data.unitF2.isUnit) { data.openLocation.push('unit F2') }
+        if (!data.unitF3.isUnit) { data.openLocation.push('unit F3') }
+        if (!data.unitB1.isUnit) { data.openLocation.push('unit B1') }
+        if (!data.unitB2.isUnit) { data.openLocation.push('unit B2') }
+        if (!data.unitB3.isUnit) { data.openLocation.push('unit B3') }
+        if (data.openLocation.length > 0) {
+          const index = Math.floor(Math.random() * data.openLocation.length)
+          data.location = data.openLocation[index]
+          data.name = ''
+          data.todo = 'CALL FROM DECK'
+          this.SEARCH_DECK_FOR_NAME(data)
+        }
+      }
+    },
+    EFF058_END (data) { // Jack
+      this.FIELD_TO_DECK(data)
+      data.grade = 2
+      data.name = 'Jack'
+      data.todo = 'CALL FROM DECK'
+      this.SEARCH_DECK_FOR_GRADE_AND_NAME(data)
+    },
+    EFF058_ATK (data) { // Jack
+      data.unit = data.unitATK
+      if (data.who === 'player') {
+        data.mana = this.data.player.mana.use
+        data.target = 'opponent'
+        data.field = this.data.opponent.field
+      } else {
+        data.mana = this.data.opponent.mana.use
+        data.target = 'player'
+        data.field = this.data.player.field
+      }
+      if (data.mana > 0) {
+        this.$swal.fire({
+          title: 'Aktifkan Efek Jack ?',
+          showCancelButton: true,
+          confirmButtonText: 'YES',
+          cancelButtonText: 'NO'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            if (data.who === 'player') {
+              this.data.player.mana.use -= 1
+            } else {
+              this.data.opponent.mana.use -= 1
+            }
+            data.front = data.field.front
+            data.back = data.field.back
+            data.unitF1 = data.front.unitF1
+            data.unitF2 = data.front.unitF2
+            data.unitF3 = data.front.unitF3
+            data.unitB1 = data.back.unitB1
+            data.unitB2 = data.back.unitB2
+            data.unitB3 = data.back.unitB3
+            const units = []
+            if (data.unitF1.isUnit && data.unitF1.card.grade <= 2) { units.push({ location: 'unit F1' }) }
+            if (data.unitF2.isUnit && data.unitF2.card.grade <= 2) { units.push({ location: 'unit F2' }) }
+            if (data.unitF3.isUnit && data.unitF3.card.grade <= 2) { units.push({ location: 'unit F3' }) }
+            if (data.unitB1.isUnit && data.unitB1.card.grade <= 2) { units.push({ location: 'unit B1' }) }
+            if (data.unitB2.isUnit && data.unitB2.card.grade <= 2) { units.push({ location: 'unit B2' }) }
+            if (data.unitB3.isUnit && data.unitB3.card.grade <= 2) { units.push({ location: 'unit B3' }) }
+            if (units.length > 0) {
+              const index = Math.floor(Math.random() * units.length)
+              this.FIELD_TO_HAND({ who: data.target, location: units[index].location })
+            }
+            setTimeout(() => this.unitBlock(data), 1000)
+          } else {
+            setTimeout(() => this.unitBlock(data), 1000)
+          }
+        })
+      } else {
+        setTimeout(() => this.unitBlock(data), 1000)
+      }
+    },
+    EFF059 (data) { // Boa Hancock
+      console.log('BOA HANCOCK')
+      console.log(data)
+      if (data.who === 'player') {
+        data.mana = this.data.player.mana.use
+        data.target = 'opponent'
+        data.field = this.data.opponent.field
+      } else {
+        data.mana = this.data.opponent.mana.use
+        data.target = 'player'
+        data.field = this.data.player.field
+      }
+      if (data.mana > 0) {
+        if (data.who === 'player') {
+          this.data.player.mana.use -= 1
+        } else {
+          this.data.opponent.mana.use -= 1
+        }
+        data.front = data.field.front
+        data.back = data.field.back
+        data.unitF1 = data.front.unitF1
+        data.unitF2 = data.front.unitF2
+        data.unitF3 = data.front.unitF3
+        data.unitB1 = data.back.unitB1
+        data.unitB2 = data.back.unitB2
+        data.unitB3 = data.back.unitB3
+        const units = []
+        if (data.unitF1.isUnit && data.unitF1.position === 'Stand') { units.push({ location: 'unit F1' }) }
+        if (data.unitF2.isUnit && data.unitF2.position === 'Stand') { units.push({ location: 'unit F2' }) }
+        if (data.unitF3.isUnit && data.unitF3.position === 'Stand') { units.push({ location: 'unit F3' }) }
+        if (data.unitB1.isUnit && data.unitB1.position === 'Stand') { units.push({ location: 'unit B1' }) }
+        if (data.unitB2.isUnit && data.unitB2.position === 'Stand') { units.push({ location: 'unit B2' }) }
+        if (data.unitB3.isUnit && data.unitB3.position === 'Stand') { units.push({ location: 'unit B3' }) }
+        if (units.length > 0) {
+          const index = Math.floor(Math.random() * units.length)
+          this.rest({ who: data.target, location: units[index].location })
+        }
+      }
+    },
+    EFF060_ATK (data) { // Coby
+      data.unit = data.unitATK
+      data.gain = 1000
+      this.AUTO_POWER(data)
+      setTimeout(() => this.unitBlock(data), 1000)
+    },
+    EFF060_DEF (data) { // Coby
+      data.unit = data.unitDEF
+      data.gain = 2000
+      this.AUTO_POWER(data)
+      setTimeout(() => this.resultBattle(data), 1000)
+    },
+    EFF061 (data) { // Eustass Kid
+      data.unit = data.unitATK
+      data.openLocation = []
+      if (data.who === 'player') {
+        data.target = 'opponent'
+        data.field = this.data.opponent.field
+        data.hand = this.data.opponent.hand
+      } else {
+        data.target = 'player'
+        data.field = this.data.player.field
+        data.hand = this.data.player.hand
+      }
+      data.front = data.field.front
+      data.back = data.field.back
+      data.unitF1 = data.front.unitF1
+      data.unitF2 = data.front.unitF2
+      data.unitF3 = data.front.unitF3
+      data.unitB1 = data.back.unitB1
+      data.unitB2 = data.back.unitB2
+      data.unitB3 = data.back.unitB3
+      if (!data.unitF1.isUnit) { data.openLocation.push('unit F1') }
+      if (!data.unitF2.isUnit) { data.openLocation.push('unit F2') }
+      if (!data.unitF3.isUnit) { data.openLocation.push('unit F3') }
+      if (!data.unitB1.isUnit) { data.openLocation.push('unit B1') }
+      if (!data.unitB2.isUnit) { data.openLocation.push('unit B2') }
+      if (!data.unitB3.isUnit) { data.openLocation.push('unit B3') }
+      if (data.openLocation.length > 0) {
+        const indexLocation = Math.floor(Math.random() * data.openLocation.length)
+        if (data.hand.length > 0) {
+          const indexHand = Math.floor(Math.random() * data.hand.length)
+          if (data.who === 'player') {
+            this.data.opponent.unit = {
+              card: data.hand[indexHand],
+              index: indexHand
+            }
+            this.data.opponent.mana.use += this.data.opponent.unit.card.grade
+          } else {
+            this.data.player.unit = {
+              card: data.hand[indexHand],
+              index: indexHand
+            }
+            this.data.player.mana.use += this.data.player.unit.card.grade
+          }
+          data.gain = data.hand[indexHand].power
+          this.AUTO_POWER(data)
+          this.callFromHand({ who: data.target, location: data.openLocation[indexLocation] })
+          setTimeout(() => this.unitBlock(data), 1000)
+        } else {
+          data.gain = 3000
+          this.AUTO_POWER(data)
+          setTimeout(() => this.unitBlock(data), 1000)
+        }
+      } else {
+        data.gain = 3000
+        this.AUTO_POWER(data)
+        setTimeout(() => this.unitBlock(data), 1000)
+      }
+    },
+    EFF062 (data) { // Fujitora
+      if (data.who === 'player') {
+        data.mana = this.data.player.mana.use
+        data.target = 'opponent'
+        data.field = this.data.opponent.field
+      } else {
+        data.mana = this.data.opponent.mana.use
+        data.target = 'player'
+        data.field = this.data.player.field
+      }
+      if (data.mana > 0) {
+        data.cost = 'pay life'
+        data.pay = 500
+        this.COST(data)
+        if (data.who === 'player') {
+          this.data.player.mana.use -= 1
+        } else {
+          this.data.opponent.mana.use -= 1
+        }
+        data.front = data.field.front
+        data.back = data.field.back
+        data.unitF1 = data.front.unitF1
+        data.unitF2 = data.front.unitF2
+        data.unitF3 = data.front.unitF3
+        data.unitB1 = data.back.unitB1
+        data.unitB2 = data.back.unitB2
+        data.unitB3 = data.back.unitB3
+        const units = []
+        if (data.unitF1.isUnit) { units.push({ unit: data.unitF1, location: 'unit F1' }) }
+        if (data.unitF2.isUnit) { units.push({ unit: data.unitF2, location: 'unit F2' }) }
+        if (data.unitF3.isUnit) { units.push({ unit: data.unitF3, location: 'unit F3' }) }
+        if (data.unitB1.isUnit) { units.push({ unit: data.unitB1, location: 'unit B1' }) }
+        if (data.unitB2.isUnit) { units.push({ unit: data.unitB2, location: 'unit B2' }) }
+        if (data.unitB3.isUnit) { units.push({ unit: data.unitB3, location: 'unit B3' }) }
+        if (units.length > 0) {
+          const index = Math.floor(Math.random() * units.length)
+          data.gain = units[index].unit.power
+          this.AUTO_POWER(data)
+          this.destroy({ who: data.target, location: units[index].location })
+        }
+      } else {
+        this.Toast('error', 'Mana tidak cukup !!!')
+      }
+    },
+    EFF064 (data) { // Kaido
+      data.special = 'Zoan'
+      data.gain = 500
+      data.todo = 'GAIN AUTO POWER'
+      this.SELECT_ALL_YOUR_FIELD_BY_SPECIAL(data)
+    },
+    EFF065 (data) { // Kaido
+      let count = 0
+      let field = {}
+      if (data.who === 'player') {
+        field = this.data.player.field
+      } else {
+        field = this.data.opponent.field
+      }
+      const unitF1 = field.front.unitF1
+      const unitF2 = field.front.unitF2
+      const unitF3 = field.front.unitF3
+      const unitB1 = field.back.unitB1
+      const unitB2 = field.back.unitB2
+      const unitB3 = field.back.unitB3
+      if (unitF1.isUnit && unitF1.card.type.special.search('Zoan') >= 0) { count += 1 }
+      if (unitF2.isUnit && unitF2.card.type.special.search('Zoan') >= 0) { count += 1 }
+      if (unitF3.isUnit && unitF3.card.type.special.search('Zoan') >= 0) { count += 1 }
+      if (unitB1.isUnit && unitB1.card.type.special.search('Zoan') >= 0) { count += 1 }
+      if (unitB2.isUnit && unitB2.card.type.special.search('Zoan') >= 0) { count += 1 }
+      if (unitB3.isUnit && unitB3.card.type.special.search('Zoan') >= 0) { count += 1 }
+      data.gain = 500 * count
+      this.CONT_POWER(data)
+    },
+    EFF066 (data) { // Marco
+      this.heal({ who: data.who, heal: 2000 })
+    },
+    EFF066_DROP (data) { // Marco
+      if (data.who === 'player') {
+        data.mana = this.data.player.mana.use
+        data.hand = this.data.player.hand
+      } else {
+        data.mana = this.data.opponent.mana.use
+        data.hand = this.data.opponent.hand
+      }
+      if (data.mana > 0 && data.hand.length > 0) {
+        if (data.who === 'player') {
+          this.data.player.mana.use -= 1
+        } else {
+          this.data.opponent.mana.use -= 1
+        }
+        data.cost = 'discard'
+        data.discard = ''
+        this.COST(data)
+        data.openLocation = []
+        if (data.who === 'player') {
+          data.field = this.data.player.field
+        } else {
+          data.field = this.data.opponent.field
+        }
+        data.front = data.field.front
+        data.back = data.field.back
+        data.unitF1 = data.front.unitF1
+        data.unitF2 = data.front.unitF2
+        data.unitF3 = data.front.unitF3
+        data.unitB1 = data.back.unitB1
+        data.unitB2 = data.back.unitB2
+        data.unitB3 = data.back.unitB3
+        if (!data.unitF1.isUnit) { data.openLocation.push('unit F1') }
+        if (!data.unitF2.isUnit) { data.openLocation.push('unit F2') }
+        if (!data.unitF3.isUnit) { data.openLocation.push('unit F3') }
+        if (!data.unitB1.isUnit) { data.openLocation.push('unit B1') }
+        if (!data.unitB2.isUnit) { data.openLocation.push('unit B2') }
+        if (!data.unitB3.isUnit) { data.openLocation.push('unit B3') }
+        if (data.openLocation.length > 0) {
+          const index = Math.floor(Math.random() * data.openLocation.length)
+          data.location = data.openLocation[index]
+          data.code = '066'
+          data.todo = 'CALL FROM DROP'
+          this.SEARCH_DROP_FOR_CODE(data)
+        }
+      }
+    },
+    EFF067 (data) { // Dracule Mihawk
+      data.openLocation = []
+      if (data.who === 'player') {
+        data.field = this.data.player.field
+        data.hand = this.data.player.hand
+      } else {
+        data.field = this.data.opponent.field
+        data.hand = this.data.opponent.hand
+      }
+      data.front = data.field.front
+      data.back = data.field.back
+      data.unitF1 = data.front.unitF1
+      data.unitF2 = data.front.unitF2
+      data.unitF3 = data.front.unitF3
+      data.unitB1 = data.back.unitB1
+      data.unitB2 = data.back.unitB2
+      data.unitB3 = data.back.unitB3
+      if (!data.unitF1.isUnit) { data.openLocation.push('unit F1') }
+      if (!data.unitF2.isUnit) { data.openLocation.push('unit F2') }
+      if (!data.unitF3.isUnit) { data.openLocation.push('unit F3') }
+      if (!data.unitB1.isUnit) { data.openLocation.push('unit B1') }
+      if (!data.unitB2.isUnit) { data.openLocation.push('unit B2') }
+      if (!data.unitB3.isUnit) { data.openLocation.push('unit B3') }
+      if (data.openLocation.length > 0) {
+        const indexLocation = Math.floor(Math.random() * data.openLocation.length)
+        if (data.who === 'player') {
+          this.data.player.unit = {
+            card: data.hand[data.index],
+            index: data.index
+          }
+          this.data.player.mana.use += this.data.player.unit.card.grade
+        } else {
+          this.data.opponent.unit = {
+            card: data.hand[data.index],
+            index: data.index
+          }
+          this.data.opponent.mana.use += this.data.opponent.unit.card.grade
+        }
+        this.callFromHand({ who: data.who, location: data.openLocation[indexLocation] })
+        this.EFF067_DESTROY(data)
+      }
+    },
+    EFF067_DESTROY (data) { // Dracule Mihawk
+      if (data.who === 'player') {
+        data.target = 'opponent'
+        data.field = this.data.opponent.field
+      } else {
+        data.target = 'player'
+        data.field = this.data.player.field
+      }
+      data.front = data.field.front
+      data.back = data.field.back
+      data.unitF1 = data.front.unitF1
+      data.unitF2 = data.front.unitF2
+      data.unitF3 = data.front.unitF3
+      data.unitB1 = data.back.unitB1
+      data.unitB2 = data.back.unitB2
+      data.unitB3 = data.back.unitB3
+      const units = []
+      if (data.unitF1.isUnit && data.unitF1.power <= data.damage) { units.push({ location: 'unit F1' }) }
+      if (data.unitF2.isUnit && data.unitF2.power <= data.damage) { units.push({ location: 'unit F2' }) }
+      if (data.unitF3.isUnit && data.unitF3.power <= data.damage) { units.push({ location: 'unit F3' }) }
+      if (data.unitB1.isUnit && data.unitB1.power <= data.damage) { units.push({ location: 'unit B1' }) }
+      if (data.unitB2.isUnit && data.unitB2.power <= data.damage) { units.push({ location: 'unit B2' }) }
+      if (data.unitB3.isUnit && data.unitB3.power <= data.damage) { units.push({ location: 'unit B3' }) }
+      if (units.length > 0) {
+        for (let i = 0; i < units.length; i++) {
+          this.destroy({ who: data.target, location: units[i].location })
+        }
+      }
+    },
+    EFF068 (data) { // Monkey D. Garp
+      let count = 0
+      let field = {}
+      if (data.who === 'player') {
+        field = this.data.player.field
+      } else {
+        field = this.data.opponent.field
+      }
+      const unitF1 = field.front.unitF1
+      const unitF2 = field.front.unitF2
+      const unitF3 = field.front.unitF3
+      const unitB1 = field.back.unitB1
+      const unitB2 = field.back.unitB2
+      const unitB3 = field.back.unitB3
+      if (unitF1.isUnit && unitF1.card.type.job.search('Fighter') >= 0) { count += 1 }
+      if (unitF2.isUnit && unitF2.card.type.job.search('Fighter') >= 0) { count += 1 }
+      if (unitF3.isUnit && unitF3.card.type.job.search('Fighter') >= 0) { count += 1 }
+      if (unitB1.isUnit && unitB1.card.type.job.search('Fighter') >= 0) { count += 1 }
+      if (unitB2.isUnit && unitB2.card.type.job.search('Fighter') >= 0) { count += 1 }
+      if (unitB3.isUnit && unitB3.card.type.job.search('Fighter') >= 0) { count += 1 }
+      data.gain = 500 * count
+      this.CONT_POWER(data)
+    },
+    EFF069_HAND (data) { // Portgas D. Ace
+      data.openLocation = []
+      if (data.who === 'player') {
+        data.field = this.data.player.field
+        data.hand = this.data.player.hand
+      } else {
+        data.field = this.data.opponent.field
+        data.hand = this.data.opponent.hand
+      }
+      data.front = data.field.front
+      data.back = data.field.back
+      data.unitF1 = data.front.unitF1
+      data.unitF2 = data.front.unitF2
+      data.unitF3 = data.front.unitF3
+      data.unitB1 = data.back.unitB1
+      data.unitB2 = data.back.unitB2
+      data.unitB3 = data.back.unitB3
+      if (!data.unitF1.isUnit) { data.openLocation.push('unit F1') }
+      if (!data.unitF2.isUnit) { data.openLocation.push('unit F2') }
+      if (!data.unitF3.isUnit) { data.openLocation.push('unit F3') }
+      if (!data.unitB1.isUnit) { data.openLocation.push('unit B1') }
+      if (!data.unitB2.isUnit) { data.openLocation.push('unit B2') }
+      if (!data.unitB3.isUnit) { data.openLocation.push('unit B3') }
+      if (data.openLocation.length > 0) {
+        const indexLocation = Math.floor(Math.random() * data.openLocation.length)
+        if (data.who === 'player') {
+          this.data.player.unit = {
+            card: data.hand[data.index],
+            index: data.index
+          }
+          this.data.player.mana.use += this.data.player.unit.card.grade
+        } else {
+          this.data.opponent.unit = {
+            card: data.hand[data.index],
+            index: data.index
+          }
+          this.data.opponent.mana.use += this.data.opponent.unit.card.grade
+        }
+        this.callFromHand({ who: data.who, location: data.openLocation[indexLocation] })
+      }
+    },
+    EFF069_AUTO (data) { // Portgas D. Ace
+      if (data.who === 'player') {
+        data.mana = this.data.player.mana.use
+        data.target = 'opponent'
+        data.field = this.data.opponent.field
+      } else {
+        data.mana = this.data.opponent.mana.use
+        data.target = 'player'
+        data.field = this.data.player.field
+      }
+      if (data.mana > 0) {
+        if (data.who === 'player') {
+          this.data.player.mana.use -= 1
+        } else {
+          this.data.opponent.mana.use -= 1
+        }
+        data.front = data.field.front
+        data.back = data.field.back
+        data.unitF1 = data.front.unitF1
+        data.unitF2 = data.front.unitF2
+        data.unitF3 = data.front.unitF3
+        data.unitB1 = data.back.unitB1
+        data.unitB2 = data.back.unitB2
+        data.unitB3 = data.back.unitB3
+        const units = []
+        if (data.unitF1.isUnit) { units.push({ location: 'unit F1' }) }
+        if (data.unitF2.isUnit) { units.push({ location: 'unit F2' }) }
+        if (data.unitF3.isUnit) { units.push({ location: 'unit F3' }) }
+        if (data.unitB1.isUnit) { units.push({ location: 'unit B1' }) }
+        if (data.unitB2.isUnit) { units.push({ location: 'unit B2' }) }
+        if (data.unitB3.isUnit) { units.push({ location: 'unit B3' }) }
+        if (units.length > 0) {
+          const index = Math.floor(Math.random() * units.length)
+          this.destroy({ who: data.target, location: units[index].location })
+        }
+      }
+    },
+    EFF069_DEF (data) { // Portgas D. Ace
+      let unitATK = {}
+      if (data.who === 'player') {
+        data.target = 'opponent'
+        data.field = this.data.opponent.field
+        unitATK = this.data.opponent.unitATK
+      } else {
+        data.target = 'player'
+        data.field = this.data.player.field
+        unitATK = this.data.player.unitATK
+      }
+      data.front = data.field.front
+      data.back = data.field.back
+      data.unitF1 = data.front.unitF1
+      data.unitF2 = data.front.unitF2
+      data.unitF3 = data.front.unitF3
+      data.unitB1 = data.back.unitB1
+      data.unitB2 = data.back.unitB2
+      data.unitB3 = data.back.unitB3
+      const units = []
+      if (data.unitF1.isUnit && data.unitF1.card.grade <= 2) { units.push({ location: 'unit F1' }) }
+      if (data.unitF2.isUnit && data.unitF2.card.grade <= 2) { units.push({ location: 'unit F2' }) }
+      if (data.unitF3.isUnit && data.unitF3.card.grade <= 2) { units.push({ location: 'unit F3' }) }
+      if (data.unitB1.isUnit && data.unitB1.card.grade <= 2) { units.push({ location: 'unit B1' }) }
+      if (data.unitB2.isUnit && data.unitB2.card.grade <= 2) { units.push({ location: 'unit B2' }) }
+      if (data.unitB3.isUnit && data.unitB3.card.grade <= 2) { units.push({ location: 'unit B3' }) }
+      if (units.length > 0) {
+        const index = Math.floor(Math.random() * units.length)
+        this.destroy({ who: data.target, location: units[index].location })
+        if (unitATK.location !== units[index].location) {
+          setTimeout(() => this.resultBattle(data), 1000)
+        }
+      }
     }
   },
   created () {
