@@ -21,7 +21,10 @@
       />
     </div>
     <div class="col-3 p-0 d-flex justify-content-center">
-      <Display :data="data.edit.display"/>
+      <Display
+        :data="data.edit.display"
+        v-on:sortData="sortData"
+      />
     </div>
   </div>
 </template>
@@ -58,8 +61,8 @@ export default {
     deleteDeck () {
       this.$emit('deleteDeck')
     },
-    sortData (byKey) {
-      this.$emit('sortData', byKey)
+    sortData (byKey, search) {
+      this.$emit('sortData', byKey, search)
     }
   }
 }

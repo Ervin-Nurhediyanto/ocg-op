@@ -712,7 +712,10 @@ export default {
         data.unit.card.code === '049' ||
         data.unit.card.code === '051' ||
         data.unit.card.code === '054' ||
-        data.unit.card.code === '062'
+        data.unit.card.code === '062' ||
+        data.unit.card.code === '071' ||
+        data.unit.card.code === '072' ||
+        data.unit.card.code === '073'
       ) {
         data.option.act = 'ACT'
       }
@@ -1126,68 +1129,118 @@ export default {
       if (data.who === 'player') {
         if (data.location === 'unit F1') {
           data.unit = this.data.player.field.front.unitF1
-          this.data.player.drop.push(data.unit.card)
-          this.data.player.field.front.unitF1 = unitEmpty
+          if (data.unit.card.code === '078') {
+            this.Toast('info', 'Diamond Jozu cannot be destroy !!!')
+          } else {
+            this.data.player.drop.push(data.unit.card)
+            this.data.player.field.front.unitF1 = unitEmpty
+          }
         }
         if (data.location === 'unit F2') {
           data.unit = this.data.player.field.front.unitF2
-          this.data.player.drop.push(data.unit.card)
-          this.data.player.field.front.unitF2 = unitEmpty
+          if (data.unit.card.code === '078') {
+            this.Toast('info', 'Diamond Jozu cannot be destroy !!!')
+          } else {
+            this.data.player.drop.push(data.unit.card)
+            this.data.player.field.front.unitF2 = unitEmpty
+          }
         }
         if (data.location === 'unit F3') {
           data.unit = this.data.player.field.front.unitF3
-          this.data.player.drop.push(data.unit.card)
-          this.data.player.field.front.unitF3 = unitEmpty
+          if (data.unit.card.code === '078') {
+            this.Toast('info', 'Diamond Jozu cannot be destroy !!!')
+          } else {
+            this.data.player.drop.push(data.unit.card)
+            this.data.player.field.front.unitF3 = unitEmpty
+          }
         }
         if (data.location === 'unit B1') {
           data.unit = this.data.player.field.back.unitB1
-          this.data.player.drop.push(data.unit.card)
-          this.data.player.field.back.unitB1 = unitEmpty
+          if (data.unit.card.code === '078') {
+            this.Toast('info', 'Diamond Jozu cannot be destroy !!!')
+          } else {
+            this.data.player.drop.push(data.unit.card)
+            this.data.player.field.back.unitB1 = unitEmpty
+          }
         }
         if (data.location === 'unit B2') {
           data.unit = this.data.player.field.back.unitB2
-          this.data.player.drop.push(data.unit.card)
-          this.data.player.field.back.unitB2 = unitEmpty
+          if (data.unit.card.code === '078') {
+            this.Toast('info', 'Diamond Jozu cannot be destroy !!!')
+          } else {
+            this.data.player.drop.push(data.unit.card)
+            this.data.player.field.back.unitB2 = unitEmpty
+          }
         }
         if (data.location === 'unit B3') {
           data.unit = this.data.player.field.back.unitB3
-          this.data.player.drop.push(data.unit.card)
-          this.data.player.field.back.unitB3 = unitEmpty
+          if (data.unit.card.code === '078') {
+            this.Toast('info', 'Diamond Jozu cannot be destroy !!!')
+          } else {
+            this.data.player.drop.push(data.unit.card)
+            this.data.player.field.back.unitB3 = unitEmpty
+          }
         }
       } else {
         if (data.location === 'unit F1') {
           data.unit = this.data.opponent.field.front.unitF1
-          this.data.opponent.drop.push(data.unit.card)
-          this.data.opponent.field.front.unitF1 = unitEmpty
+          if (data.unit.card.code === '078') {
+            this.Toast('info', 'Diamond Jozu cannot be destroy !!!')
+          } else {
+            this.data.opponent.drop.push(data.unit.card)
+            this.data.opponent.field.front.unitF1 = unitEmpty
+          }
         }
         if (data.location === 'unit F2') {
           data.unit = this.data.opponent.field.front.unitF2
-          this.data.opponent.drop.push(data.unit.card)
-          this.data.opponent.field.front.unitF2 = unitEmpty
+          if (data.unit.card.code === '078') {
+            this.Toast('info', 'Diamond Jozu cannot be destroy !!!')
+          } else {
+            this.data.opponent.drop.push(data.unit.card)
+            this.data.opponent.field.front.unitF2 = unitEmpty
+          }
         }
         if (data.location === 'unit F3') {
           data.unit = this.data.opponent.field.front.unitF3
-          this.data.opponent.drop.push(data.unit.card)
-          this.data.opponent.field.front.unitF3 = unitEmpty
+          if (data.unit.card.code === '078') {
+            this.Toast('info', 'Diamond Jozu cannot be destroy !!!')
+          } else {
+            this.data.opponent.drop.push(data.unit.card)
+            this.data.opponent.field.front.unitF3 = unitEmpty
+          }
         }
         if (data.location === 'unit B1') {
           data.unit = this.data.opponent.field.back.unitB1
-          this.data.opponent.drop.push(data.unit.card)
-          this.data.opponent.field.back.unitB1 = unitEmpty
+          if (data.unit.card.code === '078') {
+            this.Toast('info', 'Diamond Jozu cannot be destroy !!!')
+          } else {
+            this.data.opponent.drop.push(data.unit.card)
+            this.data.opponent.field.back.unitB1 = unitEmpty
+          }
         }
         if (data.location === 'unit B2') {
           data.unit = this.data.opponent.field.back.unitB2
-          this.data.opponent.drop.push(data.unit.card)
-          this.data.opponent.field.back.unitB2 = unitEmpty
+          if (data.unit.card.code === '078') {
+            this.Toast('info', 'Diamond Jozu cannot be destroy !!!')
+          } else {
+            this.data.opponent.drop.push(data.unit.card)
+            this.data.opponent.field.back.unitB2 = unitEmpty
+          }
         }
         if (data.location === 'unit B3') {
           data.unit = this.data.opponent.field.back.unitB3
-          this.data.opponent.drop.push(data.unit.card)
-          this.data.opponent.field.back.unitB3 = unitEmpty
+          if (data.unit.card.code === '078') {
+            this.Toast('info', 'Diamond Jozu cannot be destroy !!!')
+          } else {
+            this.data.opponent.drop.push(data.unit.card)
+            this.data.opponent.field.back.unitB3 = unitEmpty
+          }
         }
       }
-      this.EFF_AUTO({ who: data.who, location: data.location, unit: data.unit, condition: 'AUTO ON SEND TO DROP' })
-      this.EFF_CONT(data)
+      if (data.unit.card.code !== '078') {
+        this.EFF_AUTO({ who: data.who, location: data.location, unit: data.unit, condition: 'AUTO ON SEND TO DROP' })
+        this.EFF_CONT(data)
+      }
     },
     bind (data) {
       const unitEmpty = {
@@ -1268,8 +1321,6 @@ export default {
       this.EFF_CONT(data)
     },
     rest (data) {
-      console.log('REST')
-      console.log(data)
       if (data.who === 'player') {
         data.field = this.data.player.field
       } else {
@@ -1296,6 +1347,36 @@ export default {
         data.unit = data.back.unitB3
       }
       data.unit.position = 'Rest'
+      this.data.player.todo = ''
+      this.data.opponent.todo = ''
+    },
+    stand (data) {
+      if (data.who === 'player') {
+        data.field = this.data.player.field
+      } else {
+        data.field = this.data.opponent.field
+      }
+      data.front = data.field.front
+      data.back = data.field.back
+      if (data.location === 'unit F1') {
+        data.unit = data.front.unitF1
+      }
+      if (data.location === 'unit F2') {
+        data.unit = data.front.unitF2
+      }
+      if (data.location === 'unit F3') {
+        data.unit = data.front.unitF3
+      }
+      if (data.location === 'unit B1') {
+        data.unit = data.back.unitB1
+      }
+      if (data.location === 'unit B2') {
+        data.unit = data.back.unitB2
+      }
+      if (data.location === 'unit B3') {
+        data.unit = data.back.unitB3
+      }
+      data.unit.position = 'Stand'
       this.data.player.todo = ''
       this.data.opponent.todo = ''
     },
@@ -1749,6 +1830,64 @@ export default {
         }
       }
     },
+    RANDOM_FIELD_OP_BY_GRADE_OR_LESS (data) {
+      if (data.who === 'player') {
+        data.target = 'opponent'
+        data.field = this.data.opponent.field
+      } else {
+        data.target = 'player'
+        data.field = this.data.player.field
+      }
+      data.front = data.field.front
+      data.back = data.field.back
+      data.unitF1 = data.front.unitF1
+      data.unitF2 = data.front.unitF2
+      data.unitF3 = data.front.unitF3
+      data.unitB1 = data.back.unitB1
+      data.unitB2 = data.back.unitB2
+      data.unitB3 = data.back.unitB3
+      const units = []
+      if (data.unitF1.isUnit && data.unitF1.card.grade <= data.grade) { units.push({ location: 'unit F1' }) }
+      if (data.unitF2.isUnit && data.unitF2.card.grade <= data.grade) { units.push({ location: 'unit F2' }) }
+      if (data.unitF3.isUnit && data.unitF3.card.grade <= data.grade) { units.push({ location: 'unit F3' }) }
+      if (data.unitB1.isUnit && data.unitB1.card.grade <= data.grade) { units.push({ location: 'unit B1' }) }
+      if (data.unitB2.isUnit && data.unitB2.card.grade <= data.grade) { units.push({ location: 'unit B2' }) }
+      if (data.unitB3.isUnit && data.unitB3.card.grade <= data.grade) { units.push({ location: 'unit B3' }) }
+      if (units.length > 0) {
+        const index = Math.floor(Math.random() * units.length)
+        if (data.todo === 'destroy') {
+          this.destroy({ who: data.target, location: units[index].location })
+        }
+      }
+    },
+    RANDOM_FIELD_BY_NAME (data) {
+      if (data.who === 'player') {
+        data.field = this.data.player.field
+      } else {
+        data.field = this.data.opponent.field
+      }
+      data.front = data.field.front
+      data.back = data.field.back
+      data.unitF1 = data.front.unitF1
+      data.unitF2 = data.front.unitF2
+      data.unitF3 = data.front.unitF3
+      data.unitB1 = data.back.unitB1
+      data.unitB2 = data.back.unitB2
+      data.unitB3 = data.back.unitB3
+      const units = []
+      if (data.unitF1.isUnit && data.unitF1.card.name.search(data.name) >= 0) { units.push({ location: 'unit F1' }) }
+      if (data.unitF2.isUnit && data.unitF2.card.name.search(data.name) >= 0) { units.push({ location: 'unit F2' }) }
+      if (data.unitF3.isUnit && data.unitF3.card.name.search(data.name) >= 0) { units.push({ location: 'unit F3' }) }
+      if (data.unitB1.isUnit && data.unitB1.card.name.search(data.name) >= 0) { units.push({ location: 'unit B1' }) }
+      if (data.unitB2.isUnit && data.unitB2.card.name.search(data.name) >= 0) { units.push({ location: 'unit B2' }) }
+      if (data.unitB3.isUnit && data.unitB3.card.name.search(data.name) >= 0) { units.push({ location: 'unit B3' }) }
+      if (units.length > 0) {
+        const index = Math.floor(Math.random() * units.length)
+        if (data.todo === 'stand') {
+          this.stand({ who: data.who, location: units[index].location })
+        }
+      }
+    },
     AUTO_POWER (data) {
       if (data.who === 'player') {
         data.field = this.data.player.field
@@ -1803,6 +1942,33 @@ export default {
       data.unit.gain.cont = data.gain
       data.unit.power = data.unit.card.power + data.unit.gain.auto + data.unit.gain.cont
     },
+    COUNT_POWER_WITH_OTHER_UNIT_NAME (data) {
+      let count = 0
+      let field = {}
+      if (data.who === 'player') {
+        field = this.data.player.field
+      } else {
+        field = this.data.opponent.field
+      }
+      const unitF1 = field.front.unitF1
+      const unitF2 = field.front.unitF2
+      const unitF3 = field.front.unitF3
+      const unitB1 = field.back.unitB1
+      const unitB2 = field.back.unitB2
+      const unitB3 = field.back.unitB3
+      if (unitF1.isUnit && unitF1.card.name.search(data.name) >= 0) { count += 1 }
+      if (unitF2.isUnit && unitF2.card.name.search(data.name) >= 0) { count += 1 }
+      if (unitF3.isUnit && unitF3.card.name.search(data.name) >= 0) { count += 1 }
+      if (unitB1.isUnit && unitB1.card.name.search(data.name) >= 0) { count += 1 }
+      if (unitB2.isUnit && unitB2.card.name.search(data.name) >= 0) { count += 1 }
+      if (unitB3.isUnit && unitB3.card.name.search(data.name) >= 0) { count += 1 }
+      if (count > 0) {
+        this.CONT_POWER(data)
+      } else {
+        data.gain = 0
+        this.CONT_POWER(data)
+      }
+    },
     EFF_AUTO (data) {
       if (data.condition === 'AUTO ON ATK') { this.AUTO_ON_ATK(data) }
       if (data.condition === 'AUTO ON DEF') { this.AUTO_ON_DEF(data) }
@@ -1842,6 +2008,8 @@ export default {
         this.EFF060_ATK(data)
       } else if (data.unitATK.card.code === '061') {
         this.EFF061(data)
+      } else if (data.unitATK.card.code === '070') {
+        this.EFF070(data)
       } else {
         setTimeout(() => this.unitBlock(data), 1000)
       }
@@ -1867,6 +2035,8 @@ export default {
         this.EFF060_DEF(data)
       } else if (data.unitDEF.card.code === '069') {
         this.EFF069_DEF(data)
+      } else if (data.unitDEF.card.code === '074') {
+        this.EFF074_DEF(data)
       } else {
         setTimeout(() => this.resultBattle(data), 1000)
       }
@@ -1901,6 +2071,7 @@ export default {
       if (data.unit.card.code === '044') { this.EFF044_DROP(data) }
       if (data.unit.card.code === '056') { this.EFF056(data) }
       if (data.unit.card.code === '057') { this.EFF057(data) }
+      if (data.unit.card.code === '077') { this.EFF077(data) }
       this.AUTO_UNIT_DESTROY_ON_HAND(data)
     },
     AUTO_UNIT_DESTROY_ON_HAND (data) {
@@ -1970,6 +2141,8 @@ export default {
       if (data.drop[index].code === '025') { this.EFF025_AUTO(data) }
       if (data.drop[index].code === '026') { this.EFF026_AUTO(data) }
       if (data.drop[index].code === '027') { this.EFF027_AUTO(data) }
+      if (data.drop[index].code === '075') { this.EFF075_AUTO(data) }
+      if (data.drop[index].code === '076') { this.EFF076_AUTO(data) }
     },
     AUTO_ON_U_DISCARD (data) {
       if (data.who === 'player') {
@@ -2103,6 +2276,7 @@ export default {
         if (unit.code === '050') { this.EFF050_END({ who: data.who, location: unit.location }) }
         if (unit.code === '052') { this.EFF052_END({ who: data.who, location: unit.location }) }
         if (unit.code === '058') { this.EFF058_END({ who: data.who, location: unit.location }) }
+        if (unit.code === '078') { this.EFF078({ who: data.who, location: unit.location }) }
       })
     },
     AUTO_ON_END_DROP (data) {
@@ -2143,6 +2317,9 @@ export default {
         if (data.unit.card.code === '051') { this.EFF051_ACT(data) }
         if (data.unit.card.code === '054') { this.EFF054(data) }
         if (data.unit.card.code === '062') { this.EFF062(data) }
+        if (data.unit.card.code === '071') { this.EFF071_ACT(data) }
+        if (data.unit.card.code === '072') { this.EFF072_ACT(data) }
+        if (data.unit.card.code === '073') { this.EFF073_ACT(data) }
         data.unit.onePerTurn = true
       }
     },
@@ -2175,6 +2352,12 @@ export default {
         if (unit.code === '048') { this.EFF048({ who: 'player', location: unit.location }) }
         if (unit.code === '065') { this.EFF065({ who: 'player', location: unit.location }) }
         if (unit.code === '068') { this.EFF068({ who: 'player', location: unit.location }) }
+        if (unit.code === '071') { this.EFF071_CONT({ who: 'player', location: unit.location }) }
+        if (unit.code === '072') { this.EFF072_CONT({ who: 'player', location: unit.location }) }
+        if (unit.code === '073') { this.EFF073_CONT({ who: 'player', location: unit.location }) }
+        if (unit.code === '074') { this.EFF074_CONT({ who: 'player', location: unit.location }) }
+        if (unit.code === '075') { this.EFF075_CONT({ who: 'player', location: unit.location }) }
+        if (unit.code === '076') { this.EFF076_CONT({ who: 'player', location: unit.location }) }
       })
     },
     CONT_OPPONENT (data) {
@@ -2202,6 +2385,12 @@ export default {
         if (unit.code === '048') { this.EFF048({ who: 'opponent', location: unit.location }) }
         if (unit.code === '065') { this.EFF065({ who: 'opponent', location: unit.location }) }
         if (unit.code === '068') { this.EFF068({ who: 'opponent', location: unit.location }) }
+        if (unit.code === '071') { this.EFF071_CONT({ who: 'opponent', location: unit.location }) }
+        if (unit.code === '072') { this.EFF072_CONT({ who: 'opponent', location: unit.location }) }
+        if (unit.code === '073') { this.EFF073_CONT({ who: 'opponent', location: unit.location }) }
+        if (unit.code === '074') { this.EFF074_CONT({ who: 'opponent', location: unit.location }) }
+        if (unit.code === '075') { this.EFF075_CONT({ who: 'opponent', location: unit.location }) }
+        if (unit.code === '076') { this.EFF076_CONT({ who: 'opponent', location: unit.location }) }
       })
     },
     COST (data) {
@@ -2209,6 +2398,22 @@ export default {
         this.damage({ who: data.who, damage: data.pay })
       }
       if (data.cost === 'discard') {
+        if (data.who === 'player') {
+          data.hand = this.data.player.hand
+        } else {
+          data.hand = this.data.opponent.hand
+        }
+        const cards = []
+        for (let i = 0; i < data.hand.length; i++) {
+          if (data.hand[i].name.search(data.discard) >= 0 && data.hand[i].name !== data.notName) {
+            cards.push(i)
+          }
+        }
+        const index = Math.floor(Math.random() * cards.length)
+        this.discard({ who: data.who, index: cards[index] })
+      }
+      if (data.cost === 'pay life and discard') {
+        this.damage({ who: data.who, damage: data.pay })
         if (data.who === 'player') {
           data.hand = this.data.player.hand
         } else {
@@ -4093,6 +4298,136 @@ export default {
         if (unitATK.location !== units[index].location) {
           setTimeout(() => this.resultBattle(data), 1000)
         }
+      }
+    },
+    EFF070 (data) { // Edward Newgate "Shirohige"
+      data.unit = data.unitATK
+      data.gain = 1000
+      this.AUTO_POWER(data)
+      if (data.who === 'player') {
+        data.mana = this.data.player.mana.use
+        data.hand = this.data.player.hand
+      } else {
+        data.mana = this.data.opponent.mana.use
+        data.hand = this.data.opponent.hand
+      }
+      if (data.mana > 0 && data.hand.length > 0) {
+        this.$swal.fire({
+          title: 'Aktifkan Efek Edward Newgate ?',
+          showCancelButton: true,
+          confirmButtonText: 'YES',
+          cancelButtonText: 'NO'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            if (data.who === 'player') { this.data.player.mana.use -= 1 }
+            if (data.who === 'opponent') { this.data.opponent.mana.use -= 1 }
+            data.cost = 'pay life and discard'
+            data.pay = 500
+            data.discard = ''
+            this.COST(data)
+            data.gain = 4500
+            this.AUTO_POWER(data)
+            setTimeout(() => this.unitBlock(data), 1000)
+          } else {
+            setTimeout(() => this.unitBlock(data), 1000)
+          }
+        })
+      } else {
+        setTimeout(() => this.unitBlock(data), 1000)
+      }
+    },
+    EFF071_CONT (data) { // Bohemian
+      data.name = 'Edward Newgate "Shirohige"'
+      data.gain = 1000
+      this.COUNT_POWER_WITH_OTHER_UNIT_NAME(data)
+    },
+    EFF071_ACT (data) { // Bohemian
+      data.cost = 'pay life'
+      data.pay = 500
+      this.COST(data)
+      data.gain = 1500
+      this.AUTO_POWER(data)
+    },
+    EFF072_CONT (data) { // Squard
+      data.name = 'Edward Newgate "Shirohige"'
+      data.gain = 1000
+      this.COUNT_POWER_WITH_OTHER_UNIT_NAME(data)
+    },
+    EFF072_ACT (data) { // Squard
+      data.cost = 'pay life'
+      data.pay = 500
+      this.COST(data)
+      data.name = 'Edward Newgate "Shirohige"'
+      data.todo = 'DROP TO HAND'
+      this.SEARCH_DROP_FOR_NAME(data)
+    },
+    EFF073_CONT (data) { // Haruta
+      data.name = 'Edward Newgate "Shirohige"'
+      data.gain = 1000
+      this.COUNT_POWER_WITH_OTHER_UNIT_NAME(data)
+    },
+    EFF073_ACT (data) { // Haruta
+      data.cost = 'pay life'
+      data.pay = 500
+      this.COST(data)
+      data.name = 'Edward Newgate "Shirohige"'
+      data.todo = 'DECK TO HAND'
+      this.SEARCH_DECK_FOR_NAME(data)
+    },
+    EFF074_CONT (data) { // Kingdew
+      data.name = 'Edward Newgate "Shirohige"'
+      data.gain = 1000
+      this.COUNT_POWER_WITH_OTHER_UNIT_NAME(data)
+    },
+    EFF074_DEF (data) { // Kingdew
+      data.unit = data.unitDEF
+      data.gain = 2000
+      this.AUTO_POWER(data)
+      setTimeout(() => this.resultBattle(data), 1000)
+    },
+    EFF075_CONT (data) { // Curiel
+      data.name = 'Edward Newgate "Shirohige"'
+      data.gain = 1000
+      this.COUNT_POWER_WITH_OTHER_UNIT_NAME(data)
+    },
+    EFF075_AUTO (data) { // Curiel
+      data.grade = 2
+      data.todo = 'destroy'
+      this.RANDOM_FIELD_OP_BY_GRADE_OR_LESS(data)
+    },
+    EFF076_CONT (data) { // Blenheim
+      data.name = 'Edward Newgate "Shirohige"'
+      data.gain = 1000
+      this.COUNT_POWER_WITH_OTHER_UNIT_NAME(data)
+    },
+    EFF076_AUTO (data) { // Blenheim
+      data.name = 'Edward Newgate "Shirohige"'
+      data.todo = 'stand'
+      this.RANDOM_FIELD_BY_NAME(data)
+    },
+    EFF077 (data) { // Thatch
+      if (data.who === 'player') { data.deck = this.data.player.deck }
+      if (data.who === 'opponent') { data.deck = this.data.opponent.deck }
+      const units = []
+      data.deck.map((unit) => {
+        if (unit.name === 'Edward Newgate "Shirohige"' || unit.name === 'Portgas D. Ace') {
+          units.push(unit.name)
+        }
+      })
+      const index = Math.floor(Math.random() * units.length)
+      data.name = units[index]
+      data.todo = 'CALL FROM DECK'
+      this.SEARCH_DECK_FOR_NAME(data)
+    },
+    EFF078 (data) { // Diamond Jozu
+      if (data.who === 'player') { data.hand = this.data.player.hand }
+      if (data.who === 'opponent') { data.hand = this.data.opponent.hand }
+      if (data.hand.length > 0) {
+        data.cost = 'discard'
+        data.discard = ''
+        this.COST(data)
+      } else {
+        this.bind(data)
       }
     }
   },

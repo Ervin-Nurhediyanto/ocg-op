@@ -590,6 +590,7 @@ export default {
             power: 500,
             code: '276'
           },
+          allCard: [],
           cards: [
             {
               name: 'Hatchan',
@@ -3359,7 +3360,7 @@ export default {
                 job: 'Fighter',
                 special: 'Paramecia'
               },
-              text: '[Cont]: If you control "Edward Newgate". This unit cannot be destroy.',
+              text: '[Cont]: This unit cannot be destroy. [Auto]: At the end of turn. Discard a random card from your hand or put this unit to bind zone.',
               power: 1500,
               code: '078'
             },
@@ -3373,7 +3374,7 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Auto]: When this unit send into drop zone. call "Edward Newgate" from your drop zone.',
+              text: '[Auto]: When this unit is send into drop zone from your field. Call up to one "Edward Newgate `Shirohige`" or "Portgas D. Ace" from your deck, then shuffle your deck.',
               power: 1500,
               code: '077'
             },
@@ -3387,7 +3388,7 @@ export default {
                 job: 'Swordman',
                 special: ''
               },
-              text: '[Auto]: When this unit attack. Pay 500 life points. All "Edward Newgate" unit your control get Power + 1000 until end this turn.',
+              text: '[Cont]: If you control "Edward Newgate `Shirohige`". This unit get Power + 1000. [Auto]: When this card is discarded. Pay 500 life points. Stand up to one "Edward Newgate `Shirohige`" your control.',
               power: 500,
               code: '076'
             },
@@ -3401,7 +3402,7 @@ export default {
                 job: 'Gunner',
                 special: ''
               },
-              text: '[Act][1/Turn]: If you control "Edward Newgate" unit. Choose up to one your opponent unit, then destroy that unit.',
+              text: '[Cont]: If you control "Edward Newgate `Shirohige`". This unit get Power + 1000. [Auto]: When this card is discarded. Destroy up to one Grade 2 or less random unit your opponent control.',
               power: 500,
               code: '075'
             },
@@ -3415,7 +3416,7 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Act][1/Turn]: Choose up to one "Edward Newgate". That unit get Power + 1000 until end this turn.',
+              text: '[Cont]: If you control "Edward Newgate `Shirohige`". This unit get Power + 1000. [Auto]: When this unit block. This unit get Power + 2000, until of this turn. ',
               power: 500,
               code: '074'
             },
@@ -3429,7 +3430,7 @@ export default {
                 job: 'Swordman',
                 special: ''
               },
-              text: '[Act][1/Turn]: Pay 500 life points. Add up to one "Edward Newgate" into your hand from your deck.',
+              text: '[Cont]: If you control "Edward Newgate `Shirohige`". This unit get Power + 1000. [Act][1/Turn]: Pay 500 life points. Add up to one "Edward Newgate `Shirohige`" into your hand from your deck.',
               power: 500,
               code: '073'
             },
@@ -3443,7 +3444,7 @@ export default {
                 job: 'Swordman',
                 special: ''
               },
-              text: '[Act][1/Turn]: Pay 500 life points. Put up to one "Edward Newgate" from drop zone into your hand.',
+              text: '[Cont]: If you control "Edward Newgate `Shirohige`". This unit get Power + 1000. [Act][1/Turn]: Pay 500 life points. Put up to one "Edward Newgate `Shirohige`" from drop zone into your hand.',
               power: 500,
               code: '072'
             },
@@ -3457,7 +3458,7 @@ export default {
                 job: 'Swordman',
                 special: ''
               },
-              text: '[Auto]: When this unit attack. Pay 500 life points. Stand up to one "Edward Newgate" your control.',
+              text: '[Cont]: If you control "Edward Newgate `Shirohige`". This unit get Power + 1000. [Act][1/Turn]: Pay 500 life points. This unit get Power + 1500 until end of turn.',
               power: 500,
               code: '071'
             },
@@ -3472,7 +3473,6 @@ export default {
                 special: 'Paramecia'
               },
               text: '[Auto]: When this unit attack. This unit get Power + 1000 until end of turn. [Auto]: When this unit attack. Pay 500 life points, pay 1 mana, and discard a random card from your hand. This unit get Power + 4500 until end of turn.',
-              // text: '[Auto]: When this unit attack. Pay 500 life points. This unit get Power + 5000 until end this turn. At the end of turn, deal damage 500 to your life points.',
               power: 2500,
               code: '070'
             },
@@ -4496,7 +4496,7 @@ export default {
       this.data.edit.title = ''
       this.data.edit.deck = []
     },
-    sortData (byKey) {
+    sortData (byKey, search) {
       let sortedData
       if (byKey === 'name') {
         sortedData = this.data.edit.cards.sort((a, b) => {
@@ -4552,8 +4552,21 @@ export default {
           return 0
         })
       }
+      if (byKey === 'text') {
+        console.log('masuk sort by text')
+        sortedData = []
+        this.data.edit.allCard.map((card) => {
+          if (card.text.search(search) >= 0) {
+            sortedData.push(card)
+          }
+        })
+        this.data.edit.cards = sortedData
+      }
       return sortedData
     }
+  },
+  created () {
+    this.data.edit.allCard = this.data.edit.cards
   }
 }
 </script>
