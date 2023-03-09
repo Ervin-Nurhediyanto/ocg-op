@@ -715,7 +715,8 @@ export default {
         data.unit.card.code === '062' ||
         data.unit.card.code === '071' ||
         data.unit.card.code === '072' ||
-        data.unit.card.code === '073'
+        data.unit.card.code === '073' ||
+        data.unit.card.code === '080'
       ) {
         data.option.act = 'ACT'
       }
@@ -1458,6 +1459,9 @@ export default {
           data.index = cards[index]
           this.callFromDeck(data)
         }
+        if (data.todo === 'DECK TO HAND') {
+          this.DECK_TO_HAND({ who: data.who, index: cards[index] })
+        }
       }
     },
     SEARCH_DECK_FOR_GRADE_AND_NOT_NAME (data) {
@@ -2010,6 +2014,8 @@ export default {
         this.EFF061(data)
       } else if (data.unitATK.card.code === '070') {
         this.EFF070(data)
+      } else if (data.unitATK.card.code === '079') {
+        this.EFF079(data)
       } else {
         setTimeout(() => this.unitBlock(data), 1000)
       }
@@ -2320,6 +2326,7 @@ export default {
         if (data.unit.card.code === '071') { this.EFF071_ACT(data) }
         if (data.unit.card.code === '072') { this.EFF072_ACT(data) }
         if (data.unit.card.code === '073') { this.EFF073_ACT(data) }
+        if (data.unit.card.code === '080') { this.EFF080(data) }
         data.unit.onePerTurn = true
       }
     },
@@ -4428,6 +4435,44 @@ export default {
         this.COST(data)
       } else {
         this.bind(data)
+      }
+    },
+    EFF079 (data) { // Cavendish
+      if (data.who === 'player') {
+        data.mana = this.data.player.mana.use
+      } else {
+        data.mana = this.data.opponent.mana.use
+      }
+      if (data.mana > 0) {
+        if (data.who === 'player') {
+          this.data.player.mana.use -= 1
+        } else {
+          this.data.opponent.mana.use -= 1
+        }
+        data.cost = 'pay life'
+        data.pay = 500
+        this.COST(data)
+        setTimeout(() => this.stand(data), 1000)
+        setTimeout(() => this.unitBlock(data), 1000)
+      } else {
+        setTimeout(() => this.unitBlock(data), 1000)
+      }
+    },
+    EFF080 (data) { // Bartolomeo
+      if (data.who === 'player') {
+        data.hand = this.data.player.hand
+      } else {
+        data.hand = this.data.opponent.hand
+      }
+      if (data.hand.length > 0) {
+        data.cost = 'discard'
+        data.discard = ''
+        this.COST(data)
+        data.name = 'Monkey D. Luffy'
+        data.todo = 'DECK TO HAND'
+        this.SEARCH_DECK_FOR_NAME(data)
+      } else {
+        this.Toast('error', 'Tidak ada kartu untuk discard !!!')
       }
     }
   },

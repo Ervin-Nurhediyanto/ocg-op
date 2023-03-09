@@ -3319,6 +3319,7 @@ export default {
                 special: ''
               },
               text: '[Cont]: Commander SHP. [Act][1/Turn]: Pay 500 life points. All your grade 2 unit get Power + 1000 until end this turn.',
+              // text: '[Cont]: Commander SHP. [Act][1/Turn]: Pay 500 life points. All your grade 2 unit get Power + 1000 until end this turn.',
               power: 1500,
               code: '081'
             },
@@ -3332,7 +3333,7 @@ export default {
                 job: 'Fighter',
                 special: 'Paramecia'
               },
-              text: '[Cont]: Commander SHP. [Act][1/Turn]: Choose up to one your unit. That unit cannot be destroy until end this turn.',
+              text: '[Cont]: Commander SHP. [Act][1/Turn]: Discard a random card from your hand. Put up to one "Monkey D. Luffy" from deck into your hand. Shuffle your deck.',
               power: 1500,
               code: '080'
             },
@@ -3346,7 +3347,7 @@ export default {
                 job: 'Swordman',
                 special: ''
               },
-              text: '[Cont]: Commander SHP. [Auto][1/Turn]: When this unit attack. Pay 500 life points. Stand this unit. (Still attack and can attact again)',
+              text: '[Cont]: Commander SHP. [Auto]: When this unit attack. Pay 500 life points and 1 mana. Stand this unit. (Still attack and can attact again)',
               power: 1500,
               code: '079'
             },
