@@ -3262,7 +3262,8 @@ export default {
                 job: 'Swordman',
                 special: ''
               },
-              text: '[Cont]: This unit get Power + 500 for each "Kozuki" unit your control.',
+              text: '[Cont]: if you control "Kozuki" unit. This unit get Power + 1000.',
+              // text: '[Cont]: This unit get Power + 500 for each "Kozuki" unit your control.',
               power: 500,
               code: '085'
             },
@@ -3276,7 +3277,7 @@ export default {
                 job: 'Fighter',
                 special: 'Paramecia'
               },
-              text: '[Act][1/Turn]: Call random "Commander SHP" from your deck. Shuffle your deck.',
+              text: '[Act][1/Turn]: Pay 1 mana. Call random "Commander SHP" from your deck. Shuffle your deck.',
               power: 2500,
               code: '084'
             },
@@ -3319,7 +3320,6 @@ export default {
                 special: ''
               },
               text: '[Cont]: Commander SHP. [Act][1/Turn]: Pay 500 life points. All your grade 2 unit get Power + 1000 until end this turn.',
-              // text: '[Cont]: Commander SHP. [Act][1/Turn]: Pay 500 life points. All your grade 2 unit get Power + 1000 until end this turn.',
               power: 1500,
               code: '081'
             },

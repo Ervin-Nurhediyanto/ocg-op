@@ -716,7 +716,10 @@ export default {
         data.unit.card.code === '071' ||
         data.unit.card.code === '072' ||
         data.unit.card.code === '073' ||
-        data.unit.card.code === '080'
+        data.unit.card.code === '080' ||
+        data.unit.card.code === '081' ||
+        data.unit.card.code === '083' ||
+        data.unit.card.code === '084'
       ) {
         data.option.act = 'ACT'
       }
@@ -1551,6 +1554,30 @@ export default {
         }
       }
     },
+    SEARCH_DECK_FOR_TEXT_AND_GRADE (data) {
+      if (data.who === 'player') {
+        data.deck = this.data.player.deck
+      } else {
+        data.deck = this.data.opponent.deck
+      }
+      const cards = []
+      for (let i = 0; i < data.deck.length; i++) {
+        if (data.deck[i].text.search(data.text) >= 0 && data.deck[i].grade <= data.grade) {
+          cards.push(i)
+        }
+      }
+      if (cards.length > 0) {
+        const index = Math.floor(Math.random() * cards.length)
+        if (data.todo === 'CALL FROM DECK') {
+          data.card = data.deck[cards[index]]
+          data.index = cards[index]
+          this.callFromDeck(data)
+        }
+        if (data.todo === 'DECK TO HAND') {
+          this.DECK_TO_HAND({ who: data.who, index: cards[index] })
+        }
+      }
+    },
     SEARCH_DECK_FOR_RACE_AND_GRADE_LESS (data) {
       if (data.who === 'player') {
         data.deck = this.data.player.deck
@@ -1708,6 +1735,33 @@ export default {
         this.shuffle({ who: 'opponent', deck: this.data.opponent.deck })
       }
     },
+    SELECT_ALL_YOUR_FIELD_BY_GRADE (data) {
+      if (data.who === 'player') {
+        data.field = this.data.player.field
+      } else {
+        data.field = this.data.opponent.field
+      }
+      data.front = data.field.front
+      data.back = data.field.back
+      data.unitF1 = data.front.unitF1
+      data.unitF2 = data.front.unitF2
+      data.unitF3 = data.front.unitF3
+      data.unitB1 = data.back.unitB1
+      data.unitB2 = data.back.unitB2
+      data.unitB3 = data.back.unitB3
+      data.locations = []
+      if (data.unitF1.isUnit && data.unitF1.card.grade === data.grade) { data.locations.push({ location: 'unit F1' }) }
+      if (data.unitF2.isUnit && data.unitF2.card.grade === data.grade) { data.locations.push({ location: 'unit F2' }) }
+      if (data.unitF3.isUnit && data.unitF3.card.grade === data.grade) { data.locations.push({ location: 'unit F3' }) }
+      if (data.unitB1.isUnit && data.unitB1.card.grade === data.grade) { data.locations.push({ location: 'unit B1' }) }
+      if (data.unitB2.isUnit && data.unitB2.card.grade === data.grade) { data.locations.push({ location: 'unit B2' }) }
+      if (data.unitB3.isUnit && data.unitB3.card.grade === data.grade) { data.locations.push({ location: 'unit B3' }) }
+      if (data.todo === 'GAIN AUTO POWER') {
+        data.locations.map((unit) => {
+          this.AUTO_POWER({ who: data.who, location: unit.location, gain: data.gain })
+        })
+      }
+    },
     SELECT_ALL_YOUR_FIELD_BY_RACE (data) {
       if (data.who === 'player') {
         data.field = this.data.player.field
@@ -1831,6 +1885,39 @@ export default {
           this.data.opponent.todo = data.todo
         } else {
           this.data.player.todo = data.todo
+        }
+      }
+    },
+    RANDOM_FIELD_OP_WITH_STAND_UNIT (data) {
+      if (data.who === 'player') {
+        data.target = 'opponent'
+        data.field = this.data.opponent.field
+      } else {
+        data.target = 'player'
+        data.field = this.data.player.field
+      }
+      data.front = data.field.front
+      data.back = data.field.back
+      data.unitF1 = data.front.unitF1
+      data.unitF2 = data.front.unitF2
+      data.unitF3 = data.front.unitF3
+      data.unitB1 = data.back.unitB1
+      data.unitB2 = data.back.unitB2
+      data.unitB3 = data.back.unitB3
+      const units = []
+      if (data.unitF1.isUnit && data.unitF1.position === 'Stand') { units.push({ location: 'unit F1' }) }
+      if (data.unitF2.isUnit && data.unitF2.position === 'Stand') { units.push({ location: 'unit F2' }) }
+      if (data.unitF3.isUnit && data.unitF3.position === 'Stand') { units.push({ location: 'unit F3' }) }
+      if (data.unitB1.isUnit && data.unitB1.position === 'Stand') { units.push({ location: 'unit B1' }) }
+      if (data.unitB2.isUnit && data.unitB2.position === 'Stand') { units.push({ location: 'unit B2' }) }
+      if (data.unitB3.isUnit && data.unitB3.position === 'Stand') { units.push({ location: 'unit B3' }) }
+      if (units.length > 0) {
+        const index = Math.floor(Math.random() * units.length)
+        if (data.todo === 'destroy') {
+          this.destroy({ who: data.target, location: units[index].location })
+        }
+        if (data.todo === 'rest') {
+          this.rest({ who: data.target, location: units[index].location })
         }
       }
     },
@@ -2016,6 +2103,8 @@ export default {
         this.EFF070(data)
       } else if (data.unitATK.card.code === '079') {
         this.EFF079(data)
+      } else if (data.unitATK.card.code === '082') {
+        this.EFF082(data)
       } else {
         setTimeout(() => this.unitBlock(data), 1000)
       }
@@ -2327,6 +2416,9 @@ export default {
         if (data.unit.card.code === '072') { this.EFF072_ACT(data) }
         if (data.unit.card.code === '073') { this.EFF073_ACT(data) }
         if (data.unit.card.code === '080') { this.EFF080(data) }
+        if (data.unit.card.code === '081') { this.EFF081(data) }
+        if (data.unit.card.code === '083') { this.EFF083(data) }
+        if (data.unit.card.code === '084') { this.EFF084(data) }
         data.unit.onePerTurn = true
       }
     },
@@ -4473,6 +4565,70 @@ export default {
         this.SEARCH_DECK_FOR_NAME(data)
       } else {
         this.Toast('error', 'Tidak ada kartu untuk discard !!!')
+      }
+    },
+    EFF081 (data) { // Don Sai
+      data.cost = 'pay life'
+      data.pay = 500
+      this.COST(data)
+      data.grade = 2
+      data.gain = 1000
+      data.todo = 'GAIN AUTO POWER'
+      this.SELECT_ALL_YOUR_FIELD_BY_GRADE(data)
+    },
+    EFF082 (data) { // Ideo
+      data.grade = 2
+      data.gain = 500
+      data.todo = 'GAIN AUTO POWER'
+      this.SELECT_ALL_YOUR_FIELD_BY_GRADE(data)
+      setTimeout(() => this.unitBlock(data), 1000)
+    },
+    EFF083 (data) { // Leo
+      data.cost = 'pay life'
+      data.pay = 500
+      this.COST(data)
+      data.todo = 'rest'
+      this.RANDOM_FIELD_OP_WITH_STAND_UNIT(data)
+    },
+    EFF084 (data) { // Monkey D. Luffy
+      if (data.who === 'player') {
+        data.mana = this.data.player.mana.use
+      } else {
+        data.mana = this.data.opponent.mana.use
+      }
+      if (data.mana > 0) {
+        if (data.who === 'player') {
+          this.data.player.mana.use -= 1
+          data.field = this.data.player.field
+        } else {
+          this.data.opponent.mana.use -= 1
+          data.field = this.data.opponent.field
+        }
+        data.openLocation = []
+        data.front = data.field.front
+        data.back = data.field.back
+        data.unitF1 = data.front.unitF1
+        data.unitF2 = data.front.unitF2
+        data.unitF3 = data.front.unitF3
+        data.unitB1 = data.back.unitB1
+        data.unitB2 = data.back.unitB2
+        data.unitB3 = data.back.unitB3
+        if (!data.unitF1.isUnit) { data.openLocation.push('unit F1') }
+        if (!data.unitF2.isUnit) { data.openLocation.push('unit F2') }
+        if (!data.unitF3.isUnit) { data.openLocation.push('unit F3') }
+        if (!data.unitB1.isUnit) { data.openLocation.push('unit B1') }
+        if (!data.unitB2.isUnit) { data.openLocation.push('unit B2') }
+        if (!data.unitB3.isUnit) { data.openLocation.push('unit B3') }
+        if (data.openLocation.length > 0) {
+          const index = Math.floor(Math.random() * data.openLocation.length)
+          data.text = 'Commander SHP'
+          data.grade = 2
+          data.location = data.openLocation[index]
+          data.todo = 'CALL FROM DECK'
+          this.SEARCH_DECK_FOR_TEXT_AND_GRADE(data)
+        }
+      } else {
+        this.Toast('error', 'Mana tidak cukup !!!')
       }
     }
   },
