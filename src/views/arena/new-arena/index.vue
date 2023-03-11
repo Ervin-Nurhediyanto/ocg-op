@@ -2060,6 +2060,61 @@ export default {
         this.CONT_POWER(data)
       }
     },
+    CONT_GRADE (data) {
+      if (data.who === 'player') {
+        data.field = this.data.player.field
+      } else {
+        data.field = this.data.opponent.field
+      }
+      if (data.location === 'unit F1') {
+        data.unit = data.field.front.unitF1
+      }
+      if (data.location === 'unit F2') {
+        data.unit = data.field.front.unitF2
+      }
+      if (data.location === 'unit F3') {
+        data.unit = data.field.front.unitF3
+      }
+      if (data.location === 'unit B1') {
+        data.unit = data.field.back.unitB1
+      }
+      if (data.location === 'unit B2') {
+        data.unit = data.field.back.unitB2
+      }
+      if (data.location === 'unit B3') {
+        data.unit = data.field.back.unitB3
+      }
+      data.unit.card.grade = data.grade
+      // data.unit.gain.cont = data.gain
+      // data.unit.power = data.unit.card.power + data.unit.gain.auto + data.unit.gain.cont
+    },
+    COUNT_GRADE_WITH_OTHER_UNIT_NAME (data) {
+      let count = 0
+      let field = {}
+      if (data.who === 'player') {
+        field = this.data.player.field
+      } else {
+        field = this.data.opponent.field
+      }
+      const unitF1 = field.front.unitF1
+      const unitF2 = field.front.unitF2
+      const unitF3 = field.front.unitF3
+      const unitB1 = field.back.unitB1
+      const unitB2 = field.back.unitB2
+      const unitB3 = field.back.unitB3
+      if (unitF1.isUnit && unitF1.card.name.search(data.name) >= 0) { count += 1 }
+      if (unitF2.isUnit && unitF2.card.name.search(data.name) >= 0) { count += 1 }
+      if (unitF3.isUnit && unitF3.card.name.search(data.name) >= 0) { count += 1 }
+      if (unitB1.isUnit && unitB1.card.name.search(data.name) >= 0) { count += 1 }
+      if (unitB2.isUnit && unitB2.card.name.search(data.name) >= 0) { count += 1 }
+      if (unitB3.isUnit && unitB3.card.name.search(data.name) >= 0) { count += 1 }
+      if (count > 0) {
+        this.CONT_GRADE(data)
+      } else {
+        data.grade = data.gradeOri
+        this.CONT_GRADE(data)
+      }
+    },
     EFF_AUTO (data) {
       if (data.condition === 'AUTO ON ATK') { this.AUTO_ON_ATK(data) }
       if (data.condition === 'AUTO ON DEF') { this.AUTO_ON_DEF(data) }
@@ -2457,6 +2512,8 @@ export default {
         if (unit.code === '074') { this.EFF074_CONT({ who: 'player', location: unit.location }) }
         if (unit.code === '075') { this.EFF075_CONT({ who: 'player', location: unit.location }) }
         if (unit.code === '076') { this.EFF076_CONT({ who: 'player', location: unit.location }) }
+        if (unit.code === '085') { this.EFF085({ who: 'player', location: unit.location }) }
+        if (unit.code === '086') { this.EFF086({ who: 'player', location: unit.location }) }
       })
     },
     CONT_OPPONENT (data) {
@@ -2490,6 +2547,8 @@ export default {
         if (unit.code === '074') { this.EFF074_CONT({ who: 'opponent', location: unit.location }) }
         if (unit.code === '075') { this.EFF075_CONT({ who: 'opponent', location: unit.location }) }
         if (unit.code === '076') { this.EFF076_CONT({ who: 'opponent', location: unit.location }) }
+        if (unit.code === '085') { this.EFF085({ who: 'opponent', location: unit.location }) }
+        if (unit.code === '086') { this.EFF086({ who: 'opponent', location: unit.location }) }
       })
     },
     COST (data) {
@@ -4630,6 +4689,19 @@ export default {
       } else {
         this.Toast('error', 'Mana tidak cukup !!!')
       }
+    },
+    EFF085 (data) { // Denjiro
+      data.name = 'Kozuki'
+      data.gain = 1000
+      this.COUNT_POWER_WITH_OTHER_UNIT_NAME(data)
+    },
+    EFF086 (data) { // Baby 5
+      data.name = 'Don Sai'
+      data.gain = 1000
+      data.gradeOri = 1
+      data.grade = 2
+      this.COUNT_POWER_WITH_OTHER_UNIT_NAME(data)
+      this.COUNT_GRADE_WITH_OTHER_UNIT_NAME(data)
     }
   },
   created () {

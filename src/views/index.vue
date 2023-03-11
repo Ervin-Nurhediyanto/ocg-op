@@ -2912,7 +2912,8 @@ export default {
                 job: 'Spellcaster',
                 special: ''
               },
-              text: '[Auto]: When this unit is placed on battlefield. Put all unit your control other "Klahadore "Captain Kuro"" into bottom your deck. Draw a card for each unit put into bottom deck by this effect.',
+              text: '[Act][1/Turn]: Put a random card from drop zone into bottom of your deck. Draw a card',
+              // text: '[Auto]: When this unit is placed on battlefield. Put all unit your control other "Klahadore "Captain Kuro"" into bottom your deck. Draw a card for each unit put into bottom deck by this effect.',
               power: 500,
               code: '110'
             },
@@ -2926,7 +2927,8 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Auto]: When this unit is placed on battlefield. Stand all "Klahadore "Captain Kuro"" unit your control.',
+              text: '[Auto]: When this card is discarded. Stand all "Klahadore "Captain Kuro"" unit your control.',
+              // text: '[Auto]: When this unit is placed on battlefield. Stand all "Klahadore "Captain Kuro"" unit your control.',
               power: 500,
               code: '109'
             },
@@ -2940,7 +2942,8 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Auto]: When this unit is placed on battlefield. All "Klahadore "Captain Kuro"" unit your control get Power + 1000 until end this turn.',
+              text: '[Auto]: When this card is discarded. All "Klahadore "Captain Kuro"" unit your control get Power + 1000 until end this turn.',
+              // text: '[Auto]: When this unit is placed on battlefield. All "Klahadore "Captain Kuro"" unit your control get Power + 1000 until end this turn.',
               power: 500,
               code: '108'
             },
@@ -2954,7 +2957,8 @@ export default {
                 job: 'Swordman',
                 special: ''
               },
-              text: '[Auto]: When this unit attack. Pay 500 life points. Call random card from your hand.',
+              text: '[Auto]: When this unit attack. Pay 500 life points and discard a random card from your hand. Call up to one `Klahadore "Captain Kuro"` from your deck. Shuffle your deck.',
+              // text: '[Auto]: When this unit attack. Pay 500 life points. Call random card from your hand.',
               power: 500,
               code: '107'
             },
@@ -2968,7 +2972,8 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Auto]: When this unit is placed on battlefield. All your grade 1 unit get Power + 500 until end this turn.',
+              text: '[Auto]: When this unit attack. This unit get Power + 1000, until end of turn.',
+              // text: '[Auto]: When this unit is placed on battlefield. All your grade 1 unit get Power + 500 until end this turn.',
               power: 500,
               code: '106'
             },
@@ -2996,7 +3001,8 @@ export default {
                 job: 'Fighter',
                 special: 'Paramecia'
               },
-              text: '[Auto]: When this unit is placed on battlefield. Call up to one "Cabaji" and "Mohji" from your deck. Shuffle your deck.',
+              text: '[Auto]: When this unit is placed on battlefield. Discard a random card from your hand. Call up to one "Cabaji" and "Mohji" from your deck. Shuffle your deck.',
+              // text: '[Auto]: When this unit is placed on battlefield. Call up to one "Cabaji" and "Mohji" from your deck. Shuffle your deck.',
               power: 500,
               code: '104'
             },
@@ -3220,7 +3226,8 @@ export default {
                 job: 'Fighter',
                 special: 'Sulong'
               },
-              text: '[Auto]: At the end your phase. Put this unit into bottom your deck. Call up to one random Grade 2 "Carrot" in its card name from your deck. Shuffle your deck. [Cont]: All "Sulong" unit your control get Power + 1000.',
+              text: '[Auto]: At the end of your turn. Put this unit into bottom of your deck. Call up to one Grade 2 "Carrot" from your deck. Shuffle your deck. [Act][1/Turn]: Discard a random card from your hand. All "Sulong" unit your control get Power + 1000 until end of turn.',
+              // text: '[Auto]: At the end your phase. Put this unit into bottom your deck. Call up to one random Grade 2 "Carrot" in its card name from your deck. Shuffle your deck. [Cont]: All "Sulong" unit your control get Power + 1000.',
               power: 2500,
               code: '088'
             },
@@ -3234,7 +3241,8 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Act]: Put this unit into bottom your deck. Call up to one Grade 3 "Carrot" in its card name from your deck. Shuffle your deck.',
+              text: '[Auto]: When this unit block. Draw a card. [Act]: Put this unit into bottom of your deck. Call up to one Grade 3 "Carrot" from your deck. Shuffle your deck.',
+              // text: '[Act]: Put this unit into bottom your deck. Call up to one Grade 3 "Carrot" in its card name from your deck. Shuffle your deck.',
               power: 1500,
               code: '087'
             },
@@ -3248,7 +3256,7 @@ export default {
                 job: 'Gunner',
                 special: 'Paramecia'
               },
-              text: '[Act][1/Turn]: If you control "Don Sai" unit. This unit grade become 2 and get Power + 1500 until end this turn. (This unit is still grade 2 until it leaves the field)',
+              text: '[Cont]: if you control "Don Sai" unit. This unit get Power + 1000 and this unit Grade become 2.',
               power: 500,
               code: '086'
             },
@@ -3263,7 +3271,6 @@ export default {
                 special: ''
               },
               text: '[Cont]: if you control "Kozuki" unit. This unit get Power + 1000.',
-              // text: '[Cont]: This unit get Power + 500 for each "Kozuki" unit your control.',
               power: 500,
               code: '085'
             },
