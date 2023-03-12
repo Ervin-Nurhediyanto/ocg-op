@@ -3086,7 +3086,8 @@ export default {
                 job: 'Spellcaster',
                 special: 'Paramecia'
               },
-              text: '[Act][1/Turn]: Pay 1000 life points, send one unit your control to drop zone. Call up to one "Charlotte" in its card name other "Charlotte Linlin "Big Mom"" from your deck. Shuffle your deck',
+              text: '[Act][1/Turn]: Pay 1000 life points. Call up to one "Charlotte" other `Charlotte Linlin "Big Mom"` from your deck to open circle. Shuffle your deck',
+              // text: '[Act][1/Turn]: Pay 1000 life points, send one unit your control to drop zone. Call up to one "Charlotte" in its card name other "Charlotte Linlin "Big Mom"" from your deck. Shuffle your deck',
               power: 2500,
               code: '098'
             },
@@ -3100,7 +3101,7 @@ export default {
                 job: 'Swordman',
                 special: 'Paramecia'
               },
-              text: '[Act][1/Turn]: Pay 500 life points. Choose up to three "Charlotte" in its card name in your drop zone and put to bottom your deck. This unit get Power + 1000 for each card put to deck by this effect until end this turn.',
+              text: '[Act][1/Turn]: Pay 500 life points. For each "Charlotte" cards in your bind zone, this unit get Power + 500 until end of turn.',
               power: 2500,
               code: '097'
             },
@@ -3114,7 +3115,7 @@ export default {
                 job: 'Swordman',
                 special: 'Paramecia'
               },
-              text: '[Act][1/Turn]: Pay 500 life points. Choose up to one your opponent unit, then put that unit to bottom your opponent deck. This unit get Power + equal that unit put to bottom deck by this effect until end this turn.',
+              text: '[Act][1/Turn]: Pay 500 life points. Call up to one random "Charlotte" from your bind zone to open circle.',
               power: 1500,
               code: '096'
             },
@@ -3128,7 +3129,7 @@ export default {
                 job: 'Swordman',
                 special: 'Paramecia'
               },
-              text: '[Auto]: When this unit blocks. Pay 500 life points. Destroy the unit blocked by this unit.',
+              text: '[Auto]: When this unit block. Pay 500 life points. Destroy up to one random unit your opponent control.',
               power: 1500,
               code: '095'
             },
@@ -3142,7 +3143,7 @@ export default {
                 job: 'Fighter',
                 special: 'Paramecia'
               },
-              text: '[Auto]: When this unit is placed on battlefield. Put top of your deck into drop zone and destroy random opponent unit.',
+              text: '[Auto]: When this unit is placed on battlefield. Destroy up to one Grade 2 or less random unit your opponent control.',
               power: 500,
               code: '094'
             },
@@ -3156,7 +3157,7 @@ export default {
                 job: 'Fighter',
                 special: 'Paramecia'
               },
-              text: '[Auto]: When this unit is placed on battlefield. Call up to one "Charlotte Daifuku" from your drop zone.',
+              text: '[Act]: Bind this unit. Call up to one "Charlotte Daifuku" from your deck. Shuffle your deck.',
               power: 500,
               code: '093'
             },
@@ -3170,7 +3171,7 @@ export default {
                 job: 'Spellcaster',
                 special: 'Paramecia'
               },
-              text: '[Auto]: When this unit is send into drop zone. Draw two cards.',
+              text: '[Act]: Bind this unit. Draw two cards.',
               power: 500,
               code: '092'
             },
@@ -3198,7 +3199,7 @@ export default {
                 job: 'Gunner',
                 special: ''
               },
-              text: '[Act][1/Turn]: Rest this unit. Choose up to one "Charlotte Katakuri" in its card name and that unit get Power + 1000 until end this turn.',
+              text: '[Act]: Bind this unit. All "Charlotte" unit your control get Power + 1000 until end of turn.',
               power: 500,
               code: '090'
             },
@@ -3212,7 +3213,7 @@ export default {
                 job: 'Swordman',
                 special: ''
               },
-              text: '[Act][1/Turn]: Pay 500 life points. Destroy random Grade 2 your opponent unit.',
+              text: '[Act][1/Turn]: Pay 500 life points. All "Charlotte" unit your control get Power + 1000 until end of turn.',
               power: 500,
               code: '089'
             },
@@ -3227,7 +3228,6 @@ export default {
                 special: 'Sulong'
               },
               text: '[Auto]: At the end of your turn. Put this unit into bottom of your deck. Call up to one Grade 2 "Carrot" from your deck. Shuffle your deck. [Act][1/Turn]: Discard a random card from your hand. All "Sulong" unit your control get Power + 1000 until end of turn.',
-              // text: '[Auto]: At the end your phase. Put this unit into bottom your deck. Call up to one random Grade 2 "Carrot" in its card name from your deck. Shuffle your deck. [Cont]: All "Sulong" unit your control get Power + 1000.',
               power: 2500,
               code: '088'
             },
@@ -3242,7 +3242,6 @@ export default {
                 special: ''
               },
               text: '[Auto]: When this unit block. Draw a card. [Act]: Put this unit into bottom of your deck. Call up to one Grade 3 "Carrot" from your deck. Shuffle your deck.',
-              // text: '[Act]: Put this unit into bottom your deck. Call up to one Grade 3 "Carrot" in its card name from your deck. Shuffle your deck.',
               power: 1500,
               code: '087'
             },
