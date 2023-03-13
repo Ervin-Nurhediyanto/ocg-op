@@ -2843,6 +2843,7 @@ export default {
                 special: ''
               },
               text: '[Auto]: When this unit is send into drop zone. Destroy random "Human" unit your opponent control.',
+              // text: '[Auto]: When this unit is send into drop zone. Destroy random "Human" unit your opponent control.',
               power: 500,
               code: '115'
             },
@@ -2856,7 +2857,7 @@ export default {
                 job: 'Swordman',
                 special: ''
               },
-              text: '[Auto]: When you take damage. Call this unit from your hand. Pay 500 life points, then destroy all your opponent unit with power less than equal damage you take.',
+              text: '[Auto]: When you take damage. Call this unit from your hand. This unit get Power equal to damage you take.',
               power: 2500,
               code: '114'
             },
@@ -2870,8 +2871,8 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Auto]: When this unit is send into drop zone. Call up to one "Don Krieg" from your deck. Shuffle your deck.',
-              power: 500,
+              text: '',
+              power: 1000,
               code: '113'
             },
             {
@@ -2884,8 +2885,8 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Auto]: When this unit is send into drop zone. Stand All "Don Krieg" unit your control.',
-              power: 500,
+              text: '',
+              power: 1000,
               code: '112'
             },
             {
@@ -2898,7 +2899,7 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Auto]: When this unit attack. Destroy other unit your control. This unit get Power + 2000 until end this turn.',
+              text: '[Act][1/Turn]: Discard a random card from your hand. Call up to two normal unit from your deck. Shuffle your deck.',
               power: 500,
               code: '111'
             },
@@ -2913,7 +2914,6 @@ export default {
                 special: ''
               },
               text: '[Act][1/Turn]: Put a random card from drop zone into bottom of your deck. Draw a card',
-              // text: '[Auto]: When this unit is placed on battlefield. Put all unit your control other "Klahadore "Captain Kuro"" into bottom your deck. Draw a card for each unit put into bottom deck by this effect.',
               power: 500,
               code: '110'
             },
@@ -2928,7 +2928,6 @@ export default {
                 special: ''
               },
               text: '[Auto]: When this card is discarded. Stand all "Klahadore "Captain Kuro"" unit your control.',
-              // text: '[Auto]: When this unit is placed on battlefield. Stand all "Klahadore "Captain Kuro"" unit your control.',
               power: 500,
               code: '109'
             },
@@ -2943,7 +2942,6 @@ export default {
                 special: ''
               },
               text: '[Auto]: When this card is discarded. All "Klahadore "Captain Kuro"" unit your control get Power + 1000 until end this turn.',
-              // text: '[Auto]: When this unit is placed on battlefield. All "Klahadore "Captain Kuro"" unit your control get Power + 1000 until end this turn.',
               power: 500,
               code: '108'
             },
@@ -2958,7 +2956,6 @@ export default {
                 special: ''
               },
               text: '[Auto]: When this unit attack. Pay 500 life points and discard a random card from your hand. Call up to one `Klahadore "Captain Kuro"` from your deck. Shuffle your deck.',
-              // text: '[Auto]: When this unit attack. Pay 500 life points. Call random card from your hand.',
               power: 500,
               code: '107'
             },
@@ -2973,7 +2970,6 @@ export default {
                 special: ''
               },
               text: '[Auto]: When this unit attack. This unit get Power + 1000, until end of turn.',
-              // text: '[Auto]: When this unit is placed on battlefield. All your grade 1 unit get Power + 500 until end this turn.',
               power: 500,
               code: '106'
             },
@@ -3002,7 +2998,6 @@ export default {
                 special: 'Paramecia'
               },
               text: '[Auto]: When this unit is placed on battlefield. Discard a random card from your hand. Call up to one "Cabaji" and "Mohji" from your deck. Shuffle your deck.',
-              // text: '[Auto]: When this unit is placed on battlefield. Call up to one "Cabaji" and "Mohji" from your deck. Shuffle your deck.',
               power: 500,
               code: '104'
             },
@@ -3087,7 +3082,6 @@ export default {
                 special: 'Paramecia'
               },
               text: '[Act][1/Turn]: Pay 1000 life points. Call up to one "Charlotte" other `Charlotte Linlin "Big Mom"` from your deck to open circle. Shuffle your deck',
-              // text: '[Act][1/Turn]: Pay 1000 life points, send one unit your control to drop zone. Call up to one "Charlotte" in its card name other "Charlotte Linlin "Big Mom"" from your deck. Shuffle your deck',
               power: 2500,
               code: '098'
             },

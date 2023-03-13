@@ -716,6 +716,63 @@ export default {
       }
       this.EFF_CONT(data)
     },
+    CALL_FROM_DECK_BY_NAME (data) {
+      if (data.who === 'player') {
+        data.field = this.data.player.field
+      } else {
+        data.field = this.data.opponent.field
+      }
+      data.openLocation = []
+      data.front = data.field.front
+      data.back = data.field.back
+      data.unitF1 = data.front.unitF1
+      data.unitF2 = data.front.unitF2
+      data.unitF3 = data.front.unitF3
+      data.unitB1 = data.back.unitB1
+      data.unitB2 = data.back.unitB2
+      data.unitB3 = data.back.unitB3
+      if (!data.unitF1.isUnit) { data.openLocation.push('unit F1') }
+      if (!data.unitF2.isUnit) { data.openLocation.push('unit F2') }
+      if (!data.unitF3.isUnit) { data.openLocation.push('unit F3') }
+      if (!data.unitB1.isUnit) { data.openLocation.push('unit B1') }
+      if (!data.unitB2.isUnit) { data.openLocation.push('unit B2') }
+      if (!data.unitB3.isUnit) { data.openLocation.push('unit B3') }
+      if (data.openLocation.length > 0) {
+        const index = Math.floor(Math.random() * data.openLocation.length)
+        data.location = data.openLocation[index]
+        data.todo = 'CALL FROM DECK'
+        this.SEARCH_DECK_FOR_NAME(data)
+      }
+    },
+    CALL_NORMAL_FROM_DECK (data) {
+      if (data.who === 'player') {
+        data.field = this.data.player.field
+      } else {
+        data.field = this.data.opponent.field
+      }
+      data.openLocation = []
+      data.front = data.field.front
+      data.back = data.field.back
+      data.unitF1 = data.front.unitF1
+      data.unitF2 = data.front.unitF2
+      data.unitF3 = data.front.unitF3
+      data.unitB1 = data.back.unitB1
+      data.unitB2 = data.back.unitB2
+      data.unitB3 = data.back.unitB3
+      if (!data.unitF1.isUnit) { data.openLocation.push('unit F1') }
+      if (!data.unitF2.isUnit) { data.openLocation.push('unit F2') }
+      if (!data.unitF3.isUnit) { data.openLocation.push('unit F3') }
+      if (!data.unitB1.isUnit) { data.openLocation.push('unit B1') }
+      if (!data.unitB2.isUnit) { data.openLocation.push('unit B2') }
+      if (!data.unitB3.isUnit) { data.openLocation.push('unit B3') }
+      if (data.openLocation.length > 0) {
+        const index = Math.floor(Math.random() * data.openLocation.length)
+        data.location = data.openLocation[index]
+        data.todo = 'CALL FROM DECK'
+        // this.SEARCH_DECK_FOR_NAME(data)
+        this.SEARCH_DECK_NORMAL(data)
+      }
+    },
     moveOrACT (data) {
       if (data.who === 'player') {
         data.user = this.data.player
@@ -790,7 +847,12 @@ export default {
         data.unit.card.code === '093' ||
         data.unit.card.code === '096' ||
         data.unit.card.code === '097' ||
-        data.unit.card.code === '098'
+        data.unit.card.code === '098' ||
+        data.unit.card.code === '099' ||
+        data.unit.card.code === '100' ||
+        data.unit.card.code === '105' ||
+        data.unit.card.code === '110' ||
+        data.unit.card.code === '111'
       ) {
         data.option.act = 'ACT'
       }
@@ -1256,6 +1318,7 @@ export default {
             this.data.player.field.back.unitB3 = unitEmpty
           }
         }
+        this.data.player.todo = ''
       } else {
         if (data.location === 'unit F1') {
           data.unit = this.data.opponent.field.front.unitF1
@@ -1311,6 +1374,7 @@ export default {
             this.data.opponent.field.back.unitB3 = unitEmpty
           }
         }
+        this.data.opponent.todo = data.todo
       }
       if (data.unit.card.code !== '078') {
         this.EFF_AUTO({ who: data.who, location: data.location, unit: data.unit, condition: 'AUTO ON SEND TO DROP' })
@@ -1361,6 +1425,7 @@ export default {
           this.data.player.bind.push(data.unit.card)
           this.data.player.field.back.unitB3 = unitEmpty
         }
+        this.data.player.todo = data.todo
       } else {
         if (data.location === 'unit F1') {
           data.unit = this.data.opponent.field.front.unitF1
@@ -1392,6 +1457,7 @@ export default {
           this.data.opponent.bind.push(data.unit.card)
           this.data.opponent.field.back.unitB3 = unitEmpty
         }
+        this.data.opponent.todo = data.todo
       }
       this.EFF_CONT(data)
     },
@@ -1559,6 +1625,28 @@ export default {
         }
       }
     },
+    SEARCH_DECK_NORMAL (data) {
+      if (data.who === 'player') {
+        data.deck = this.data.player.deck
+      } else {
+        data.deck = this.data.opponent.deck
+      }
+      const cards = []
+      for (let i = 0; i < data.deck.length; i++) {
+        if (data.deck[i].text === '') { cards.push(i) }
+      }
+      if (cards.length > 0) {
+        const index = Math.floor(Math.random() * cards.length)
+        if (data.todo === 'CALL FROM DECK') {
+          data.card = data.deck[cards[index]]
+          data.index = cards[index]
+          this.callFromDeck(data)
+        }
+        if (data.todo === 'DECK TO HAND') {
+          this.DECK_TO_HAND({ who: data.who, index: cards[index] })
+        }
+      }
+    },
     SEARCH_DECK_FOR_NAME (data) {
       if (data.who === 'player') {
         data.deck = this.data.player.deck
@@ -1668,6 +1756,54 @@ export default {
         }
       }
     },
+    SEARCH_DECK_FOR_RACE_AND_NOT_NAME (data) {
+      if (data.who === 'player') {
+        data.deck = this.data.player.deck
+      } else {
+        data.deck = this.data.opponent.deck
+      }
+      const cards = []
+      for (let i = 0; i < data.deck.length; i++) {
+        if (data.deck[i].type.race.search(data.race) >= 0 && data.deck[i].name !== data.notName) {
+          cards.push(i)
+        }
+      }
+      if (cards.length > 0) {
+        const index = Math.floor(Math.random() * cards.length)
+        if (data.todo === 'CALL FROM DECK') {
+          data.card = data.deck[cards[index]]
+          data.index = cards[index]
+          this.callFromDeck(data)
+        }
+        if (data.todo === 'DECK TO HAND') {
+          this.DECK_TO_HAND({ who: data.who, index: cards[index] })
+        }
+      }
+    },
+    SEARCH_DECK_FOR_JOB (data) {
+      if (data.who === 'player') {
+        data.deck = this.data.player.deck
+      } else {
+        data.deck = this.data.opponent.deck
+      }
+      const cards = []
+      for (let i = 0; i < data.deck.length; i++) {
+        if (data.deck[i].type.job.search(data.job) >= 0) {
+          cards.push(i)
+        }
+      }
+      if (cards.length > 0) {
+        const index = Math.floor(Math.random() * cards.length)
+        if (data.todo === 'CALL FROM DECK') {
+          data.card = data.deck[cards[index]]
+          data.index = cards[index]
+          this.callFromDeck(data)
+        }
+        if (data.todo === 'DECK TO HAND') {
+          this.DECK_TO_HAND({ who: data.who, index: cards[index] })
+        }
+      }
+    },
     SEARCH_DECK_FOR_JOB_AND_GRADE_LESS (data) {
       if (data.who === 'player') {
         data.deck = this.data.player.deck
@@ -1712,6 +1848,10 @@ export default {
         }
         if (data.todo === 'DROP TO HAND') {
           data.hand.push(data.drop[cards[index]])
+          data.drop.splice(cards[index], 1)
+        }
+        if (data.todo === 'DROP TO DECK') {
+          data.deck.push(data.drop[cards[index]])
           data.drop.splice(cards[index], 1)
         }
         if (data.todo === 'ALL DROP TO DECK') {
@@ -1942,6 +2082,11 @@ export default {
       if (data.todo === 'GAIN AUTO POWER') {
         data.locations.map((unit) => {
           this.AUTO_POWER({ who: data.who, location: unit.location, gain: data.gain })
+        })
+      }
+      if (data.todo === 'STAND UNIT') {
+        data.locations.map((unit) => {
+          this.stand({ who: data.who, location: unit.location })
         })
       }
     },
@@ -2292,6 +2437,10 @@ export default {
         this.EFF079(data)
       } else if (data.unitATK.card.code === '082') {
         this.EFF082(data)
+      } else if (data.unitATK.card.code === '106') {
+        this.EFF106(data)
+      } else if (data.unitATK.card.code === '107') {
+        this.EFF107(data)
       } else {
         setTimeout(() => this.unitBlock(data), 1000)
       }
@@ -2350,6 +2499,7 @@ export default {
       if (data.unit.card.code === '066') { this.EFF066(data) }
       if (data.unit.card.code === '069') { this.EFF069_AUTO(data) }
       if (data.unit.card.code === '094') { this.EFF094(data) }
+      if (data.unit.card.code === '104') { this.EFF104(data) }
     },
     AUTO_ON_SEND_TO_DROP (data) {
       if (data.unit.card.code === '009') { this.EFF009(data) }
@@ -2387,6 +2537,10 @@ export default {
         if (data.hand[i].code === '067') {
           data.index = i
           this.EFF067(data)
+        }
+        if (data.hand[i].code === '114') {
+          data.index = i
+          this.EFF114(data)
         }
       }
     },
@@ -2430,6 +2584,8 @@ export default {
       if (data.drop[index].code === '027') { this.EFF027_AUTO(data) }
       if (data.drop[index].code === '075') { this.EFF075_AUTO(data) }
       if (data.drop[index].code === '076') { this.EFF076_AUTO(data) }
+      if (data.drop[index].code === '108') { this.EFF108(data) }
+      if (data.drop[index].code === '109') { this.EFF109(data) }
     },
     AUTO_ON_U_DISCARD (data) {
       if (data.who === 'player') {
@@ -2622,6 +2778,11 @@ export default {
         if (data.unit.card.code === '096') { this.EFF096(data) }
         if (data.unit.card.code === '097') { this.EFF097(data) }
         if (data.unit.card.code === '098') { this.EFF098(data) }
+        if (data.unit.card.code === '099') { this.EFF099(data) }
+        if (data.unit.card.code === '100') { this.EFF100(data) }
+        if (data.unit.card.code === '105') { this.EFF105(data) }
+        if (data.unit.card.code === '110') { this.EFF110(data) }
+        if (data.unit.card.code === '111') { this.EFF111(data) }
         data.unit.onePerTurn = true
       }
     },
@@ -5047,12 +5208,213 @@ export default {
         data.todo = 'CALL FROM DECK'
         this.SEARCH_DECK_FOR_NAME_AND_NOT_NAME(data)
       }
+    },
+    EFF099 (data) { // Shirahoshi
+      data.cost = 'pay life'
+      data.pay = 1000
+      this.COST(data)
+      if (data.who === 'player') {
+        data.field = this.data.player.field
+      } else {
+        data.field = this.data.opponent.field
+      }
+      data.openLocation = []
+      data.front = data.field.front
+      data.back = data.field.back
+      data.unitF1 = data.front.unitF1
+      data.unitF2 = data.front.unitF2
+      data.unitF3 = data.front.unitF3
+      data.unitB1 = data.back.unitB1
+      data.unitB2 = data.back.unitB2
+      data.unitB3 = data.back.unitB3
+      if (!data.unitF1.isUnit) { data.openLocation.push('unit F1') }
+      if (!data.unitF2.isUnit) { data.openLocation.push('unit F2') }
+      if (!data.unitF3.isUnit) { data.openLocation.push('unit F3') }
+      if (!data.unitB1.isUnit) { data.openLocation.push('unit B1') }
+      if (!data.unitB2.isUnit) { data.openLocation.push('unit B2') }
+      if (!data.unitB3.isUnit) { data.openLocation.push('unit B3') }
+      if (data.openLocation.length > 0) {
+        const index = Math.floor(Math.random() * data.openLocation.length)
+        data.race = 'Fishman'
+        data.notName = 'Shirahoshi'
+        data.location = data.openLocation[index]
+        data.todo = 'CALL FROM DECK'
+        this.SEARCH_DECK_FOR_RACE_AND_NOT_NAME(data)
+      }
+    },
+    EFF100 (data) { // Kozuki Hiyori Komurasaki
+      data.cost = 'pay life'
+      data.pay = 1000
+      this.COST(data)
+      if (data.who === 'player') {
+        data.field = this.data.player.field
+      } else {
+        data.field = this.data.opponent.field
+      }
+      data.openLocation = []
+      data.front = data.field.front
+      data.back = data.field.back
+      data.unitF1 = data.front.unitF1
+      data.unitF2 = data.front.unitF2
+      data.unitF3 = data.front.unitF3
+      data.unitB1 = data.back.unitB1
+      data.unitB2 = data.back.unitB2
+      data.unitB3 = data.back.unitB3
+      if (!data.unitF1.isUnit) { data.openLocation.push('unit F1') }
+      if (!data.unitF2.isUnit) { data.openLocation.push('unit F2') }
+      if (!data.unitF3.isUnit) { data.openLocation.push('unit F3') }
+      if (!data.unitB1.isUnit) { data.openLocation.push('unit B1') }
+      if (!data.unitB2.isUnit) { data.openLocation.push('unit B2') }
+      if (!data.unitB3.isUnit) { data.openLocation.push('unit B3') }
+      if (data.openLocation.length > 0) {
+        const index = Math.floor(Math.random() * data.openLocation.length)
+        data.job = 'Swordman'
+        data.location = data.openLocation[index]
+        data.todo = 'CALL FROM DECK'
+        this.SEARCH_DECK_FOR_JOB(data)
+      }
+    },
+    EFF104 (data) { // Buggy
+      if (data.who === 'player') {
+        data.hand = this.data.player.hand
+      } else {
+        data.hand = this.data.opponent.hand
+      }
+      if (data.hand.length > 0) {
+        data.cost = 'discard'
+        data.discard = ''
+        this.COST(data)
+        this.CALL_FROM_DECK_BY_NAME({ who: data.who, name: 'Cabaji' })
+        this.CALL_FROM_DECK_BY_NAME({ who: data.who, name: 'Mohji' })
+      }
+    },
+    EFF105 (data) { // Cabaji
+      data.cost = 'pay life'
+      data.pay = 500
+      this.COST(data)
+      data.grade = 1
+      data.gain = 1000
+      data.todo = 'GAIN AUTO POWER'
+      this.SELECT_ALL_YOUR_FIELD_BY_GRADE(data)
+    },
+    EFF106 (data) { // Mohji
+      data.unit = data.unitATK
+      data.gain = 1000
+      this.AUTO_POWER(data)
+      setTimeout(() => this.unitBlock(data), 1000)
+    },
+    EFF107 (data) { // Klahadore "Captain Kuro"
+      if (data.who === 'player') {
+        data.hand = this.data.player.hand
+      } else {
+        data.hand = this.data.opponent.hand
+      }
+      if (data.hand.length > 0) {
+        this.$swal.fire({
+          title: 'Aktifkan Efek Captain Kuro ?',
+          showCancelButton: true,
+          confirmButtonText: 'YES',
+          cancelButtonText: 'NO'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            data.cost = 'pay life and discard'
+            data.pay = 500
+            data.discard = ''
+            this.COST(data)
+            this.CALL_FROM_DECK_BY_NAME({ who: data.who, name: 'Klahadore "Captain Kuro"' })
+            setTimeout(() => this.unitBlock(data), 1000)
+          } else {
+            setTimeout(() => this.unitBlock(data), 1000)
+          }
+        })
+      } else {
+        setTimeout(() => this.unitBlock(data), 1000)
+      }
+    },
+    EFF108 (data) { // Sham
+      data.name = 'Klahadore "Captain Kuro"'
+      data.gain = 1000
+      data.todo = 'GAIN AUTO POWER'
+      this.SELECT_ALL_YOUR_FIELD_BY_NAME(data)
+    },
+    EFF109 (data) { // Buchi
+      data.name = 'Klahadore "Captain Kuro"'
+      data.todo = 'STAND UNIT'
+      this.SELECT_ALL_YOUR_FIELD_BY_NAME(data)
+    },
+    EFF110 (data) { // Jango
+      data.name = ''
+      data.todo = 'DROP TO DECK'
+      this.SEARCH_DROP_FOR_NAME(data)
+      this.draw({ who: data.who })
+    },
+    EFF111 (data) { // Don Krieg
+      if (data.who === 'player') {
+        data.hand = this.data.player.hand
+      } else {
+        data.hand = this.data.opponent.hand
+      }
+      if (data.hand.length > 0) {
+        data.cost = 'discard'
+        data.discard = ''
+        this.COST(data)
+        for (let i = 0; i < 2; i++) {
+          this.CALL_NORMAL_FROM_DECK(data)
+        }
+      }
+    },
+    EFF114 (data) { // Dracule Mihawk
+      data.openLocation = []
+      if (data.who === 'player') {
+        data.field = this.data.player.field
+        data.hand = this.data.player.hand
+      } else {
+        data.field = this.data.opponent.field
+        data.hand = this.data.opponent.hand
+      }
+      data.front = data.field.front
+      data.back = data.field.back
+      data.unitF1 = data.front.unitF1
+      data.unitF2 = data.front.unitF2
+      data.unitF3 = data.front.unitF3
+      data.unitB1 = data.back.unitB1
+      data.unitB2 = data.back.unitB2
+      data.unitB3 = data.back.unitB3
+      if (!data.unitF1.isUnit) { data.openLocation.push('unit F1') }
+      if (!data.unitF2.isUnit) { data.openLocation.push('unit F2') }
+      if (!data.unitF3.isUnit) { data.openLocation.push('unit F3') }
+      if (!data.unitB1.isUnit) { data.openLocation.push('unit B1') }
+      if (!data.unitB2.isUnit) { data.openLocation.push('unit B2') }
+      if (!data.unitB3.isUnit) { data.openLocation.push('unit B3') }
+      if (data.openLocation.length > 0) {
+        const indexLocation = Math.floor(Math.random() * data.openLocation.length)
+        if (data.who === 'player') {
+          this.data.player.unit = {
+            card: data.hand[data.index],
+            index: data.index
+          }
+          this.data.player.mana.use += this.data.player.unit.card.grade
+        } else {
+          this.data.opponent.unit = {
+            card: data.hand[data.index],
+            index: data.index
+          }
+          this.data.opponent.mana.use += this.data.opponent.unit.card.grade
+        }
+        data.location = data.openLocation[indexLocation]
+        this.callFromHand(data)
+        this.EFF114_POWER(data)
+      }
+    },
+    EFF114_POWER (data) { // Dracule Mihawk
+      data.gain = data.damage
+      this.CONT_POWER(data)
     }
   },
   created () {
     this.parse(this.deckPlay, 'player')
     this.parse(this.deckOpponent, 'opponent')
-    this.shuffle({ who: 'player', deck: this.data.player.deck })
+    // this.shuffle({ who: 'player', deck: this.data.player.deck })
     this.shuffle({ who: 'opponent', deck: this.data.opponent.deck })
     for (let i = 0; i < 5; i++) { // Max Hand Card 14
       this.draw({ who: 'player' })
