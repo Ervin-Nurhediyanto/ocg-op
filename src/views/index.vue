@@ -2800,7 +2800,7 @@ export default {
                 job: 'Swordman',
                 special: ''
               },
-              text: '[Act][1/Turn]: Pay 500 life points. Choose unit your control and destroy that unit. Call up to one "Fishman" Grade 1 from your drop zone.',
+              text: '[Act][1/Turn]: Pay 500 life points and discard a random card from your hand. Put up to two "Fishman" from drop zone into your hand.',
               power: 500,
               code: '118'
             },
@@ -2814,7 +2814,7 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Act][1/Turn]: Choose unit your control and destroy that unit. Search your deck. Put up to one "Fishman" Grade 1 from your deck into your hand. Shuffle your deck.',
+              text: '[Auto]: When this card is discarded. Add up to one Grade 1 "Fishman" from deck into your hand. Shuffle your deck.',
               power: 500,
               code: '117'
             },
@@ -2828,7 +2828,7 @@ export default {
                 job: 'Gunner',
                 special: ''
               },
-              text: '[Auto]: When this unit is placed on battlefield. Call up to one "Fishman" Grade 1 unit from your drop zone.',
+              text: '[Auto]: When this card is discarded. Call up to one "Fishman" Grade 1 unit from your hand.',
               power: 500,
               code: '116'
             },
@@ -2842,8 +2842,7 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Auto]: When this unit is send into drop zone. Destroy random "Human" unit your opponent control.',
-              // text: '[Auto]: When this unit is send into drop zone. Destroy random "Human" unit your opponent control.',
+              text: '[Auto]: When this unit is send into drop zone from your field. Destroy a random "Human" your opponent control. [Auto]: At the end of turn. If this card is in your drop zone. Discard a random card from your hand. Put this unit into your hand.',
               power: 500,
               code: '115'
             },
