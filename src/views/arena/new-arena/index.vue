@@ -880,7 +880,9 @@ export default {
         data.unit.card.code === '105' ||
         data.unit.card.code === '110' ||
         data.unit.card.code === '111' ||
-        data.unit.card.code === '118'
+        data.unit.card.code === '118' ||
+        data.unit.card.code === '119' ||
+        data.unit.card.code === '120'
       ) {
         data.option.act = 'ACT'
       }
@@ -2592,6 +2594,7 @@ export default {
       if (data.unit.card.code === '069') { this.EFF069_AUTO(data) }
       if (data.unit.card.code === '094') { this.EFF094(data) }
       if (data.unit.card.code === '104') { this.EFF104(data) }
+      if (data.unit.card.code === '120') { this.EFF120_AUTO(data) }
     },
     AUTO_ON_SEND_TO_DROP (data) {
       if (data.unit.card.code === '009') { this.EFF009(data) }
@@ -2880,6 +2883,8 @@ export default {
         if (data.unit.card.code === '110') { this.EFF110(data) }
         if (data.unit.card.code === '111') { this.EFF111(data) }
         if (data.unit.card.code === '118') { this.EFF118(data) }
+        if (data.unit.card.code === '119') { this.EFF119(data) }
+        if (data.unit.card.code === '120') { this.EFF120_ACT(data) }
         data.unit.onePerTurn = true
       }
     },
@@ -2977,7 +2982,6 @@ export default {
         this.discard({ who: data.who, index: cards[index] })
       }
       if (data.cost === 'pay life and discard') {
-        this.damage({ who: data.who, damage: data.pay })
         if (data.who === 'player') {
           data.hand = this.data.player.hand
         } else {
@@ -2991,6 +2995,7 @@ export default {
         }
         const index = Math.floor(Math.random() * cards.length)
         this.discard({ who: data.who, index: cards[index] })
+        this.damage({ who: data.who, damage: data.pay })
       }
       if (data.cost === 'bind from drop') {
         if (data.who === 'player') {
@@ -5564,6 +5569,44 @@ export default {
           this.SEARCH_DROP_FOR_RACE(data)
         }
       }
+    },
+    EFF119 (data) { // Alvida
+      if (data.who === 'player') {
+        data.hand = this.data.player.hand
+      } else {
+        data.hand = this.data.opponent.hand
+      }
+      if (data.hand.length > 0) {
+        data.cost = 'discard'
+        data.discard = ''
+        this.COST(data)
+        this.CALL_FROM_DECK_BY_NAME({ who: data.who, name: 'Buggy' })
+      }
+    },
+    EFF120_AUTO (data) { // Smoker
+      if (data.who === 'player') {
+        data.mana = this.data.player.mana.use
+      } else {
+        data.mana = this.data.opponent.mana.use
+      }
+      if (data.mana > 0) {
+        if (data.who === 'player') {
+          this.data.player.mana.use -= 1
+        } else {
+          this.data.opponent.mana.use -= 1
+        }
+        data.todo = 'rest unit'
+        this.SELECT_OP_FIELD(data)
+      } else {
+        this.Toast('error', 'Mana tidak cukup !!!')
+      }
+    },
+    EFF120_ACT (data) { // Smoker
+      data.cost = 'pay life'
+      data.pay = 500
+      this.COST(data)
+      data.gain = 1500
+      this.AUTO_POWER(data)
     }
   },
   created () {

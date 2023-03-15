@@ -2772,7 +2772,7 @@ export default {
                 job: 'Swordman',
                 special: 'Logia'
               },
-              text: '[Act][1/Turn]: Pay 500 life points. Choose up to one "Paramecia" your opponent control, then Rest that unit. [Auto]: When this unit is placed on battlefield. Pay 500 life points. Choose up to one "Paramecia" your opponent control, then Rest that unit.',
+              text: '[Auto]: When this unit is placed on battlefield. Pay 1 mana, choose up to one your opponent unit and rest that unit. [Act][1/Turn]: Pay 500 life points. This unit get Power + 1500 until end of turn.',
               power: 1500,
               code: '120'
             },
