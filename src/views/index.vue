@@ -2730,7 +2730,8 @@ export default {
                 job: '',
                 special: ''
               },
-              text: '[Auto]: When this unit is send into drop zone. Seacrh your deck. put up to one "Laboon" or "Brook" in its card name into drop zone. Shuffle your deck.',
+              text: '[Auto]: When this unit is send into drop zone from your field. Call up to one "Laboon" in its card name from your deck, then shuffle your deck.',
+              // text: '[Auto]: When this unit is send into drop zone. Seacrh your deck. put up to one "Laboon" or "Brook" in its card name into drop zone. Shuffle your deck.',
               power: 500,
               code: '123'
             },

@@ -882,7 +882,8 @@ export default {
         data.unit.card.code === '111' ||
         data.unit.card.code === '118' ||
         data.unit.card.code === '119' ||
-        data.unit.card.code === '120'
+        data.unit.card.code === '120' ||
+        data.unit.card.code === '121'
       ) {
         data.option.act = 'ACT'
       }
@@ -2595,6 +2596,7 @@ export default {
       if (data.unit.card.code === '094') { this.EFF094(data) }
       if (data.unit.card.code === '104') { this.EFF104(data) }
       if (data.unit.card.code === '120') { this.EFF120_AUTO(data) }
+      if (data.unit.card.code === '122') { this.EFF122(data) }
     },
     AUTO_ON_SEND_TO_DROP (data) {
       if (data.unit.card.code === '009') { this.EFF009(data) }
@@ -2605,6 +2607,7 @@ export default {
       if (data.unit.card.code === '057') { this.EFF057(data) }
       if (data.unit.card.code === '077') { this.EFF077(data) }
       if (data.unit.card.code === '115') { this.EFF115(data) }
+      if (data.unit.card.code === '123') { this.EFF123(data) }
       this.AUTO_UNIT_DESTROY_ON_HAND(data)
     },
     AUTO_UNIT_DESTROY_ON_HAND (data) {
@@ -2885,6 +2888,7 @@ export default {
         if (data.unit.card.code === '118') { this.EFF118(data) }
         if (data.unit.card.code === '119') { this.EFF119(data) }
         if (data.unit.card.code === '120') { this.EFF120_ACT(data) }
+        if (data.unit.card.code === '121') { this.EFF121(data) }
         data.unit.onePerTurn = true
       }
     },
@@ -5607,12 +5611,35 @@ export default {
       this.COST(data)
       data.gain = 1500
       this.AUTO_POWER(data)
+    },
+    EFF121 (data) { // Tashigi
+      data.cost = 'pay life'
+      data.pay = 500
+      this.COST(data)
+      data.grade = 3
+      data.job = 'Swordman'
+      data.todo = 'DECK TO HAND'
+      this.SEARCH_DECK_FOR_JOB_AND_GRADE_LESS(data)
+    },
+    EFF122 (data) { // Crocus
+      if (data.who === 'player') { data.drop = this.data.player.drop }
+      if (data.who === 'opponent') { data.drop = this.data.opponent.drop }
+      let count = 0
+      data.drop.map((unit) => {
+        if (unit.name === 'Laboon') { count += 1 }
+      })
+      this.heal({ who: data.who, heal: 1000 * count })
+    },
+    EFF123 (data) { // Laboon
+      data.name = 'Laboon'
+      data.todo = 'CALL FROM DECK'
+      this.SEARCH_DECK_FOR_NAME(data)
     }
   },
   created () {
     this.parse(this.deckPlay, 'player')
     this.parse(this.deckOpponent, 'opponent')
-    this.shuffle({ who: 'player', deck: this.data.player.deck })
+    // this.shuffle({ who: 'player', deck: this.data.player.deck })
     this.shuffle({ who: 'opponent', deck: this.data.opponent.deck })
     for (let i = 0; i < 5; i++) { // Max Hand Card 14
       this.draw({ who: 'player' })
