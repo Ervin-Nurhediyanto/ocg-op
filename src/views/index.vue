@@ -2562,8 +2562,9 @@ export default {
                 job: 'Swordman',
                 special: ''
               },
-              text: '[Auto]: When this unit block. This unit get Power + 2000, until end this turn. If your life points is grether than 500, pay 500 life points and this unit get Power + 1000, until end this turn.',
-              power: 2500,
+              text: '',
+              // text: '[Auto]: When this unit block. This unit get Power + 2000, until end this turn. If your life points is grether than 500, pay 500 life points and this unit get Power + 1000, until end this turn.',
+              power: 3000,
               code: '135'
             },
             {
@@ -2576,8 +2577,9 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Act][1/Turn]: Discard a random card from your hand and put top of your deck into drop zone. This unit get Power + 3000 until end this turn.',
-              power: 2500,
+              text: '',
+              // text: '[Act][1/Turn]: Discard a random card from your hand and put top of your deck into drop zone. This unit get Power + 3000 until end this turn.',
+              power: 3000,
               code: '134'
             },
             {
@@ -2590,7 +2592,8 @@ export default {
                 job: 'Fighter',
                 special: 'Paramecia'
               },
-              text: '[Auto]: When this unit is send into drop zone. Draw two cards, then discard a random card from your hand.',
+              text: '[Auto]: When this unit is placed on battlefield. You may bind a random card from your hand, then increase your max mana equal to Grade that unit bind by this effect.',
+              // text: '[Auto]: When this unit is send into drop zone. Draw two cards, then discard a random card from your hand.',
               power: 500,
               code: '133'
             },
@@ -2604,8 +2607,9 @@ export default {
                 job: '',
                 special: ''
               },
-              text: '[Auto]: When this unit is placed on battlefield. Bind this card and Draw a card.',
-              power: 500,
+              text: '',
+              // text: '[Auto]: When this unit is placed on battlefield. Bind this card and Draw a card.',
+              power: 1000,
               code: '132'
             },
             {
@@ -2618,7 +2622,8 @@ export default {
                 job: 'Spellcaster',
                 special: ''
               },
-              text: '[Auto]: When this unit is send into drop zone. Draw a card.',
+              text: '[Auto]: When this unit is placed on battlefield. Put up to one random card from drop zone into your hand.',
+              // text: '[Auto]: When this unit is send into drop zone. Draw a card.',
               power: 500,
               code: '131'
             },
@@ -2660,8 +2665,9 @@ export default {
                 job: 'Gunner',
                 special: ''
               },
-              text: '[Auto]: When this unit is send into drop zone. Destroy up to one random Grade 1 your opponent control.',
-              power: 500,
+              text: '',
+              // text: '[Auto]: When this unit is send into drop zone. Destroy up to one random Grade 1 your opponent control.',
+              power: 1000,
               code: '128'
             },
             {
@@ -2674,7 +2680,7 @@ export default {
                 job: '',
                 special: ''
               },
-              text: '[Auto]: When this unit is send into drop zone. Search your deck. Put up to one "Nefertari Vivi" in its card name into your hand. Shuffle your deck.',
+              text: '[Auto]: When this unit is placed on battlefield. You may bind this unit, then put up to one "Nefertari Vivi" from bind zone into your hand.',
               power: 500,
               code: '127'
             },
@@ -2688,8 +2694,8 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Auto]: When this unit is send into drop zone. All Grade 1 unit your control get Power + 500 until end this turn.',
-              power: 500,
+              text: '',
+              power: 1000,
               code: '126'
             },
             {
@@ -2702,7 +2708,7 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Auto]: When this unit is placed on battlefield. Search your deck. Put up to one grade 1 into drop zone, then shuffle your deck and draw two cards.',
+              text: '[Auto]: When this unit is placed on battlefield. You may bind this unit, then draw two cards.',
               power: 500,
               code: '125'
             },
@@ -2716,8 +2722,8 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Auto]: When this unit is placed on battlefield. Put this unit to drop zone. Call up to one "Nefertari Vivi" from your deck. Shuffle your deck.',
-              power: 500,
+              text: '',
+              power: 1000,
               code: '124'
             },
             {
@@ -2731,7 +2737,6 @@ export default {
                 special: ''
               },
               text: '[Auto]: When this unit is send into drop zone from your field. Call up to one "Laboon" in its card name from your deck, then shuffle your deck.',
-              // text: '[Auto]: When this unit is send into drop zone. Seacrh your deck. put up to one "Laboon" or "Brook" in its card name into drop zone. Shuffle your deck.',
               power: 500,
               code: '123'
             },

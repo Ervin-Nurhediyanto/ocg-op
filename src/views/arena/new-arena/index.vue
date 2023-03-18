@@ -2597,6 +2597,8 @@ export default {
       if (data.unit.card.code === '104') { this.EFF104(data) }
       if (data.unit.card.code === '120') { this.EFF120_AUTO(data) }
       if (data.unit.card.code === '122') { this.EFF122(data) }
+      if (data.unit.card.code === '125') { this.EFF125(data) }
+      if (data.unit.card.code === '127') { this.EFF127(data) }
     },
     AUTO_ON_SEND_TO_DROP (data) {
       if (data.unit.card.code === '009') { this.EFF009(data) }
@@ -5634,6 +5636,41 @@ export default {
       data.name = 'Laboon'
       data.todo = 'CALL FROM DECK'
       this.SEARCH_DECK_FOR_NAME(data)
+    },
+    EFF125 (data) { // Nefertari Vivi
+      this.$swal.fire({
+        title: 'Aktifkan Efek Vivi ?',
+        showCancelButton: true,
+        confirmButtonText: 'YES',
+        cancelButtonText: 'NO'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          data.cost = 'bind on field'
+          this.COST(data)
+          for (let i = 0; i < 2; i++) {
+            this.draw({ who: data.who })
+          }
+        }
+      })
+    },
+    EFF127 (data) { // Karoo
+      this.$swal.fire({
+        title: 'Aktifkan Efek Vivi ?',
+        showCancelButton: true,
+        confirmButtonText: 'YES',
+        cancelButtonText: 'NO'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          data.cost = 'bind on field'
+          this.COST(data)
+          data.name = 'Nefertari Vivi'
+          data.todo = 'BIND TO HAND'
+          this.SEARCH_BIND_FOR_NAME(data)
+          // for (let i = 0; i < 2; i++) {
+          //   this.draw({ who: data.who })
+          // }
+        }
+      })
     }
   },
   created () {
