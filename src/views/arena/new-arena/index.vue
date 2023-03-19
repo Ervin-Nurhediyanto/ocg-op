@@ -2291,6 +2291,9 @@ export default {
         if (data.todo === 'bind') {
           this.bind({ who: data.target, location: units[index].location })
         }
+        if (data.todo === 'rest') {
+          this.rest({ who: data.target, location: units[index].location })
+        }
       }
     },
     RANDOM_FIELD_BY_NAME (data) {
@@ -2599,6 +2602,10 @@ export default {
       if (data.unit.card.code === '122') { this.EFF122(data) }
       if (data.unit.card.code === '125') { this.EFF125(data) }
       if (data.unit.card.code === '127') { this.EFF127(data) }
+      if (data.unit.card.code === '129') { this.EFF129(data) }
+      if (data.unit.card.code === '130') { this.EFF130(data) }
+      if (data.unit.card.code === '131') { this.EFF131(data) }
+      if (data.unit.card.code === '133') { this.EFF133(data) }
     },
     AUTO_ON_SEND_TO_DROP (data) {
       if (data.unit.card.code === '009') { this.EFF009(data) }
@@ -3017,6 +3024,17 @@ export default {
       }
       if (data.cost === 'bind on field') {
         this.bind(data)
+      }
+      if (data.cost === 'bind hand') {
+        if (data.who === 'player') {
+          data.hand = this.data.player.hand
+          data.bind = this.data.player.bind
+        } else {
+          data.hand = this.data.opponent.hand
+          data.bind = this.data.opponent.bind
+        }
+        data.bind.push(data.hand[data.index])
+        data.hand.splice(data.index, 1)
       }
     },
     // CARD EFFECT
@@ -5655,7 +5673,7 @@ export default {
     },
     EFF127 (data) { // Karoo
       this.$swal.fire({
-        title: 'Aktifkan Efek Vivi ?',
+        title: 'Aktifkan Efek Karoo ?',
         showCancelButton: true,
         confirmButtonText: 'YES',
         cancelButtonText: 'NO'
@@ -5666,11 +5684,42 @@ export default {
           data.name = 'Nefertari Vivi'
           data.todo = 'BIND TO HAND'
           this.SEARCH_BIND_FOR_NAME(data)
-          // for (let i = 0; i < 2; i++) {
-          //   this.draw({ who: data.who })
-          // }
         }
       })
+    },
+    EFF129 (data) { // Miss Valentine
+      data.grade = 1
+      data.todo = 'rest'
+      this.RANDOM_FIELD_OP_BY_GRADE_OR_LESS(data)
+    },
+    EFF130 (data) { // Mr 5
+      data.grade = 1
+      data.todo = 'destroy'
+      this.RANDOM_FIELD_OP_BY_GRADE_OR_LESS(data)
+    },
+    EFF131 (data) { // Nami
+      data.name = ''
+      data.todo = 'BIND TO HAND'
+      this.SEARCH_BIND_FOR_NAME(data)
+    },
+    EFF133 (data) { // Nico Robin
+      if (data.who === 'player') {
+        data.hand = this.data.player.hand
+      } else {
+        data.hand = this.data.opponent.hand
+      }
+      if (data.hand.length > 0) {
+        data.index = Math.floor(Math.random() * data.hand.length)
+        if (data.who === 'player') {
+          this.data.player.mana.max += data.hand[data.index].grade
+        } else {
+          this.data.opponent.mana.max += data.hand[data.index].grade
+        }
+        data.cost = 'bind hand'
+        this.COST(data)
+      } else {
+        this.Toast('error', 'Tidak ada kartu untuk discard !!!')
+      }
     }
   },
   created () {

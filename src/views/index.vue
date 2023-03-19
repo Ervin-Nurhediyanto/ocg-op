@@ -2534,7 +2534,8 @@ export default {
                 job: 'Spellcaster',
                 special: ''
               },
-              text: '[Cont]: When your opponent unit is call on the battlefield. Put top of your deck into drop zone. If that card send into drop zone is Grade 1, Rest that opponent call unit.',
+              text: '',
+              // text: '[Cont]: When your opponent unit is call on the battlefield. Put top of your deck into drop zone. If that card send into drop zone is Grade 1, Rest that opponent call unit.',
               power: 500,
               code: '137'
             },
@@ -2548,7 +2549,8 @@ export default {
                 job: 'Swordman',
                 special: 'Paramecia'
               },
-              text: '[Auto]: When this unit block. Pay 500 life points. Rest a random unit your opponent control.',
+              text: '[Act][1/Turn]: Pay 500 life points. Choose up to one grade 2 or less your opponent unit and rest that unit.',
+              // text: '[Auto]: When this unit block. Pay 500 life points. Rest a random unit your opponent control.',
               power: 1500,
               code: '136'
             },
@@ -2563,7 +2565,6 @@ export default {
                 special: ''
               },
               text: '',
-              // text: '[Auto]: When this unit block. This unit get Power + 2000, until end this turn. If your life points is grether than 500, pay 500 life points and this unit get Power + 1000, until end this turn.',
               power: 3000,
               code: '135'
             },
@@ -2578,7 +2579,6 @@ export default {
                 special: ''
               },
               text: '',
-              // text: '[Act][1/Turn]: Discard a random card from your hand and put top of your deck into drop zone. This unit get Power + 3000 until end this turn.',
               power: 3000,
               code: '134'
             },
@@ -2593,7 +2593,6 @@ export default {
                 special: 'Paramecia'
               },
               text: '[Auto]: When this unit is placed on battlefield. You may bind a random card from your hand, then increase your max mana equal to Grade that unit bind by this effect.',
-              // text: '[Auto]: When this unit is send into drop zone. Draw two cards, then discard a random card from your hand.',
               power: 500,
               code: '133'
             },
@@ -2608,7 +2607,6 @@ export default {
                 special: ''
               },
               text: '',
-              // text: '[Auto]: When this unit is placed on battlefield. Bind this card and Draw a card.',
               power: 1000,
               code: '132'
             },
@@ -2623,7 +2621,6 @@ export default {
                 special: ''
               },
               text: '[Auto]: When this unit is placed on battlefield. Put up to one random card from drop zone into your hand.',
-              // text: '[Auto]: When this unit is send into drop zone. Draw a card.',
               power: 500,
               code: '131'
             },
@@ -2666,7 +2663,6 @@ export default {
                 special: ''
               },
               text: '',
-              // text: '[Auto]: When this unit is send into drop zone. Destroy up to one random Grade 1 your opponent control.',
               power: 1000,
               code: '128'
             },
