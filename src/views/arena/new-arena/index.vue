@@ -883,7 +883,8 @@ export default {
         data.unit.card.code === '118' ||
         data.unit.card.code === '119' ||
         data.unit.card.code === '120' ||
-        data.unit.card.code === '121'
+        data.unit.card.code === '121' ||
+        data.unit.card.code === '136'
       ) {
         data.option.act = 'ACT'
       }
@@ -2244,12 +2245,12 @@ export default {
       data.unitB2 = data.back.unitB2
       data.unitB3 = data.back.unitB3
       const units = []
-      if (data.unitF1.isUnit && data.unitF1.position === 'Stand') { units.push({ location: 'unit F1' }) }
-      if (data.unitF2.isUnit && data.unitF2.position === 'Stand') { units.push({ location: 'unit F2' }) }
-      if (data.unitF3.isUnit && data.unitF3.position === 'Stand') { units.push({ location: 'unit F3' }) }
-      if (data.unitB1.isUnit && data.unitB1.position === 'Stand') { units.push({ location: 'unit B1' }) }
-      if (data.unitB2.isUnit && data.unitB2.position === 'Stand') { units.push({ location: 'unit B2' }) }
-      if (data.unitB3.isUnit && data.unitB3.position === 'Stand') { units.push({ location: 'unit B3' }) }
+      if (data.unitF1.isUnit && data.unitF1.card.grade <= data.grade && data.unitF1.position === 'Stand') { units.push({ location: 'unit F1' }) }
+      if (data.unitF2.isUnit && data.unitF2.card.grade <= data.grade && data.unitF2.position === 'Stand') { units.push({ location: 'unit F2' }) }
+      if (data.unitF3.isUnit && data.unitF3.card.grade <= data.grade && data.unitF3.position === 'Stand') { units.push({ location: 'unit F3' }) }
+      if (data.unitB1.isUnit && data.unitB1.card.grade <= data.grade && data.unitB1.position === 'Stand') { units.push({ location: 'unit B1' }) }
+      if (data.unitB2.isUnit && data.unitFB2.card.grade <= data.grade && data.unitB2.position === 'Stand') { units.push({ location: 'unit B2' }) }
+      if (data.unitB3.isUnit && data.unitB3.card.grade <= data.grade && data.unitB3.position === 'Stand') { units.push({ location: 'unit B3' }) }
       if (units.length > 0) {
         const index = Math.floor(Math.random() * units.length)
         if (data.todo === 'destroy') {
@@ -2617,6 +2618,7 @@ export default {
       if (data.unit.card.code === '077') { this.EFF077(data) }
       if (data.unit.card.code === '115') { this.EFF115(data) }
       if (data.unit.card.code === '123') { this.EFF123(data) }
+      if (data.unit.card.code === '137') { this.EFF137(data) }
       this.AUTO_UNIT_DESTROY_ON_HAND(data)
     },
     AUTO_UNIT_DESTROY_ON_HAND (data) {
@@ -2898,6 +2900,7 @@ export default {
         if (data.unit.card.code === '119') { this.EFF119(data) }
         if (data.unit.card.code === '120') { this.EFF120_ACT(data) }
         if (data.unit.card.code === '121') { this.EFF121(data) }
+        if (data.unit.card.code === '136') { this.EFF136(data) }
         data.unit.onePerTurn = true
       }
     },
@@ -5081,6 +5084,7 @@ export default {
       data.cost = 'pay life'
       data.pay = 500
       this.COST(data)
+      data.grade = 2
       data.todo = 'rest'
       this.RANDOM_FIELD_OP_WITH_STAND_UNIT(data)
     },
@@ -5720,6 +5724,19 @@ export default {
       } else {
         this.Toast('error', 'Tidak ada kartu untuk discard !!!')
       }
+    },
+    EFF136 (data) { // Galdino "Mr 3"
+      data.cost = 'pay life'
+      data.pay = 500
+      this.COST(data)
+      data.grade = 2
+      data.todo = 'rest'
+      this.RANDOM_FIELD_OP_WITH_STAND_UNIT(data)
+    },
+    EFF137 (data) { // Miss Goldenweek
+      data.grade = 2
+      data.todo = 'rest'
+      this.RANDOM_FIELD_OP_WITH_STAND_UNIT(data)
     }
   },
   created () {

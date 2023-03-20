@@ -2492,7 +2492,8 @@ export default {
                 job: 'Fighter',
                 special: ''
               },
-              text: '[Act]: If you control "Wapol" and "Chess" unit. Put this unit to drop zone. Choose "Chess" your control and put that unit to drop zone. Seacrh your deck. Call up to one "Chessmarimo" from your deck. Shuffle your deck.',
+              text: '[Auto]: When this unit is placed on battlefield. Add up to one "Chessmarimo" from your deck into your hand, then shuffle your deck.',
+              // text: '[Act]: If you control "Wapol" and "Chess" unit. Put this unit to drop zone. Choose "Chess" your control and put that unit to drop zone. Seacrh your deck. Call up to one "Chessmarimo" from your deck. Shuffle your deck.',
               power: 500,
               code: '140'
             },
@@ -2506,7 +2507,8 @@ export default {
                 job: 'Archer',
                 special: ''
               },
-              text: '[Act]: If you control "Wapol" and "Kuromarimo" unit. Put this unit to drop zone. Choose "Kuromarimo" your control and put that unit to drop zone. Seacrh your deck. Call up to one "Chessmarimo" from your deck. Shuffle your deck.',
+              text: '[Auto]: When this unit is placed on battlefield. Add up to one "Wapol" from your deck into your hand, then shuffle your deck.',
+              // text: '[Act]: If you control "Wapol" and "Kuromarimo" unit. Put this unit to drop zone. Choose "Kuromarimo" your control and put that unit to drop zone. Seacrh your deck. Call up to one "Chessmarimo" from your deck. Shuffle your deck.',
               power: 500,
               code: '139'
             },
@@ -2521,6 +2523,7 @@ export default {
                 special: 'Paramecia'
               },
               text: '[Act][1/Turn]: Search your deck. Call up to one "Chess" or "Kuromarimo" from your deck. Shuffle your deck.',
+              // text: '[Act][1/Turn]: Search your deck. Call up to one "Chess" or "Kuromarimo" from your deck. Shuffle your deck.',
               power: 500,
               code: '138'
             },
@@ -2534,8 +2537,7 @@ export default {
                 job: 'Spellcaster',
                 special: ''
               },
-              text: '',
-              // text: '[Cont]: When your opponent unit is call on the battlefield. Put top of your deck into drop zone. If that card send into drop zone is Grade 1, Rest that opponent call unit.',
+              text: '[Auto]: When this unit is send into drop zone from your field. Rest up to one grade 2 or less random unit your opponent control.',
               power: 500,
               code: '137'
             },
@@ -2549,8 +2551,7 @@ export default {
                 job: 'Swordman',
                 special: 'Paramecia'
               },
-              text: '[Act][1/Turn]: Pay 500 life points. Choose up to one grade 2 or less your opponent unit and rest that unit.',
-              // text: '[Auto]: When this unit block. Pay 500 life points. Rest a random unit your opponent control.',
+              text: '[Act][1/Turn]: Pay 500 life points. Rest up to one grade 2 or less random unit your opponent control.',
               power: 1500,
               code: '136'
             },
